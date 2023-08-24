@@ -2,10 +2,9 @@ package com.todolist.DoToday.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.todo.todolist.config.auth.OAuthToken;
-import com.todo.todolist.domain.user.Role;
-import com.todo.todolist.dto.response.KakaoProfile;
-import com.todo.todolist.entity.Members;
+import com.todolist.DoToday.config.auth.OAuthToken;
+import com.todolist.DoToday.dto.response.KakaoProfile;
+import com.todolist.DoToday.entity.Members;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -51,7 +50,6 @@ public class KakaoUserInfo {
                 .name(kakaoProfile.getProperties().getNickname())
                 .email(kakaoProfile.getKakao_account().getEmail())
                 .picture(kakaoProfile.getProperties().getProfile_image())
-                .role(Role.USER)
                 .secession(true)
                 .build();
 
