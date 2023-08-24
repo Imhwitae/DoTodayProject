@@ -19,6 +19,10 @@ public class FirebaseTestController {
         return firebaseService.insert(test);
     }
 
+    /**
+     * @param id: Firestore Database의 문서 이름
+     * http://localhost:8080/getMemberDetail?id=id
+     */
     @GetMapping("/getMemberDetail")
     public Test getMemberDetail(@RequestParam String id) throws Exception{
         return firebaseService.getDetail(id);
