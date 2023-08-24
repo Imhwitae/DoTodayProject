@@ -20,8 +20,8 @@ public class FirebaseTestController {
     }
 
     /**
-     * @param id: Firestore Database의 문서 이름
-     * http://localhost:8080/getMemberDetail?id=id
+     * @param id: Firestore Database의 문서 이름 복사
+     * @get: http://localhost:8080/getMemberDetail?id=id
      */
     @GetMapping("/getMemberDetail")
     public Test getMemberDetail(@RequestParam String id) throws Exception{
