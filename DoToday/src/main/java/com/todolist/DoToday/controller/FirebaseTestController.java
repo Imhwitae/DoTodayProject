@@ -3,10 +3,7 @@ package com.todolist.DoToday.controller;
 import com.todolist.DoToday.entity.Test;
 import com.todolist.DoToday.service.FirebaseServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,14 +11,24 @@ public class FirebaseTestController {
 
     private final FirebaseServiceImpl firebaseService;
 
-    @GetMapping("/insertMember")
+    @PostMapping("/insertMember")
     public String insertMember(@RequestBody Test test) throws Exception{
+        System.out.println("컨트롤러 진입");
         return firebaseService.insert(test);
     }
 
     /**
-     * @param id: Firestore Database의 문서 이름 복사
-     * @get: http://localhost:8080/getMemberDetail?id=id
+     * @주소창에: http://localhost:8080/insertMember
+     * @확인하기: Firebase Database 가서 값이 들어갔는지 확인
+     */
+    @GetMapping("/insertMember")
+    public void insertMember() {
+        firebaseService.insert();
+    }
+
+    /**
+     * @param id Firestore Database의 문서 이름 복사
+     * @주소창에: http://localhost:8080/getMemberDetail?id=id
      */
     @GetMapping("/getMemberDetail")
     public Test getMemberDetail(@RequestParam String id) throws Exception{

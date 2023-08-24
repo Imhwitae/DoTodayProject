@@ -9,16 +9,33 @@ import com.google.firebase.cloud.FirestoreClient;
 import com.todolist.DoToday.entity.Test;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class FirebaseServiceImpl implements FirebaseService{
 
     public static final String COLLECTION_NAME = "test";
+    Firestore db = FirestoreClient.getFirestore();
+
     @Override
     public String insert(Test test) throws Exception {
         Firestore firestore = FirestoreClient.getFirestore();
         ApiFuture<WriteResult> apiFuture =
                 firestore.collection(COLLECTION_NAME).document(test.getId()).set(test);
+        System.out.println("가입 완료");
         return apiFuture.get().getUpdateTime().toString();
+    }
+
+
+    public void insert() {
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", "park");
+        data.put("id", "3");
+        data.put("email", "qwe@gmail.com");
+        data.put("pw", "1111");
+        ApiFuture<DocumentReference> addedDocRef = db.collection("test").add(data);
+//        return "Added document with ID: " + addedDocRef.get().getId();
     }
 
     @Override

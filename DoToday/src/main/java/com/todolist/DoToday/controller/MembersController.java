@@ -45,5 +45,9 @@ public class MembersController {
     }
 
 
+    @GetMapping("join")
+    public String joinPage() {
+        return "test_form";
+    }
 
 }
