@@ -1,5 +1,9 @@
 package com.todolist.DoToday.controller;
 
+import com.todolist.DoToday.config.auth.OAuthToken;
+import com.todolist.DoToday.entity.Members;
+import com.todolist.DoToday.util.KakaoToken;
+import com.todolist.DoToday.util.KakaoUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 //@RequestMapping("/members")
 @RequiredArgsConstructor
 public class MembersController {
-    private final MemberService memberService;
+//    private final MemberService memberService;
     private final KakaoToken kakaoToken;
     private final KakaoUserInfo kakaoUserInfo;
 
