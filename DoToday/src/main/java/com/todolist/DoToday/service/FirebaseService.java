@@ -1,7 +1,5 @@
 package com.todolist.DoToday.service;
 
-import com.todo.todolist.dto.response.TestDto;
-import com.todo.todolist.entity.Test;
 import com.todolist.DoToday.entity.Test;
 
 public interface FirebaseService {

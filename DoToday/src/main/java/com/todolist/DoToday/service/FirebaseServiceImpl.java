@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class FirebaseServiceImpl implements FirebaseService{
 
-    public static final String COLLECTION_NAME = "Test";
+    public static final String COLLECTION_NAME = "test";
     @Override
     public String insert(Test test) throws Exception {
         Firestore firestore = FirestoreClient.getFirestore();
