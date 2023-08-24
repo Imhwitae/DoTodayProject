@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link th:href="@{/css/login.css}"
+          href="/css/login.css" rel="stylesheet">
+</head>
+<body>
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+
+  <script th:inline="javascript">
+    //회원가입 실패시 에러 메시지 출력
+    $(document).ready(function(){
+      var errorMessage = [[${errorMessage}]];
+      if(errorMessage != null){
+        alert(errorMessage);
+      }
+    });
+  </script>
+
+</th:block>
+<div class="container" id="container">
+  <div class="form-container sign-up-container">
+    <form th:action="@{/members/add}" th:object="${members}" method="post">
+      <h1>회원가입</h1>
+      <div class="social-container">
+        <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+        <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+      <span>사용하실 아이디와 비밀번호를 입력해주세요.</span>
+<!--      <input type="text" placeholder="Name" th:field="*{name}"/>-->
+<!--      <input type="text" placeholder="Id" th:field="*{email}" />-->
+<!--      <input type="password" placeholder="Password" th:field="*{password}"/>-->
+      <button type="submit">Sign Up</button>
+    </form>
+  </div>
+  <div class="form-container sign-in-container">
+    <form th:action="@{/todo_main}" th:object="${loginForm}" method="post">
+      <h1>로그인</h1>
+<!--      <div class="social-container">-->
+<!--        <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>-->
+<!--        <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>-->
+<!--        <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>-->
+<!--      </div>-->
+<!--      <span>or</span>-->
+<!--      <input type="text" placeholder="Id" th:field="*{email}" />-->
+<!--      <input type="password" placeholder="Password" th:field="*{password}"/>-->
+<!--      <a href="#">아이디/ 비밀번호 찾기</a>-->
+<!--      <button type="submit">LogIn</button>-->
+      <a href="/oauth2/authorization/google"><img th:src="@{/css/image/btn_google_signin_light_normal_web.png}"></a>
+      <a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=bd418e40192dec1008813e6eab065492&redirect_uri=http://localhost:8080/kakao/login">
+        <img th:src="@{/css/image/kakao_login_medium_narrow.png}"height="45" width="191"/></a>
+    </form>
+  </div>
+  <div class="overlay-container">
+    <div class="overlay">
+      <div class="overlay-panel overlay-left">
+        <h1>어서오세요!</h1>
+        <p>로그인을 해주세요.</p>
+        <button class="ghost" id="signIn">LogIn</button>
+      </div>
+      <div class="overlay-panel overlay-right">
+        <h1>환영합니다!</h1>
+        <p>저희 서비스를 이용하고 싶으시면 회원가입을 해주세요.</p>
+        <input th:value="${memberName}">
+<!--        <button class="ghost" id="signUp">Sign Up</button>-->
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const signUpButton = document.getElementById('signUp');
+  const signInButton = document.getElementById('signIn');
+  const container = document.getElementById('container');
+
+  signUpButton.addEventListener('click', () => {
+    container.classList.add("right-panel-active");
+  });
+
+  signInButton.addEventListener('click', () => {
+    container.classList.remove("right-panel-active");
+  });
+</script>
+</body>
+</html>
