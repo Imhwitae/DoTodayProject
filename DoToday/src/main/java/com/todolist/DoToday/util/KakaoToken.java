@@ -25,7 +25,7 @@ public class KakaoToken {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
 
-        // body 데이터를 담을 오브젝트인 MultiValueMap를 만들어보자
+        // body 데이터를 담을 오브젝트인 MultiValueMap<>를 만들어보자
         // body는 보통 key, value의 쌍으로 이루어지기 때문에 자바에서 제공해주는 MultiValueMap 타입을 사용한다.
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
