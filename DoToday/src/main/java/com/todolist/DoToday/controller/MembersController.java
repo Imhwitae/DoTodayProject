@@ -7,9 +7,12 @@ import com.todolist.DoToday.service.MemberService;
 import com.todolist.DoToday.util.KakaoToken;
 import com.todolist.DoToday.util.KakaoUserInfo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 //@RequestMapping("/members")
@@ -18,6 +21,7 @@ public class MembersController {
     private final FirebaseServiceKakaoImpl firebaseServiceKakao;
     private final KakaoToken kakaoToken;
     private final KakaoUserInfo kakaoUserInfo;
+    private final MemberService memberService;
 
     @GetMapping("/kakao/login")
     public String kakaoCallback(String code, Model model) throws Exception {
@@ -45,10 +49,16 @@ public class MembersController {
         return "index";
     }
 
-
     @GetMapping("join")
     public String joinPage() {
         return "test_form";
+    }
+
+
+    // 구글 로그인
+    @GetMapping("/login/oauth2/code/callback/google")
+    public void googleLogin(@RequestParam("code") String accessCode) {
+        memberService.getCodeTest(accessCode);
     }
 
 }
