@@ -2,6 +2,7 @@ package com.todolist.DoToday.controller;
 
 import com.todolist.DoToday.config.auth.OAuthToken;
 import com.todolist.DoToday.entity.Members;
+import com.todolist.DoToday.service.FirebaseServiceKakaoImpl;
 import com.todolist.DoToday.service.MemberService;
 import com.todolist.DoToday.util.KakaoToken;
 import com.todolist.DoToday.util.KakaoUserInfo;
@@ -14,12 +15,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 //@RequestMapping("/members")
 @RequiredArgsConstructor
 public class MembersController {
-//    private final MemberService memberService;
+    private final FirebaseServiceKakaoImpl firebaseServiceKakao;
     private final KakaoToken kakaoToken;
     private final KakaoUserInfo kakaoUserInfo;
 
     @GetMapping("/kakao/login")
-    public String kakaoCallback(String code, Model model) {
+    public String kakaoCallback(String code, Model model) throws Exception {
 
         OAuthToken oAuthToken = kakaoToken.getToken(code);
 
@@ -30,7 +31,7 @@ public class MembersController {
         System.out.println("kakao이메일 = " + kakaoProfile.getEmail());
 
         try {
-//            memberService.join(kakaoProfile);
+            firebaseServiceKakao.insert(kakaoProfile);
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "member/message";
