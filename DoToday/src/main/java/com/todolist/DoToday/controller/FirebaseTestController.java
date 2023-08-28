@@ -13,7 +13,6 @@ public class FirebaseTestController {
 
     @PostMapping("/insertMember")
     public String insertMember(@RequestBody Test test) throws Exception{
-        System.out.println("컨트롤러 진입");
         return firebaseService.insert(test);
     }
 

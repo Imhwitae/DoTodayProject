@@ -28,6 +28,7 @@ public class FirebaseServiceImpl implements FirebaseService{
     }
 
 
+//   삽입 테스트용 메서드
     public void insert() {
         Map<String, Object> data = new HashMap<>();
         data.put("name", "park");
