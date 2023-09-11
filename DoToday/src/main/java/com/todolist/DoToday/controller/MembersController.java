@@ -2,8 +2,6 @@ package com.todolist.DoToday.controller;
 
 import com.todolist.DoToday.config.auth.OAuthToken;
 import com.todolist.DoToday.entity.Members;
-import com.todolist.DoToday.service.FirebaseServiceKakaoImpl;
-import com.todolist.DoToday.service.MemberService;
 import com.todolist.DoToday.util.KakaoToken;
 import com.todolist.DoToday.util.KakaoUserInfo;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 //@RequestMapping("/members")
 @RequiredArgsConstructor
 public class MembersController {
-    private final FirebaseServiceKakaoImpl firebaseServiceKakao;
+//    private final FirebaseServiceKakaoImpl firebaseServiceKakao;
     private final KakaoToken kakaoToken;
     private final KakaoUserInfo kakaoUserInfo;
-    private final MemberService memberService;
+//    private final MemberService memberService;
 
     @GetMapping("/kakao/login")
     public String kakaoCallback(String code, Model model) throws Exception {
@@ -35,7 +33,7 @@ public class MembersController {
         System.out.println("kakao이메일 = " + kakaoProfile.getEmail());
 
         try {
-            firebaseServiceKakao.insert(kakaoProfile);
+//            firebaseServiceKakao.insert(kakaoProfile);
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "member/message";
@@ -58,7 +56,7 @@ public class MembersController {
     // 구글 로그인
     @GetMapping("/login/oauth2/code/callback/google")
     public void googleLogin(@RequestParam("code") String accessCode) {
-        memberService.getCodeTest(accessCode);
+//        memberService.getCodeTest(accessCode);
     }
 
 }
