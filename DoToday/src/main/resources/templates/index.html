@@ -33,25 +33,25 @@
         <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
       </div>
       <span>사용하실 아이디와 비밀번호를 입력해주세요.</span>
-<!--      <input type="text" placeholder="Name" th:field="*{name}"/>-->
-<!--      <input type="text" placeholder="Id" th:field="*{email}" />-->
-<!--      <input type="password" placeholder="Password" th:field="*{password}"/>-->
+      <input type="text" placeholder="Name" th:field="*{name}"/>
+      <input type="text" placeholder="Id" th:field="*{members.email}" />
+      <input type="password" placeholder="Password" th:field="*{members.password}"/>
       <button type="submit">Sign Up</button>
     </form>
   </div>
   <div class="form-container sign-in-container">
     <form th:object="${loginForm}" method="post">
       <h1>로그인</h1>
-<!--      <div class="social-container">-->
-<!--        <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>-->
-<!--        <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>-->
-<!--        <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>-->
-<!--      </div>-->
-<!--      <span>or</span>-->
-<!--      <input type="text" placeholder="Id" th:field="*{email}" />-->
-<!--      <input type="password" placeholder="Password" th:field="*{password}"/>-->
-<!--      <a href="#">아이디/ 비밀번호 찾기</a>-->
-<!--      <button type="submit">LogIn</button>-->
+      <div class="social-container">
+        <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+        <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+      <span>or</span>
+      <input type="text" placeholder="Id" th:field="*{memebers.email}" />
+      <input type="password" placeholder="Password" th:field="*{members.password}"/>
+      <a href="#">아이디/ 비밀번호 찾기</a>
+      <button type="submit">LogIn</button>
       <a href="https://accounts.google.com/o/oauth2/auth?client_id=180149997803-eq2ht84npp10lhv50hbp18temhuip25b.apps.googleusercontent.com&redirect_uri=http://localhost:8080/login/oauth2/code/callback/google&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"><img th:src="@{/css/image/btn_google_signin_light_normal_web.png}"></a>
       <a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=bd418e40192dec1008813e6eab065492&redirect_uri=http://localhost:8080/kakao/login">
         <img th:src="@{/css/image/kakao_login_medium_narrow.png}"height="45" width="191"/></a>
@@ -68,7 +68,7 @@
       <div class="overlay-panel overlay-right">
         <h1>환영합니다!</h1>
         <p>저희 서비스를 이용하고 싶으시면 회원가입을 해주세요.</p>
-<!--        <input th:value="${memberName}">-->
+        <input th:value="${memberName}">
         <a th:href="@{/test_form.html}"><button class="ghost" id="signUp">Sign Up</button></a>
       </div>
     </div>
