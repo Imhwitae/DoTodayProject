@@ -4,7 +4,7 @@
       layout:decorate="~{layouts/default}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>DoToday</title>
     <link th:href="@{/css/login.css}"
           href="/css/login.css" rel="stylesheet">
 </head>
@@ -27,11 +27,6 @@
   <div class="form-container sign-up-container">
     <form action="/members/add" th:object="${member}" method="post">
       <h1>회원가입</h1>
-      <div class="social-container">
-        <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-        <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-        <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-      </div>
       <span>사용하실 아이디와 비밀번호를 입력해주세요.</span>
       <input type="text" name="name" placeholder="Name"/>
       <input type="text" placeholder="Id"  />
@@ -48,8 +43,8 @@
         <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
       </div>
       <span>or</span>
-      <input type="text" placeholder="Id" th:field="*{memebers.email}" />
-      <input type="password" placeholder="Password" th:field="*{members.password}"/>
+      <input type="text" placeholder="Id"  />
+      <input type="password" placeholder="Password" />
       <a href="#">아이디/ 비밀번호 찾기</a>
       <button type="submit">LogIn</button>
       <a href="https://accounts.google.com/o/oauth2/auth?client_id=180149997803-eq2ht84npp10lhv50hbp18temhuip25b.apps.googleusercontent.com&redirect_uri=http://localhost:8080/login/oauth2/code/callback/google&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"><img th:src="@{/css/image/btn_google_signin_light_normal_web.png}"></a>
@@ -68,8 +63,7 @@
       <div class="overlay-panel overlay-right">
         <h1>환영합니다!</h1>
         <p>저희 서비스를 이용하고 싶으시면 회원가입을 해주세요.</p>
-        <input th:value="${memberName}">
-        <a th:href="@{/test_form.html}"><button class="ghost" id="signUp">Sign Up</button></a>
+        <a th:href="@{/members/join_form}"><button class="ghost" id="sign_up">Sign Up</button></a>
       </div>
     </div>
   </div>

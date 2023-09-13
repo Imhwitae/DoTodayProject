@@ -19,19 +19,19 @@ public class MembersController {
     private final MemberService memberService;
     private MemberJoinDto memberJoinDto;
 
-    @GetMapping("/add")
+    @GetMapping("/join_form")
     public String addForm(Model model) {
 
         model.addAttribute("member", new MemberJoinDto());
 
-        return "/test_form";
+        return "/join_form";
     }
 
     @PostMapping("/add")
     public String memberAdd(MemberJoinDto memberJoinDto) {
         String name = memberJoinDto.getMemberName();
         System.out.println("가입 완료: " + name);
-        return "/todo_main";
+        return "redirect:/";
     }
 
 }
