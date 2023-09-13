@@ -38,23 +38,23 @@
       <div class="field birth">
         <b>생년월일</b>
         <div>
-          <input type="number" placeholder="년(4자)" name="year" th:field="*{memberBirthYear}">
+          <input type="text" placeholder="년(4자)" name="year" th:field="*{memberBirthYear}">
           <select name="month" th:field="*{memberBirthMonth}">
 <!--            <option value="">월</option>-->
-            <option value="" th:value="${'1'}">1월</option>
-            <option value="" th:value="${'2'}">2월</option>
-            <option value="" th:value="${'3'}">3월</option>
-            <option value="" th:value="${'4'}">4월</option>
-            <option value="" th:value="${'5'}">5월</option>
-            <option value="" th:value="${'6'}">6월</option>
-            <option value="" th:value="${'7'}">7월</option>
-            <option value="" th:value="${'8'}">8월</option>
-            <option value="" th:value="${'9'}">9월</option>
+            <option value="" th:value="${'01'}">1월</option>
+            <option value="" th:value="${'02'}">2월</option>
+            <option value="" th:value="${'03'}">3월</option>
+            <option value="" th:value="${'04'}">4월</option>
+            <option value="" th:value="${'05'}">5월</option>
+            <option value="" th:value="${'06'}">6월</option>
+            <option value="" th:value="${'07'}">7월</option>
+            <option value="" th:value="${'08'}">8월</option>
+            <option value="" th:value="${'09'}">9월</option>
             <option value="" th:value="${'10'}">10월</option>
             <option value="" th:value="${'11'}">11월</option>
             <option value="" th:value="${'12'}">12월</option>
           </select>
-          <input type="number" placeholder="일" name="date" th:field="*{memberBirthDate}">
+          <input type="text" placeholder="일" name="date" th:field="*{memberBirthDate}">
         </div>
       </div>
 

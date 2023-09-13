@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @Controller
 @RequestMapping("/members")
 @RequiredArgsConstructor
@@ -35,6 +37,8 @@ public class MembersController {
 
     @PostMapping("/add")
     public String memberAdd(MemberJoinDto memberJoinDto) {
+
+        memberService.joinMember(memberJoinDto);
 
         System.out.println(memberJoinDto.getMemberName());
         System.out.println(memberJoinDto.getMemberId());
