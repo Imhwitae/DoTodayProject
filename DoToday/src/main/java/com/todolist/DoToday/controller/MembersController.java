@@ -1,6 +1,7 @@
 package com.todolist.DoToday.controller;
 
 import com.todolist.DoToday.config.auth.OAuthToken;
+import com.todolist.DoToday.dto.Gender;
 import com.todolist.DoToday.dto.request.MemberJoinDto;
 import com.todolist.DoToday.entity.Members;
 import com.todolist.DoToday.service.MemberService;
@@ -27,11 +28,24 @@ public class MembersController {
         return "/join_form";
     }
 
+    @ModelAttribute("genders")
+    public Gender[] genders() {
+        return Gender.values();  // enum에서 values를 사용하면 모든 데이터를 배열로 만들어줌
+    }
+
     @PostMapping("/add")
     public String memberAdd(MemberJoinDto memberJoinDto) {
-        String name = memberJoinDto.getMemberName();
-        System.out.println("가입 완료: " + name);
+
+        System.out.println(memberJoinDto.getMemberName());
+        System.out.println(memberJoinDto.getMemberId());
+        System.out.println(memberJoinDto.getMemberPw());
+        System.out.println(memberJoinDto.getMemberEmail());
+        System.out.println(memberJoinDto.getMemberGender());
+        System.out.println(memberJoinDto.getMemberBirthDate());
+        System.out.println(memberJoinDto.getMemberBirthMonth());
+        System.out.println(memberJoinDto.getMemberBirthYear());
         return "redirect:/";
     }
+
 
 }

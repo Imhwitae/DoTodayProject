@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MemberService {
 
-
     public Long join(Members members) throws Exception {
         validateDuplicateMember(members);
         return members.getMembersId();
