@@ -34,9 +34,9 @@ public class FriendService {
         return list;
     }
 
-    public int deleteFriend(String friendId){
-        String sql = "delete from friend_list where friend_id = ?";
-        int result = jdbcTemplate.update(sql,friendId);
+    public int deleteFriend(FriendList friendList){
+        String sql = "delete from friend_list where friend_id = ? and user_id = ?";
+        int result = jdbcTemplate.update(sql,friendList.getFriendId(),friendList.getUserId());
 
         return result;
     }
