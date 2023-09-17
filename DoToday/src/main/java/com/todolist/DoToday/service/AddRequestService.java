@@ -18,6 +18,7 @@ public class AddRequestService {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    //친구신청 수락대기 리스트
     public List<AddRequest> selectRequestList(String userId){
         String sql = "select * from add_request where receiver_id = ? and req_status = 1";
         List<AddRequest> list = jdbcTemplate.query(sql, new Object[]{userId},
@@ -34,11 +35,13 @@ public class AddRequestService {
         return list;
     }
 
+    //친구신청 삭제(거부)
     public int deniedRequest(AddRequest addRequest){
         String sql = "delete from add_request where receiver_id = ? and sender_id = ?";
         return jdbcTemplate.update(sql, addRequest.getReceiverId(), addRequest.getSenderId());
     }
 
+    //친구신청 수락
     public int acceptRequest(AddRequest addRequest){
         String sql = "delete from add_request where receiver_id = ? and sender_id = ?";
         jdbcTemplate.update(sql, addRequest.getReceiverId(), addRequest.getSenderId());
@@ -47,6 +50,7 @@ public class AddRequestService {
         return jdbcTemplate.update(sql,addRequest.getReceiverId(), addRequest.getSenderId());
     }
 
+    //친구신청 차단
     public int blockUser(AddRequest addRequest){
         String sql = "update add_request set req_status = 0 where receiver = ? and sender_id = ?";
         return jdbcTemplate.update(sql, addRequest.getReceiverId(), addRequest.getSenderId());
