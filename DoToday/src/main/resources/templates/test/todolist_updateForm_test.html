@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="list_form" th:action="@{/list/write}" th:object="${todoList}" method="post">
+    <input type="text" th:field="*{memberId}">
+    <input type="text" th:field="*{listTitle}">
+    <input type="submit" value="추가" form="list_form">
+</form>
+</body>
+</html>

@@ -16,6 +16,11 @@ public class KakaoLoginController {
     private final KakaoToken kakaoToken;
     private final KakaoUserInfo kakaoUserInfo;
 
+    @GetMapping("/loginForm")
+    public String loginForm(){
+        return "index";
+    }
+
     @GetMapping("/kakao/login")
     public String kakaoCallback(String code, Model model) throws Exception {
 
@@ -34,11 +39,6 @@ public class KakaoLoginController {
             return "member/message";
         }
 
-        return "member/message3";
-    }
-
-    @GetMapping("/kakao/index")
-    public String index(){
-        return "index";
+        return "redirect:/loginForm";
     }
 }

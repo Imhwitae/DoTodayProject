@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="date_form" th:action="@{/list/view}" th:object="${todoList}" method="post">
+    <input type="text" th:field="*{memberId}">
+    <input type="date" id="list_date" max="2030-12-31" min="2023-09-01" th:field="*{date}">
+    <input type="submit" value="검색" form="date_form">
+</form><br/>
+<form id="list_form" th:action="@{/list/write}" th:object="${todoList}" method="post">
+    <input type="text" th:field="*{memberId}">
+    <input type="text" th:field="*{listTitle}">
+    <input type="submit" value="추가" form="list_form">
+</form>
+<div th:each="todoList : ${list}">
+    <div class="title" th:text="${todoList.listTitle}"></div>
+    <div class="complete" th:if="${todoList.complete} == 1">완료</div>
+    <div class="completer" th:if="${todoList.complete} == 0">진행중</div>
+    <form id="delete" th:action="@{'/list/delete/'+${todoList.listNum}}" method="post">
+        <input type="submit" value="삭제" form="delete">
+    </form>
+    <form id="update" th:action="@{'/list/update/'+${todoList.listNum}}" method="post">
+        <input type="submit" value="수정" form="update">
+    </form>
+</div>
+<script>
+    document.getElementById('list_date').value = new Date().toISOString().substring(0, 10);;
+</script>
+</body>
+</html>
