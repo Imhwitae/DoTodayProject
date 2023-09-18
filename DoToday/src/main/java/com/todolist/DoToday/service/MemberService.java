@@ -13,14 +13,16 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Service
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class MemberService {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public MemberService(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
+    private String basicImage = null;
+
+//    public MemberService(DataSource dataSource) {
+//        this.jdbcTemplate = new JdbcTemplate(dataSource);
+//    }
 
     public Long join(Members members) throws Exception {
         validateDuplicateMember(members);
@@ -56,6 +58,7 @@ public class MemberService {
         String id = memberJoinDto.getMemberId();
         String pw = memberJoinDto.getMemberPw();
         String name = memberJoinDto.getMemberName();
+
         LocalDate birth = stringToDate(memberJoinDto);
         String gender = memberJoinDto.getMemberGender().getGenderSelect();
         String email = memberJoinDto.getMemberEmail();
