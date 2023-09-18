@@ -4,11 +4,13 @@ import com.todolist.DoToday.dto.Gender;
 import com.todolist.DoToday.dto.request.MemberJoinDto;
 import com.todolist.DoToday.entity.Members;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
+import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -18,11 +20,11 @@ public class MemberService {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private String basicImage = null;
+    @Value("${cloud.aws.s3.basic-image}")
+    private String basicImage;
 
-//    public MemberService(DataSource dataSource) {
-//        this.jdbcTemplate = new JdbcTemplate(dataSource);
-//    }
+    @Value("${cloud.aws.s3.bucket}")
+    private String s3BucketLink;
 
     public Long join(Members members) throws Exception {
         validateDuplicateMember(members);
@@ -58,17 +60,18 @@ public class MemberService {
         String id = memberJoinDto.getMemberId();
         String pw = memberJoinDto.getMemberPw();
         String name = memberJoinDto.getMemberName();
-
+        String image = basicImage;
         LocalDate birth = stringToDate(memberJoinDto);
         String gender = memberJoinDto.getMemberGender().getGenderSelect();
         String email = memberJoinDto.getMemberEmail();
         LocalDate regtime = LocalDate.now();
         boolean isEnabled = false;
 
-        jdbcTemplate.update("insert into member (member_id, member_pw, member_name, member_birth, member_regdate, " +
+        jdbcTemplate.update("insert into member (member_id, member_pw, member_name, member_image, member_birth, member_regdate, " +
                 "member_gender, member_email, member_enabled) " +
-                "values (?, ?, ?, ?, ?, ?, ?, ?)", id, pw, name, birth, regtime, gender, email, isEnabled);
+                "values (?, ?, ?, ?, ?, ?, ?, ?, ?)", id, pw, name, image, birth, regtime, gender, email, isEnabled);
     }
+
 
 
     public void getCodeTest(String code) {

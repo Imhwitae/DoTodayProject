@@ -8,6 +8,7 @@ import com.todolist.DoToday.service.MemberService;
 import com.todolist.DoToday.util.KakaoToken;
 import com.todolist.DoToday.util.KakaoUserInfo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 @Controller
 @RequestMapping("/members")
 @RequiredArgsConstructor
+@Slf4j
 public class MembersController {
     private final MemberService memberService;
     private MemberJoinDto memberJoinDto;
@@ -40,16 +42,15 @@ public class MembersController {
 
         memberService.joinMember(memberJoinDto);
 
-        System.out.println(memberJoinDto.getMemberName());
-        System.out.println(memberJoinDto.getMemberId());
-        System.out.println(memberJoinDto.getMemberPw());
-        System.out.println(memberJoinDto.getMemberEmail());
-        System.out.println(memberJoinDto.getMemberGender());
-        System.out.println(memberJoinDto.getMemberBirthDate());
-        System.out.println(memberJoinDto.getMemberBirthMonth());
-        System.out.println(memberJoinDto.getMemberBirthYear());
+        log.info("회원가입 성공");
+
         return "redirect:/";
     }
+
+//    @GetMapping("/mypage")
+//    public String mypage(Model model) {
+//
+//    }
 
 
 }
