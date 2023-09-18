@@ -13,6 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SpringSecurityConfig {
 
+
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
