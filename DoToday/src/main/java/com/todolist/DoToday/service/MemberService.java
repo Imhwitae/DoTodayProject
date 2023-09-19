@@ -1,6 +1,7 @@
 package com.todolist.DoToday.service;
 
 import com.todolist.DoToday.dto.Gender;
+import com.todolist.DoToday.dto.MemberDetailDto;
 import com.todolist.DoToday.dto.request.MemberJoinDto;
 import com.todolist.DoToday.dto.request.MemberLoginDto;
 import com.todolist.DoToday.entity.Members;
@@ -8,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
@@ -17,7 +21,7 @@ import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
-public class MemberService {
+public class MemberService implements UserDetailsService {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -57,6 +61,17 @@ public class MemberService {
         return localDate;
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
+        String findById = jdbcTemplate.queryForObject("select * from member where = ?", String.class, memberId);
+
+        if (findById != null) {
+            return new MemberDetailDto(findById);
+        }
+
+        return null;
+    }
+
     public void joinMember(MemberJoinDto memberJoinDto) {
         String id = memberJoinDto.getMemberId();
         String pw = memberJoinDto.getMemberPw();
@@ -68,18 +83,15 @@ public class MemberService {
         LocalDate regtime = LocalDate.now();
         boolean isEnabled = false;
 
-        jdbcTemplate.update("insert into member (member_id, member_pw, member_name, member_image, member_birth, member_regdate, " +
-                "member_gender, member_email, member_enabled) " +
-                "values (?, ?, ?, ?, ?, ?, ?, ?, ?)", id, pw, name, image, birth, regtime, gender, email, isEnabled);
+        jdbcTemplate.update("insert into member (member_id, member_pw, member_name, member_image, member_birth," +
+                                "member_regdate, member_gender, member_email, member_enabled) " +
+                                "values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                id, pw, name, image, birth, regtime, gender, email, isEnabled);
     }
-
-    public void loginMember(MemberLoginDto memberLoginDto) {
-
-    }
-
-
 
     public void getCodeTest(String code) {
         System.out.println("code = " + code);
     }
+
+
 }

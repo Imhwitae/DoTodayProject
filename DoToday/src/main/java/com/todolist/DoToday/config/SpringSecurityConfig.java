@@ -18,7 +18,8 @@ public class SpringSecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/", "join_form", "/css/**", "/scripts/**", "/plugin/**", "/image/**").permitAll()
+                        .anyRequest().permitAll()
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/").permitAll()  // 사용자 정의 로그인 페이지
