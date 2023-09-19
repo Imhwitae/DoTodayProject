@@ -2,6 +2,7 @@ package com.todolist.DoToday.service;
 
 import com.todolist.DoToday.dto.Gender;
 import com.todolist.DoToday.dto.request.MemberJoinDto;
+import com.todolist.DoToday.dto.request.MemberLoginDto;
 import com.todolist.DoToday.entity.Members;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,6 +71,10 @@ public class MemberService {
         jdbcTemplate.update("insert into member (member_id, member_pw, member_name, member_image, member_birth, member_regdate, " +
                 "member_gender, member_email, member_enabled) " +
                 "values (?, ?, ?, ?, ?, ?, ?, ?, ?)", id, pw, name, image, birth, regtime, gender, email, isEnabled);
+    }
+
+    public void loginMember(MemberLoginDto memberLoginDto) {
+
     }
 
 

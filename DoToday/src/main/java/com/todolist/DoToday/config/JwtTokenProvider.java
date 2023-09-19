@@ -1,10 +1,12 @@
 package com.todolist.DoToday.config;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +19,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class JwtTokenProvider {
 
     private String secretKey = "dotosecret";
@@ -25,15 +28,15 @@ public class JwtTokenProvider {
     private long tokenTime = 30 * 60 * 1000L;
 
     // secretKey를 Base64로 인코딩
-    @PostConstruct
-    protected void encodeSecretKey() {
-        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-    }
+//    @PostConstruct
+//    protected void encodeSecretKey() {
+//        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+//    }
+
+    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);  // 토큰 알고리즘
 
     // JWT 토큰 생성
     public String createToken(String memberId) {
-        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);  // 토큰 알고리즘
-
 
         Map<String, Object> headerMap = new HashMap<>();
         headerMap.put("type", "JWT");
@@ -49,6 +52,20 @@ public class JwtTokenProvider {
                 .setIssuedAt(expireTime)  // 토큰 시간 설정
                 .signWith(key)  // 사용할 암호화 알고리즘
                 .compact();
+    }
+
+    // JWT 토큰 유효성 검증
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (JwtException e) {
+            log.info("토큰 오류");
+            return false;
+        }
     }
 
     // JWT 토큰에서 회원 정보 추출

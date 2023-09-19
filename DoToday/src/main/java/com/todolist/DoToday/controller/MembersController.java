@@ -3,6 +3,7 @@ package com.todolist.DoToday.controller;
 import com.todolist.DoToday.config.auth.OAuthToken;
 import com.todolist.DoToday.dto.Gender;
 import com.todolist.DoToday.dto.request.MemberJoinDto;
+import com.todolist.DoToday.dto.request.MemberLoginDto;
 import com.todolist.DoToday.entity.Members;
 import com.todolist.DoToday.service.MemberService;
 import com.todolist.DoToday.util.KakaoToken;
@@ -22,7 +23,6 @@ import java.time.LocalDate;
 @Slf4j
 public class MembersController {
     private final MemberService memberService;
-    private MemberJoinDto memberJoinDto;
 
     @GetMapping("/join_form")
     public String addForm(Model model) {
@@ -46,6 +46,13 @@ public class MembersController {
 
         return "redirect:/";
     }
+
+    @GetMapping()
+    public String memberLogin(Model model) {
+        model.addAttribute("login", new MemberLoginDto());
+        return "/";
+    }
+
 
 //    @GetMapping("/mypage")
 //    public String mypage(Model model) {
