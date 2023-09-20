@@ -47,10 +47,21 @@ public class MembersController {
         return "redirect:/";
     }
 
-    @GetMapping()
-    public String memberLogin(Model model) {
-        model.addAttribute("login", new MemberLoginDto());
-        return "/";
+    @GetMapping("/loginform")
+    public String memberLoginForm(Model model) {
+        model.addAttribute("loginForm", new MemberLoginDto());
+        return "/member/login";
+    }
+
+    @PostMapping("/login")
+    public void memberLogin(MemberLoginDto memberLoginDto) {
+        memberService.loadUserByUsername(memberLoginDto.getMemberId());
+        log.info("로그인");
+    }
+
+    @GetMapping("/home")
+    public String goHome() {
+        return "/todo_main";
     }
 
 

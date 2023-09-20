@@ -1,23 +1,22 @@
 package com.todolist.DoToday.service;
 
-import com.todolist.DoToday.dto.Gender;
-import com.todolist.DoToday.dto.MemberDetailDto;
+import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.dto.request.MemberJoinDto;
-import com.todolist.DoToday.dto.request.MemberLoginDto;
 import com.todolist.DoToday.entity.Members;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
-import java.io.File;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -62,13 +61,27 @@ public class MemberService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
-        String findById = jdbcTemplate.queryForObject("select * from member where = ?", String.class, memberId);
+    public MemberDetailDto loadUserByUsername(String memberId) throws UsernameNotFoundException {
+        // memberId 값을 따로 빼내서 String 타입으로 저장
+        String sql = String.format(("select * from member where member_id = '%s'"), memberId);
+
+        // MemberDetailDto의 필드에 맞게 db에서 정보 가져오기
+        MemberDetailDto findById = jdbcTemplate.queryForObject(sql, new RowMapper<MemberDetailDto>() {
+            @Override
+            public MemberDetailDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+                MemberDetailDto memberDetailDto = new MemberDetailDto(
+                        rs.getString("member_id"),
+                        rs.getString("member_name"),
+                        rs.getString("member_email"),
+                        rs.getString("member_image")
+                );
+                return memberDetailDto;
+            }
+        });
 
         if (findById != null) {
-            return new MemberDetailDto(findById);
+            return findById;
         }
-
         return null;
     }
 

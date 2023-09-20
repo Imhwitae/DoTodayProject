@@ -1,5 +1,6 @@
-package com.todolist.DoToday.dto;
+package com.todolist.DoToday.dto.response;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,12 +10,19 @@ import java.util.Collection;
 
 @Getter
 @Setter
+@Builder
 public class MemberDetailDto implements UserDetails {
 
-    private String memberId = null;
+    private String memberId;
+    private String memberName;
+    private String memberEmail;
+    private String memberImage;
 
-    public MemberDetailDto(String memberId) {
+    public MemberDetailDto(String memberId, String memberName, String memberEmail, String memberImage) {
         this.memberId = memberId;
+        this.memberName = memberName;
+        this.memberEmail = memberEmail;
+        this.memberImage = memberImage;
     }
 
     @Override
