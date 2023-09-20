@@ -5,10 +5,10 @@
     <title>Title</title>
 </head>
 <body>
-<form id="list_form" th:action="@{/list/write}" th:object="${todoList}" method="post">
-    <input type="text" th:field="*{memberId}">
+<form id="update_form" th:action="@{/list/update}" th:object="${todoList}" method="post" th:each="list:${view}">
     <input type="text" th:field="*{listTitle}">
-    <input type="submit" value="추가" form="list_form">
+    <input type="hidden" th:field="*{listNum}" th:value="${list.listNum}">
+    <input type="submit" value="수정" form="update_form">
 </form>
 </body>
 </html>

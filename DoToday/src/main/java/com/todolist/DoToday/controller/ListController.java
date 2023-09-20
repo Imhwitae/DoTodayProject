@@ -34,21 +34,35 @@ public class ListController {
     @PostMapping("/write")
     public String writeList(@ModelAttribute("todoList") TodoList todoList,Model model){
         listService.write(todoList);
-        List<TodoList> list = listService.showToday("aa");
-        model.addAttribute("list",list);
+//        List<TodoList> list = listService.showToday("aa");
+//        model.addAttribute("list",list);
         return "redirect:/list/view";
     }
 
-    @PostMapping("/delete/{listNum}")
-    public String deleteList(@PathVariable("listNum") int listNum, Model model){
+    @PostMapping("/delete/{num}")
+    public String deleteList(@PathVariable("num") int listNum){
         listService.delete(listNum);
-        List<TodoList> list = listService.showToday("aa");
-        model.addAttribute("list",list);
+//        List<TodoList> list = listService.showToday("aa");
+//        model.addAttribute("list",list);
         return "redirect:/list/view";
     }
 
-    @GetMapping("/update/{listNum}")
-    public String updateList(@PathVariable("listNum") int listNum, @ModelAttribute("todoList") TodoList todoList){
+    @GetMapping("/update/{num}")
+    public String updateForm(@PathVariable("num") int listNum,
+                             @ModelAttribute("todoList") TodoList todoList, Model model){
+        model.addAttribute("view",listService.view(listNum));
         return "test/todolist_updateForm_test";
+    }
+
+    @PostMapping("/update")
+    public String updateList(@ModelAttribute("todoList") TodoList todoList){
+        listService.updateContent(todoList);
+        return "redirect:/list/view";
+    }
+
+    @PostMapping("/complete/{num}")
+    public String completeList(@PathVariable("num") int listNum){
+        listService.updateComplete(listNum);
+        return "redirect:/list/view";
     }
 }
