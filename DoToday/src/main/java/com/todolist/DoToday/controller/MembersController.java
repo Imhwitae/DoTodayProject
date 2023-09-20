@@ -44,31 +44,28 @@ public class MembersController {
 
         log.info("회원가입 성공");
 
-        return "redirect:/";
-    }
-
-    @GetMapping("/loginform")
-    public String memberLoginForm(Model model) {
-        model.addAttribute("loginForm", new MemberLoginDto());
         return "/member/login";
     }
 
-    @PostMapping("/login")
-    public void memberLogin(MemberLoginDto memberLoginDto) {
-        memberService.loadUserByUsername(memberLoginDto.getMemberId());
-        log.info("로그인");
+    @GetMapping("/loginform")
+    public String memberLoginForm() {
+//        model.addAttribute("loginForm", new MemberLoginDto());
+        return "/member/login";
     }
 
-    @GetMapping("/home")
-    public String goHome() {
-        return "/todo_main";
-    }
-
-
-//    @GetMapping("/mypage")
-//    public String mypage(Model model) {
+//    @PostMapping("/login")
+//    public String memberLogin(MemberLoginDto memberLoginDto) {
+//        memberService.loadUserByUsername(memberLoginDto.getMemberId());
+//        log.info("로그인");
 //
+//        return "redirect:/todo_main";
 //    }
+
+//    @GetMapping("/home")
+//    public String goHome() {
+//        return "/todo_main";
+//    }
+
 
 
 }

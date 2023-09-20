@@ -4,12 +4,14 @@ import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.dto.request.MemberJoinDto;
 import com.todolist.DoToday.entity.Members;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.ResultSet;
@@ -20,9 +22,30 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService implements UserDetailsService {
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<MemberDetailDto> rowMapper = new RowMapper<MemberDetailDto>() {
+        @Override
+        public MemberDetailDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+            try {
+                return new MemberDetailDto(
+                        rs.getLong("member_num"),
+                        rs.getString("member_id"),
+                        rs.getString("member_name"),
+                        rs.getString("member_image"),
+                        rs.getString("member_email"),
+                        rs.getBoolean("member_enabled")
+                );
+            } catch (Exception e) {
+                return null;
+            }
+
+        }
+    };
+
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Value("${cloud.aws.s3.basic-image}")
     private String basicImage;
@@ -61,28 +84,9 @@ public class MemberService implements UserDetailsService {
     }
 
     @Override
-    public MemberDetailDto loadUserByUsername(String memberId) throws UsernameNotFoundException {
-        // memberId 값을 따로 빼내서 String 타입으로 저장
-        String sql = String.format(("select * from member where member_id = '%s'"), memberId);
-
-        // MemberDetailDto의 필드에 맞게 db에서 정보 가져오기
-        MemberDetailDto findById = jdbcTemplate.queryForObject(sql, new RowMapper<MemberDetailDto>() {
-            @Override
-            public MemberDetailDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-                MemberDetailDto memberDetailDto = new MemberDetailDto(
-                        rs.getString("member_id"),
-                        rs.getString("member_name"),
-                        rs.getString("member_email"),
-                        rs.getString("member_image")
-                );
-                return memberDetailDto;
-            }
-        });
-
-        if (findById != null) {
-            return findById;
-        }
-        return null;
+    public MemberDetailDto loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.info("멤버 전달");
+        return findById(username);
     }
 
     public void joinMember(MemberJoinDto memberJoinDto) {
@@ -96,14 +100,17 @@ public class MemberService implements UserDetailsService {
         LocalDate regtime = LocalDate.now();
         boolean isEnabled = false;
 
+        String encodedPw = bCryptPasswordEncoder.encode(pw);
+
         jdbcTemplate.update("insert into member (member_id, member_pw, member_name, member_image, member_birth," +
                                 "member_regdate, member_gender, member_email, member_enabled) " +
                                 "values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                                id, pw, name, image, birth, regtime, gender, email, isEnabled);
+                                id, encodedPw, name, image, birth, regtime, gender, email, isEnabled);
     }
 
-    public void getCodeTest(String code) {
-        System.out.println("code = " + code);
+    public MemberDetailDto findById(String id) {
+        String sql = "select * from member where member_id = ?";
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
 

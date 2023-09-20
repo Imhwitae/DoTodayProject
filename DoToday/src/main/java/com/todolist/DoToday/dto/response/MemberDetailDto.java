@@ -10,19 +10,22 @@ import java.util.Collection;
 
 @Getter
 @Setter
-@Builder
 public class MemberDetailDto implements UserDetails {
 
+    private Long memberNum;
     private String memberId;
     private String memberName;
     private String memberEmail;
     private String memberImage;
+    private boolean memberExpired;
 
-    public MemberDetailDto(String memberId, String memberName, String memberEmail, String memberImage) {
+    public MemberDetailDto(Long memberNum, String memberId, String memberName, String memberEmail, String memberImage, boolean memberExpired) {
+        this.memberNum = memberNum;
         this.memberId = memberId;
         this.memberName = memberName;
         this.memberEmail = memberEmail;
         this.memberImage = memberImage;
+        this.memberExpired = memberExpired;
     }
 
     @Override
@@ -37,7 +40,7 @@ public class MemberDetailDto implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return memberId;
     }
 
     @Override
