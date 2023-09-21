@@ -14,14 +14,16 @@ public class MemberDetailDto implements UserDetails {
 
     private Long memberNum;
     private String memberId;
+    private String memberPw;
     private String memberName;
     private String memberEmail;
     private String memberImage;
     private boolean memberExpired;
 
-    public MemberDetailDto(Long memberNum, String memberId, String memberName, String memberEmail, String memberImage, boolean memberExpired) {
+    public MemberDetailDto(Long memberNum, String memberId, String memberPw, String memberName, String memberEmail, String memberImage, boolean memberExpired) {
         this.memberNum = memberNum;
         this.memberId = memberId;
+        this.memberPw = memberPw;
         this.memberName = memberName;
         this.memberEmail = memberEmail;
         this.memberImage = memberImage;
@@ -35,7 +37,7 @@ public class MemberDetailDto implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return memberPw;
     }
 
     @Override

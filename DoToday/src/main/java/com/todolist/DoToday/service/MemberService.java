@@ -8,6 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,11 +23,12 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MemberService implements UserDetailsService {
+public class MemberService implements UserDetailsService, AuthenticationProvider {
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<MemberDetailDto> rowMapper = new RowMapper<MemberDetailDto>() {
@@ -33,6 +38,7 @@ public class MemberService implements UserDetailsService {
                 return new MemberDetailDto(
                         rs.getLong("member_num"),
                         rs.getString("member_id"),
+                        rs.getString("member_pw"),
                         rs.getString("member_name"),
                         rs.getString("member_image"),
                         rs.getString("member_email"),
@@ -84,7 +90,7 @@ public class MemberService implements UserDetailsService {
     }
 
     @Override
-    public MemberDetailDto loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("멤버 전달");
         return findById(username);
     }
@@ -114,4 +120,23 @@ public class MemberService implements UserDetailsService {
     }
 
 
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        log.info("Authentication 진입");
+        String memberId = authentication.getName();
+        String memberPw = authentication.getCredentials().toString();
+        String savedPw = findById(memberId).getMemberPw();
+
+        if (!bCryptPasswordEncoder.matches(memberPw, savedPw)) {
+            return null;
+        } else {
+            log.info("비밀번호 검증");
+            return new UsernamePasswordAuthenticationToken(findById(memberId), null);
+        }
+    }
+
+    @Override
+    public boolean supports(Class<?> authentication) {
+        return authentication.equals(UsernamePasswordAuthenticationToken.class);
+    }
 }
