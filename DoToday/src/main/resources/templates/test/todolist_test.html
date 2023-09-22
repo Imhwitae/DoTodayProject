@@ -25,7 +25,7 @@
     <form id="update" th:action="@{'/list/update/'+${todoList.listNum}}" method="get">
         <input type="submit" value="수정" form="update">
     </form>
-    <form id="complete" th:action="@{'/list/complete/'+${todoList.listNum}}" method="get">
+    <form id="complete" th:action="@{'/list/complete/'+${todoList.listNum}}" method="post">
         <input type="submit" value="완료" form="complete">
     </form>
 </div>

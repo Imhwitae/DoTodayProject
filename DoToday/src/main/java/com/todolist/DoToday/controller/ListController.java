@@ -16,6 +16,7 @@ import java.util.List;
 @Slf4j
 public class ListController {
     private final ListService listService;
+    private boolean blank;
 
     @GetMapping("/view")
     public String showList(Model model,@ModelAttribute("todoList") TodoList todoList){
@@ -33,17 +34,18 @@ public class ListController {
 
     @PostMapping("/write")
     public String writeList(@ModelAttribute("todoList") TodoList todoList,Model model){
+        blank = listService.validate(todoList);
+        if (blank == true){ // todolist의 title이 비어있을때
+            model.addAttribute("error","오늘의 할일을 작성해 주세요!");
+            return "/test/error";
+        }
         listService.write(todoList);
-//        List<TodoList> list = listService.showToday("aa");
-//        model.addAttribute("list",list);
         return "redirect:/list/view";
     }
 
     @PostMapping("/delete/{num}")
     public String deleteList(@PathVariable("num") int listNum){
         listService.delete(listNum);
-//        List<TodoList> list = listService.showToday("aa");
-//        model.addAttribute("list",list);
         return "redirect:/list/view";
     }
 
@@ -54,8 +56,15 @@ public class ListController {
         return "test/todolist_updateForm_test";
     }
 
-    @PostMapping("/update")
-    public String updateList(@ModelAttribute("todoList") TodoList todoList){
+    @PostMapping("/update/{num}")
+    public String updateList(@PathVariable("num") int listNum,
+                             @ModelAttribute("todoList") TodoList todoList, Model model){
+        blank = listService.validate(todoList);
+        if (blank == true){ // todolist의 title이 비어있을때
+            model.addAttribute("error","빈칸을 채워주세요!");
+            return "/test/error";
+        }
+        todoList.setListNum(listNum);
         listService.updateContent(todoList);
         return "redirect:/list/view";
     }

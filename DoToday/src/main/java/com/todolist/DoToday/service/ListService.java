@@ -1,6 +1,7 @@
 package com.todolist.DoToday.service;
 
 import com.todolist.DoToday.dto.response.TodoList;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Service
+@Slf4j
 public class ListService {
     private JdbcTemplate jdbcTemplate;
 
@@ -76,26 +78,40 @@ public class ListService {
     }
 
     //할일 작성
-    public void write(TodoList todoList){
-        jdbcTemplate.update("insert into list(list_title,member_id) values(?,?)"
+    public int write(TodoList todoList){
+        int result = jdbcTemplate.update("insert into list(list_title,member_id) values(?,?)"
                 , todoList.getListTitle(), todoList.getMemberId());
+        return result;
     }
 
     //삭제
-    public void delete(int listNum){
-        jdbcTemplate.update("delete from list where list_num = ?"
+    public int delete(int listNum){
+        int result = jdbcTemplate.update("delete from list where list_num = ?"
                 ,listNum);
+        return result;
     }
 
     //수정
-    public void updateContent(TodoList todoList){
-        jdbcTemplate.update("update list set list_title = ? where list_num = ?"
+    public int updateContent(TodoList todoList){
+        int result = 0;
+        result = jdbcTemplate.update("update list set list_title = ? where list_num = ?"
                 , todoList.getListTitle(), todoList.getListNum());
+        return result;
     }
 
     //완료처리
-    public void updateComplete(int num){
-        jdbcTemplate.update("update list set complete = 1 where list_num = ?"
+    public int updateComplete(int num){
+        int result = jdbcTemplate.update("update list set complete = 1 where list_num = ?"
                 , num);
+        return result;
+    }
+
+    public boolean validate(TodoList todoList){
+        String title = todoList.getListTitle();
+        boolean blank = false;
+        if (title.trim().isEmpty() == true || title == null){
+            blank = true;
+        }
+        return blank;
     }
 }
