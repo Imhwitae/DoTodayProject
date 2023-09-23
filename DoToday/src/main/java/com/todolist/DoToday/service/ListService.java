@@ -109,7 +109,7 @@ public class ListService {
     public boolean validate(TodoList todoList){
         String title = todoList.getListTitle();
         boolean blank = false;
-        if (title.trim().isEmpty() == true || title == null){
+        if (title.trim().isEmpty() == true || title == null){//앞뒤로 공백이 있으면 지워줌
             blank = true;
         }
         return blank;

@@ -61,8 +61,7 @@ public class ListController {
                              @ModelAttribute("todoList") TodoList todoList, Model model){
         blank = listService.validate(todoList);
         if (blank == true){ // todolist의 title이 비어있을때
-            model.addAttribute("error","빈칸을 채워주세요!");
-            return "/test/error";
+            return "redirect:/list/view";
         }
         todoList.setListNum(listNum);
         listService.updateContent(todoList);

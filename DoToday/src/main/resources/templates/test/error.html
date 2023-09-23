@@ -8,9 +8,10 @@
 <body>
 
 <script th:inline="javascript">
-    // Swal.fire("",[[${error}]],"error");
+    // swal("",[[${error}]],"error");
     alert([[${error}]])
-    history.back();
+    // history.back();
+    location.href="/list/view";
 </script>
 
 </body>
