@@ -24,6 +24,7 @@ public class FriendService {
         String sql = "select * from friend_list where user_id = ?"; //친구목록 조회하는 쿼리문
         List<FriendList> list =jdbcTemplate.query(sql,new Object[] {userId},//query()에서 sql 바인딩변수를 배열로 받음 (지정해야될 값이 여러개일수도 있기때문)
                 new RowMapper<FriendList>(){
+                    @Override
                     public FriendList mapRow(ResultSet rs,int rowNum) throws SQLException{//ResultSet에 값을 담고 FreindList에 담는걸 rowNum만큼 한다
                         FriendList friendList = new FriendList();
                         friendList.setUserId(rs.getString("user_id"));
@@ -49,6 +50,7 @@ public class FriendService {
         String sql = "select * from add_request where receiver_id = ? and req_status = 0";
         List<AddRequest> list = jdbcTemplate.query(sql, new Object[]{userId},
                 new RowMapper<AddRequest>() {
+                    @Override
                     public AddRequest mapRow(ResultSet rs,int rowNum) throws SQLException{
                         AddRequest addRequest = new AddRequest();
                         addRequest.setSenderId(rs.getString("sender_id"));
@@ -57,5 +59,12 @@ public class FriendService {
                 }
             );
         return list;
+    }
+
+    //친구 신청
+    public int addFriend(AddRequest addRequest){
+        String sql = "insert into add_request(receiver_id, sender_id) values (?,?)";
+        int result = jdbcTemplate.update(sql, addRequest.getReceiverId(), addRequest.getSenderId());
+        return result;
     }
 }
