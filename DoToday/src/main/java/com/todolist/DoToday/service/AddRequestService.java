@@ -35,6 +35,8 @@ public class AddRequestService {
         return list;
     }
 
+
+
     //친구신청 삭제(거부)
     public int deniedRequest(AddRequest addRequest){
         String sql = "delete from add_request where receiver_id = ? and sender_id = ?";
@@ -54,5 +56,11 @@ public class AddRequestService {
     public int blockUser(AddRequest addRequest){
         String sql = "update add_request set req_status = 0 where receiver = ? and sender_id = ?";
         return jdbcTemplate.update(sql, addRequest.getReceiverId(), addRequest.getSenderId());
+    }
+
+    //친구 신청 목록 개수
+    public int listCount(AddRequest addRequest){
+        String sql = "select"
+        int result = this.jdbcTemplate.query()
     }
 }
