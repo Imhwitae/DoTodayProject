@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 @Slf4j
 public class ListService {
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public ListService(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);

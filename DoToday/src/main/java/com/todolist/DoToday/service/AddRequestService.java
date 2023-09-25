@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 public class AddRequestService {
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public AddRequestService(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -49,7 +49,8 @@ public class AddRequestService {
         jdbcTemplate.update(sql, addRequest.getReceiverId(), addRequest.getSenderId());
 
         sql = "insert into friend_list(user_id,friend_id) values (?,?)";
-        return jdbcTemplate.update(sql,addRequest.getReceiverId(), addRequest.getSenderId());
+        jdbcTemplate.update(sql,addRequest.getReceiverId(), addRequest.getSenderId());//본인 리스트에 추가
+        return jdbcTemplate.update(sql,addRequest.getSenderId(), addRequest.getReceiverId());//상대 리스트에 추가
     }
 
     //친구신청 차단
@@ -59,8 +60,9 @@ public class AddRequestService {
     }
 
     //친구 신청 목록 개수
-    public int listCount(AddRequest addRequest){
-        String sql = "select"
-        int result = this.jdbcTemplate.query()
+    public int listCount(String userId){
+        String sql = "select count(*) from add_request where receiver_id =?";
+        int result = this.jdbcTemplate.queryForObject(sql,Integer.class,userId);
+        return result;
     }
 }

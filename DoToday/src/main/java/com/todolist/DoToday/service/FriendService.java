@@ -1,6 +1,7 @@
 package com.todolist.DoToday.service;
 
 import com.todolist.DoToday.dto.request.AddRequest;
+import com.todolist.DoToday.dto.request.FriendInfoDto;
 import com.todolist.DoToday.dto.response.FriendList;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Service
 public class FriendService {
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public FriendService(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -40,7 +41,8 @@ public class FriendService {
     //친구 삭제
     public int deleteFriend(FriendList friendList){
         String sql = "delete from friend_list where friend_id = ? and user_id = ?";
-        int result = jdbcTemplate.update(sql,friendList.getFriendId(),friendList.getUserId());
+        jdbcTemplate.update(sql,friendList.getUserId(),friendList.getFriendId()); //상대방 리스트에서 삭제
+        int result = jdbcTemplate.update(sql,friendList.getFriendId(),friendList.getUserId());//본인 리스트에서 삭가
 
         return result;
     }
@@ -66,5 +68,22 @@ public class FriendService {
         String sql = "insert into add_request(receiver_id, sender_id) values (?,?)";
         int result = jdbcTemplate.update(sql, addRequest.getReceiverId(), addRequest.getSenderId());
         return result;
+    }
+
+    //친구정보 가져오기
+    public List<FriendInfoDto> infoList(String memberId){
+        String sql = "select * from friend_list where user_id = ?";
+        List<FriendInfoDto> list = jdbcTemplate.query(sql, new Object[]{memberId},
+                new RowMapper<FriendInfoDto>() {
+                    @Override
+                    public FriendInfoDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        String userId = "";
+                        FriendInfoDto friendInfoDto = new FriendInfoDto();
+
+                        return null;
+                    }
+                }
+            );
+        return list;
     }
 }
