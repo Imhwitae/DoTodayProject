@@ -1,5 +1,6 @@
 package com.todolist.DoToday.service;
 
+import com.todolist.DoToday.config.JwtTokenProvider;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.dto.request.MemberJoinDto;
 import com.todolist.DoToday.entity.Members;
@@ -31,6 +32,7 @@ import java.util.Optional;
 public class MemberService implements UserDetailsService, AuthenticationProvider {
 
     private final JdbcTemplate jdbcTemplate;
+    private final JwtTokenProvider jwtTokenProvider;
     private final RowMapper<MemberDetailDto> rowMapper = new RowMapper<MemberDetailDto>() {
         @Override
         public MemberDetailDto mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -131,6 +133,9 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
             return null;
         } else {
             log.info("비밀번호 검증");
+            String token = jwtTokenProvider.createToken(memberId);
+            log.info(token);
+
             return new UsernamePasswordAuthenticationToken(findById(memberId), null);
         }
     }

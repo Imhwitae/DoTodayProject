@@ -43,6 +43,7 @@ public class SpringSecurityConfig {
         return http.build();
     }
 
+
     // 패스워드 인코더 빈 등록
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {

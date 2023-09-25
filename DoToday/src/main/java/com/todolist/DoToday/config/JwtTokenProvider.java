@@ -43,6 +43,7 @@ public class JwtTokenProvider {
         headerMap.put("alg", "HS256");
 
         Claims claims = Jwts.claims().setSubject(memberId);  // JWT payload에 저장되는 정보(보통 유저 식별 값을 넣음)
+
         Date expireTime = new Date();
         expireTime.setTime(expireTime.getTime() + tokenTime);
 

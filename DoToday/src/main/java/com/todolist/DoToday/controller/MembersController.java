@@ -1,5 +1,6 @@
 package com.todolist.DoToday.controller;
 
+import com.todolist.DoToday.config.JwtTokenProvider;
 import com.todolist.DoToday.config.auth.OAuthToken;
 import com.todolist.DoToday.dto.Gender;
 import com.todolist.DoToday.dto.request.MemberJoinDto;
@@ -22,6 +23,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @Slf4j
 public class MembersController {
+
     private final MemberService memberService;
 
     @GetMapping("/join_form")
@@ -52,6 +54,12 @@ public class MembersController {
 //        model.addAttribute("loginForm", new MemberLoginDto());
         return "/member/login";
     }
+
+//    @GetMapping("/token")
+//    @ResponseBody
+//    public String giveToken() {
+//        jwtTokenProvider.createToken()
+//    }
 
 //    @PostMapping("/login")
 //    public String memberLogin(MemberLoginDto memberLoginDto) {
