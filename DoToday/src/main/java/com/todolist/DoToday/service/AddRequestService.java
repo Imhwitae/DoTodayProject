@@ -60,7 +60,7 @@ public class AddRequestService {
 
     //친구 신청 목록 개수
     public int listCount(AddRequest addRequest){
-        String sql = "select"
-        int result = this.jdbcTemplate.query()
+        String sql = "select";
+        int result = this.jdbcTemplate.query();
     }
 }
