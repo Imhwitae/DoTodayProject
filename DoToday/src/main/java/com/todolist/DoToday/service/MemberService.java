@@ -133,9 +133,6 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
             return null;
         } else {
             log.info("비밀번호 검증");
-            String token = jwtTokenProvider.createToken(memberId);
-            log.info(token);
-
             return new UsernamePasswordAuthenticationToken(findById(memberId), null);
         }
     }

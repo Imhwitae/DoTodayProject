@@ -1,20 +1,19 @@
 package com.todolist.DoToday.config;
 
+import com.todolist.DoToday.entity.MemberRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
-import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
-import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,6 +22,7 @@ import java.util.Map;
 @Component
 @Slf4j
 public class JwtTokenProvider {
+    private final String BEARER = "Bearer";
 
     @Value("${custom.jwt.secret-key}")
     private String secretKey;
@@ -49,9 +49,19 @@ public class JwtTokenProvider {
         Date expireTime = new Date();
         expireTime.setTime(date.getTime() + tokenTime);  // 만료 시간
 
+        String accessToken = Jwts.builder()
+                .setHeader(headerMap)  // 헤더에 들어갈 정보
+                .claim("role", MemberRole.USER)  // 사용자 권한
+                .setSubject(memberId)
+                .setIssuedAt(date)  // 토큰 발행 일자
+                .setExpiration(expireTime)  // 토큰 만료 시간
+                .signWith(jwtSecretKey())  // 커스텀 키, 사용할 암호화 알고리즘(알아서 해줌)
+                .compact();
+
         return Jwts.builder()
                 .setHeader(headerMap)  // 헤더에 들어갈 정보
-//                .setClaims(claims)  // 정보 저장
+                .claim("role", MemberRole.USER)  // 사용자 권한
+//                .setClaims()  // 정보 저장
                 .setSubject(memberId)
                 .setIssuedAt(date)  // 토큰 발행 일자
                 .setExpiration(expireTime)  // 토큰 만료 시간
@@ -59,29 +69,59 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-//     JWT 토큰 유효성 검증
-    public void validateToken(String token) {
+    // JWT 토큰 유효성 검증
+    public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder()
+            // 토큰 서명 확인
+            Claims claims = Jwts.parserBuilder()
                     .setSigningKey(jwtSecretKey())
                     .build()
-                    .parseClaimsJws(token);  // JWT를 파싱
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            Date expireDate = claims.getExpiration();  // 토큰 만료 시간
+            Date now = new Date();  // 현재 시간
+            //  토큰 만료 시간이 현재 시간보다 이전이라면
+            if (expireDate.before(now)) {
+                log.info("토큰 시간 만료");
+                return false;
+            }
         } catch (JwtException e) {
-            log.info("토큰 오류");
-            e.printStackTrace();
+            log.info("토큰 검증 실패");
         }
+        return true;
     }
 
-    // JWT 토큰에서 회원 정보 추출
-//    public String getMemberInfo(String token) {
-//        return Jwts.parserBuilder()
-//                .setSigningKey(secretKey)
-//                .
-//
-//    }
+    // JWT 토큰 http header에 response
+    public void accessTokenSetHeader(String accessToken, HttpServletResponse response) {
+        String headerValue = BEARER + accessToken;
+        response.setHeader(HttpHeaders.AUTHORIZATION, headerValue);
+        log.info(headerValue);
+    }
 
-    // JWT 토큰에서 인증정보 조회
-//    public Authentication getAuth(String token) {
-//
-//    }
+    // JWT 토큰에서 사용자 아이디 추출
+    public String getMemberIdFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(jwtSecretKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getSubject();
+    }
+
+    /**
+     * 토큰 추출
+     * @StringUtils.hasText() 값이 있을 경우에는 true반환, 공백이거나 null이면 false 반환
+     *
+     */
+    public String extractToken(HttpServletRequest request) {
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION);  // http header의 authorization 이름을 가진 값을 가져옴
+
+        if (StringUtils.hasText(token) && token.startsWith(BEARER)) {
+            return token.substring(7);
+        }
+
+        return null;
+    }
 }

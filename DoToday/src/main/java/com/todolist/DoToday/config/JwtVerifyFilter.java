@@ -4,6 +4,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -14,10 +16,20 @@ import java.io.IOException;
  * OncePerRequestFilter는 각 HTTP 요청에 대해 한 번만 실행되는 것을 보장한다.
  * HTTP 요청마다 JWT를 검증하는 것은 비효율적이기 때문에 OncePerRequestFilter를 상속함으로써 JWT 검증을 보다 효율적으로 수행할 수 있다.
  */
-@Component
+@RequiredArgsConstructor
+@Slf4j
 public class JwtVerifyFilter extends OncePerRequestFilter {
+
+    private final JwtTokenProvider jwtTokenProvider;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
+        String token = jwtTokenProvider.extractToken(request);
+        try {
+            if (jwtTokenProvider.validateToken(token)) {
+                filterChain.doFilter(request, response);
+            }
+        } catch (Exception e) {
+            log.info("토큰 검증 실패");
+        }
     }
 }
