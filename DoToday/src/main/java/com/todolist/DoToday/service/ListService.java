@@ -20,60 +20,35 @@ public class ListService {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    private final RowMapper<TodoList> listRowMapper = new RowMapper<TodoList>() {
+        @Override
+        public TodoList mapRow(ResultSet rs, int rowNum) throws SQLException {
+            TodoList todoList = new TodoList();
+            todoList.setListTitle(rs.getString("list_title"));
+            todoList.setComplete(rs.getInt("complete"));
+            todoList.setListNum(rs.getInt("list_num"));
+            todoList.setMemberId(rs.getString("member_id"));
+            return todoList;
+        }
+    };
+
     public List<TodoList> show(String userId,String date){
         String sql = "select * from list where member_id = ? and write_date = ?";
 
-        List<TodoList> list = jdbcTemplate.query(sql, new Object[]{userId,date},
-                new RowMapper<TodoList>() {
-                    @Override
-                    public TodoList mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        TodoList todoList = new TodoList();
-                        todoList.setListTitle(rs.getString("list_title"));
-                        todoList.setComplete(rs.getInt("complete"));
-                        todoList.setListNum(rs.getInt("list_num"));
-                        todoList.setMemberId(rs.getString("member_id"));
-                        return todoList;
-                    }
-                }
-            );
+        List<TodoList> list = jdbcTemplate.query(sql, new Object[]{userId,date}, listRowMapper);
         return list;
     }
 
     public List<TodoList> view(int listNum){
         String sql = "select * from list where list_num = ?";
-
-        List<TodoList> list = jdbcTemplate.query(sql, new Object[]{listNum},
-                new RowMapper<TodoList>() {
-                    @Override
-                    public TodoList mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        TodoList todoList = new TodoList();
-                        todoList.setListTitle(rs.getString("list_title"));
-                        todoList.setComplete(rs.getInt("complete"));
-                        todoList.setListNum(rs.getInt("list_num"));
-                        todoList.setMemberId(rs.getString("member_id"));
-                        return todoList;
-                    }
-                }
-        );
+        List<TodoList> list = jdbcTemplate.query(sql, new Object[]{listNum}, listRowMapper);
         return list;
     }
 
     public List<TodoList> showToday(String userId){
         String sql = "select * from list where member_id = ? and write_date = curdate()";
 
-        List<TodoList> list = jdbcTemplate.query(sql, new Object[]{userId},
-                new RowMapper<TodoList>() {
-                    @Override
-                    public TodoList mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        TodoList todoList = new TodoList();
-                        todoList.setListTitle(rs.getString("list_title"));
-                        todoList.setComplete(rs.getInt("complete"));
-                        todoList.setListNum(rs.getInt("list_num"));
-                        todoList.setMemberId(rs.getString("member_id"));
-                        return todoList;
-                    }
-                }
-        );
+        List<TodoList> list = jdbcTemplate.query(sql, new Object[]{userId}, listRowMapper);
         return list;
     }
 

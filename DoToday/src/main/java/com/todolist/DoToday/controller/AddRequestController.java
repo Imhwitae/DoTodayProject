@@ -26,4 +26,15 @@ public class AddRequestController {
     public String requestAccept(){
         return "redirect:/request/list";
     }
+
+    @GetMapping("/search")
+    public String searchForm(){
+        return "test/add_form_test";
+    }
+
+    @PostMapping("/search/{memberId}")
+    public String search(){
+        return "redirect:/request/list";
+    }
+
 }
