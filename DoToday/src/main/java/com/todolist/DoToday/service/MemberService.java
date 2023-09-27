@@ -42,8 +42,8 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
                         rs.getString("member_id"),
                         rs.getString("member_pw"),
                         rs.getString("member_name"),
-                        rs.getString("member_image"),
                         rs.getString("member_email"),
+                        rs.getString("member_image"),
                         rs.getBoolean("member_enabled")
                 );
             } catch (Exception e) {
