@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .img_block{
+            width: 50px;
+            height: 50px;
+        }
+        .memberImage{
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+<a th:href="@{'/friend/list'}">뒤로가기</a>
+<form th:action="@{'/request/search'}" th:method="post">
+    <input type="text" th:name="memberId" placeholder="아이디를 입력해주세요.">
+    <input type="submit" value="검색">
+</form>
+<div th:if="${exist} == 1">
+    <div class="img_block">
+        <img class="memberImage" th:src="${memberInfo.getMemberImage()}" alt="유저 이미지">
+    </div>
+    <div class="memberName" th:text="${memberInfo.getMemberName()}"></div>
+    <form th:action="@{'/friend/apply'}" method="post" th:if="${status}==0">
+        <input type="hidden" th:value="${memberInfo.getMemberId()}" name="friendId">
+        <input type="submit" value="친구신청 보내기">
+    </form>
+    <div th:if="${status}==1">
+        이미 친구입니다.
+    </div>
+</div>
+<div th:if="${exist} == 0">
+    <p>친구를 찾아보세요!</p>
+</div>
+</body>
+</html>

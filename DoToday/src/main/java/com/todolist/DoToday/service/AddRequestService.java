@@ -1,6 +1,8 @@
 package com.todolist.DoToday.service;
 
 import com.todolist.DoToday.dto.request.AddRequest;
+import com.todolist.DoToday.dto.request.FriendInfoDto;
+import com.todolist.DoToday.dto.response.MemberDetailDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,25 +17,29 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AddRequestService {
     private final JdbcTemplate jdbcTemplate;
+    private final MemberService memberService;
 
 //    public AddRequestService(DataSource dataSource) {
 //        this.jdbcTemplate = new JdbcTemplate(dataSource);
 //    }
 
     // 친구신청 수락대기 리스트
-    public List<AddRequest> selectRequestList(String userId) {
+    public List<FriendInfoDto> selectRequestList(String userId) {
         String sql = "select * from add_request where receiver_id = ? and req_status = 1";
-        List<AddRequest> list = jdbcTemplate.query(sql, new Object[] { userId },
-                new RowMapper<AddRequest>() {
+        List<FriendInfoDto> flist = jdbcTemplate.query(sql, new Object[]{userId},
+                new RowMapper<FriendInfoDto>() {
                     @Override
-                    public AddRequest mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        AddRequest addRequest = new AddRequest();
-                        addRequest.setReceiverId(rs.getString("receiver_id"));
-                        addRequest.setSenderId(rs.getString("sender_id"));
-                        return addRequest;
+                    public FriendInfoDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        MemberDetailDto md = memberService.findById(rs.getString("sender_id"));
+                        FriendInfoDto fid = new FriendInfoDto();
+                        fid.setMemberId(md.getMemberId());
+                        fid.setMemberName(md.getMemberName());
+                        fid.setMemberImage(md.getMemberImage());
+                        return fid;
                     }
-                });
-        return list;
+                }
+        );
+        return flist;
     }
 
     // 친구신청 삭제(거부)
@@ -54,7 +60,7 @@ public class AddRequestService {
 
     // 친구신청 차단
     public int blockUser(AddRequest addRequest) {
-        String sql = "update add_request set req_status = 0 where receiver = ? and sender_id = ?";
+        String sql = "update add_request set req_status = 0 where receiver_id = ? and sender_id = ?";
         return jdbcTemplate.update(sql, addRequest.getReceiverId(), addRequest.getSenderId());
     }
 

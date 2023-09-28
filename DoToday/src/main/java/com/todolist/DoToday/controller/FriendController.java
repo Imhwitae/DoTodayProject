@@ -1,5 +1,6 @@
 package com.todolist.DoToday.controller;
 
+import com.todolist.DoToday.dto.request.AddRequest;
 import com.todolist.DoToday.dto.request.FriendInfoDto;
 import com.todolist.DoToday.dto.response.FriendList;
 import com.todolist.DoToday.service.AddRequestService;
@@ -41,4 +42,12 @@ public class FriendController {
         return "redirect:/friend/list";
     }
 
+    @PostMapping("/apply")
+    public String applyFriend(@RequestParam("friendId") String friendId){
+        AddRequest add = new AddRequest();
+        add.setReceiverId(friendId);
+        add.setSenderId("cor2580");
+        friendService.addFriend(add);
+        return "redirect:/request/search";
+    }
 }
