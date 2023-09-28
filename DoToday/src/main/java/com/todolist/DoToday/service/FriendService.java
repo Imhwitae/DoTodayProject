@@ -44,6 +44,13 @@ public class FriendService {
         return flist;
     }
 
+    //친구상태
+    public int friendStatus(FriendList friendList){
+        String sql = "select count(*) from friend_list where friend_id = ? and user_id = ?";
+        int result = jdbcTemplate.queryForObject(sql, Integer.class, friendList.getFriendId(), friendList.getUserId());
+        return result;
+    }
+
 
     //친구 삭제
     public int deleteFriend(FriendList friendList){
