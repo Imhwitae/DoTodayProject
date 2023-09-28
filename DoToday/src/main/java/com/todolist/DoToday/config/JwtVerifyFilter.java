@@ -1,6 +1,7 @@
 package com.todolist.DoToday.config;
 
 import com.todolist.DoToday.dto.MemberTokenDto;
+import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.service.MemberService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -39,19 +40,21 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
 
         if (extractedToken != null) {
             memberId = jwtTokenProvider.getMemberIdFromToken(extractedToken);
-        } else {
-            filterChain.doFilter(request, response);
         }
 
         // SecurityContextHolder에 인증 객체가 있는지 확인
         if (memberId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails member = memberService.findById(memberId);
+            // db 접근 말고 객체로 저장하기
+            MemberDetailDto member = memberService.findById(memberId);
 
             if (!jwtTokenProvider.validateToken(extractedToken)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
                         = new UsernamePasswordAuthenticationToken(member, null, null);
 
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                log.info("인증 정보 저장 {}", usernamePasswordAuthenticationToken.getName());
+            } else {
+                log.info("저장 실패");
             }
         }
         filterChain.doFilter(request, response);

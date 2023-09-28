@@ -130,9 +130,9 @@ public class JwtTokenProvider {
 
     // JWT 토큰 http header에 response
     public void accessTokenSetHeader(String accessToken, HttpServletResponse response) {
-        String headerValue = BEARER + accessToken;
-        response.setHeader(HttpHeaders.AUTHORIZATION, headerValue);
-        log.info(headerValue);
+//        String headerValue = BEARER + accessToken;
+        response.setHeader(HttpHeaders.AUTHORIZATION, accessToken);
+        log.info(accessToken);
     }
 
     // JWT 토큰에서 사용자 아이디 추출
@@ -153,11 +153,9 @@ public class JwtTokenProvider {
     public String extractToken(HttpServletRequest request) {
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);  // http header의 authorization 이름을 가진 값을 가져옴
 
-        if (StringUtils.hasText(token) && token.startsWith(BEARER)) {
-            return token.substring(7);
-        }
-
-        return null;
+//        if (StringUtils.hasText(token) && token.startsWith(BEARER)) {
+//            return token.substring(7);
+        return token;
     }
 
     public String reCreateAccessToken(String memberId) {

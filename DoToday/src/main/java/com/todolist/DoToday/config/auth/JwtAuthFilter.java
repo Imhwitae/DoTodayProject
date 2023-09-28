@@ -32,6 +32,6 @@ public class JwtAuthFilter implements AuthenticationSuccessHandler {
         String token = jwtTokenProvider.createToken(memberId);
         jwtTokenProvider.accessTokenSetHeader(token, response);
         response.sendRedirect("/home");
-        log.info("로그인 성공");
+        log.info("{} 로그인 성공", memberId);
     }
 }
