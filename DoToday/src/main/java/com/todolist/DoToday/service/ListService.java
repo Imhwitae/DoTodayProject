@@ -1,6 +1,7 @@
 package com.todolist.DoToday.service;
 
 import com.todolist.DoToday.dto.response.TodoList;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,12 +14,13 @@ import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ListService {
     private final JdbcTemplate jdbcTemplate;
 
-    public ListService(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
+//    public ListService(DataSource dataSource) {
+//        this.jdbcTemplate = new JdbcTemplate(dataSource);
+//    }
 
     private final RowMapper<TodoList> listRowMapper = new RowMapper<TodoList>() {
         @Override

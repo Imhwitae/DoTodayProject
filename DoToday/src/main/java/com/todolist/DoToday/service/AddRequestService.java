@@ -1,6 +1,7 @@
 package com.todolist.DoToday.service;
 
 import com.todolist.DoToday.dto.request.AddRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -11,12 +12,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AddRequestService {
     private final JdbcTemplate jdbcTemplate;
 
-    public AddRequestService(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
+//    public AddRequestService(DataSource dataSource) {
+//        this.jdbcTemplate = new JdbcTemplate(dataSource);
+//    }
 
     // 친구신청 수락대기 리스트
     public List<AddRequest> selectRequestList(String userId) {
