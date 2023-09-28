@@ -2,41 +2,43 @@ package com.todolist.DoToday.controller;
 
 import com.todolist.DoToday.dto.request.FriendInfoDto;
 import com.todolist.DoToday.dto.response.FriendList;
+import com.todolist.DoToday.service.AddRequestService;
 import com.todolist.DoToday.service.FriendService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/friend")
 public class FriendController {
     private final FriendService friendService;
-    private FriendList friendList;
+    private final AddRequestService addRequestService;
 
     @GetMapping("/list")
-    public String friendList(Model model){
+    public String friendList(Model model,@ModelAttribute("friend") FriendList friendList){
         List<FriendInfoDto> infoDtoList = friendService.info("cor2580");
+        int listCount = friendService.listCount("cor2580");
+        int requestCount = addRequestService.listCount("cor2580");
         model.addAttribute("friendList", infoDtoList);
+        model.addAttribute("lCount", listCount);
+        model.addAttribute("rCount", requestCount);
         return "test/friendlist_test";
     }
 
-    @PostMapping("/delete/{friendId}")
-    public String deleteFriend(@PathVariable String friendId){
+    @PostMapping("/delete")
+    public String deleteFriend(@RequestParam("userId") String userId,
+                               @RequestParam("friendId") String friendId){
+        FriendList friendList = new FriendList();
         friendList.setFriendId(friendId);
-        friendList.setUserId("cor2580");
+        friendList.setUserId(userId);
         friendService.deleteFriend(friendList);
         return "redirect:/friend/list";
-    }
-
-    @GetMapping("/blockList")
-    public String blockList(Model model){
-        List<FriendInfoDto> blist = friendService.blockUserList("cor2580");
-        model.addAttribute("blockList", blist);
-        return "test/block_friendlist_test";
     }
 
 }
