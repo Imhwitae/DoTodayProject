@@ -1,5 +1,6 @@
 package com.todolist.DoToday.config;
 
+import com.todolist.DoToday.dto.MemberTokenDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,9 +22,11 @@ import java.io.IOException;
 public class JwtVerifyFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final MemberTokenDto memberTokenDto;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = jwtTokenProvider.extractToken(request);
+        String token = jwtTokenProvider.extractToken(request);  // 헤더에서 토큰 추출
+
         try {
             if (jwtTokenProvider.validateToken(token)) {
                 filterChain.doFilter(request, response);

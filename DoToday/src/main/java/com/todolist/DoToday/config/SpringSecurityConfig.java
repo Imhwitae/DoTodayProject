@@ -35,7 +35,7 @@ public class SpringSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "join_form", "/css/**", "/scripts/**", "/plugin/**", "/image/**").permitAll()
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/members/loginform").permitAll()  // 사용자 정의 로그인 url
