@@ -32,6 +32,7 @@ import java.util.Optional;
 public class MemberService implements UserDetailsService, AuthenticationProvider {
 
     private final JdbcTemplate jdbcTemplate;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final RowMapper<MemberDetailDto> rowMapper = new RowMapper<MemberDetailDto>() {
         @Override
@@ -53,7 +54,7 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
         }
     };
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
     @Value("${cloud.aws.s3.basic-image}")
     private String basicImage;
@@ -129,11 +130,12 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
         String memberPw = authentication.getCredentials().toString();
         String savedPw = findById(memberId).getMemberPw();
 
-        if (!bCryptPasswordEncoder.matches(memberPw, savedPw)) {
-            return null;
+        if (bCryptPasswordEncoder.matches(memberPw, savedPw)) {
+            log.info("비밀번호 검증 성공");
+            // UsernamePasswordAuthenticationToken은 권한까지 부여한 생성자를 사용해야 인증을 해준다.
+            return new UsernamePasswordAuthenticationToken(findById(memberId), null, null);
         } else {
-            log.info("비밀번호 검증");
-            return new UsernamePasswordAuthenticationToken(findById(memberId), null);
+            return null;
         }
     }
 

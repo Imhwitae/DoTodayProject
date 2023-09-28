@@ -1,13 +1,21 @@
 package com.todolist.DoToday.config;
 
 import com.todolist.DoToday.dto.MemberTokenDto;
+import com.todolist.DoToday.service.MemberService;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -19,20 +27,34 @@ import java.io.IOException;
  */
 @RequiredArgsConstructor
 @Slf4j
+@Component
 public class JwtVerifyFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final MemberTokenDto memberTokenDto;
+    private final MemberService memberService;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = jwtTokenProvider.extractToken(request);  // 헤더에서 토큰 추출
+        String extractedToken = jwtTokenProvider.extractToken(request);  // 헤더에서 토큰 추출
+        String memberId = null;
 
-        try {
-            if (jwtTokenProvider.validateToken(token)) {
-                filterChain.doFilter(request, response);
-            }
-        } catch (Exception e) {
-            log.info("토큰 검증 실패");
+        if (extractedToken != null) {
+            memberId = jwtTokenProvider.getMemberIdFromToken(extractedToken);
+        } else {
+            filterChain.doFilter(request, response);
         }
+
+        // SecurityContextHolder에 인증 객체가 있는지 확인
+        if (memberId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails member = memberService.findById(memberId);
+
+            if (!jwtTokenProvider.validateToken(extractedToken)) {
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
+                        = new UsernamePasswordAuthenticationToken(member, null, null);
+
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            }
+        }
+        filterChain.doFilter(request, response);
     }
+
 }

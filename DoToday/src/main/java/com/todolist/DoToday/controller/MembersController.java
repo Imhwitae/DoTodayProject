@@ -5,6 +5,7 @@ import com.todolist.DoToday.config.auth.OAuthToken;
 import com.todolist.DoToday.dto.Gender;
 import com.todolist.DoToday.dto.request.MemberJoinDto;
 import com.todolist.DoToday.dto.request.MemberLoginDto;
+import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.entity.Members;
 import com.todolist.DoToday.service.MemberService;
 import com.todolist.DoToday.util.KakaoToken;
@@ -55,25 +56,10 @@ public class MembersController {
         return "/member/login";
     }
 
-//    @GetMapping("/token")
-//    @ResponseBody
-//    public String giveToken() {
-//
-//    }
-
-//    @PostMapping("/login")
-//    public String memberLogin(MemberLoginDto memberLoginDto) {
-//        memberService.loadUserByUsername(memberLoginDto.getMemberId());
-//        log.info("로그인");
-//
-//        return "redirect:/todo_main";
-//    }
-
-//    @GetMapping("/home")
-//    public String goHome() {
-//        return "/todo_main";
-//    }
-
-
+    @GetMapping("/mypage")
+    public String memberMyPage() {
+//        model.addAttribute(memberDetailDto);
+        return "/member/mypage";
+    }
 
 }
