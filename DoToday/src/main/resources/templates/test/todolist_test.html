@@ -19,13 +19,16 @@
     <div class="title" th:text="${todoList.listTitle}"></div>
     <div class="complete" th:if="${todoList.complete} == 1">완료</div>
     <div class="completer" th:if="${todoList.complete} == 0">진행중</div>
-    <form id="delete" th:action="@{'/list/delete/'+${todoList.listNum}}" method="post">
+    <form id="delete" th:action="@{'/list/delete'}" method="post">
+        <input type="hidden" th:name="listNum" th:value="${todoList.listNum}">
         <input type="submit" value="삭제" form="delete">
     </form>
-    <form id="update" th:action="@{'/list/update/'+${todoList.listNum}}" method="get">
+    <form id="update" th:action="@{'/list/update'}" method="get">
+        <input type="hidden" th:name="listNum" th:value="${todoList.listNum}">
         <input type="submit" value="수정" form="update">
     </form>
-    <form id="complete" th:action="@{'/list/complete/'+${todoList.listNum}}" method="post">
+    <form id="complete" th:action="@{'/list/complete'}" method="post">
+        <input type="hidden" th:name="listNum" th:value="${todoList.listNum}">
         <input type="submit" value="완료" form="complete">
     </form>
 </div>

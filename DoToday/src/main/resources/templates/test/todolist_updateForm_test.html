@@ -5,7 +5,8 @@
     <title>Title</title>
 </head>
 <body>
-<form id="update_form" th:action="@{'/list/update/'+${list.listNum}}" th:object="${todoList}" method="post" th:each="list:${view}">
+<form id="update_form" th:action="@{'/list/update'}" th:object="${todoList}" method="post" th:each="list:${view}">
+    <input type="hidden" th:name="listNum" th:value="${list.listNum}">
     <input type="text" th:field="*{listTitle}" th:value="${list.listTitle}">
     <input type="submit" value="수정" form="update_form">
 </form>
