@@ -1,6 +1,6 @@
 package com.todolist.DoToday.config;
 
-import com.todolist.DoToday.jwt.AuthenticationSuccessHandlerImpl;
+import com.todolist.DoToday.config.auth.AuthenticationSuccessHandlerImpl;
 import com.todolist.DoToday.jwt.JwtVerifyFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

@@ -1,5 +1,6 @@
-package com.todolist.DoToday.jwt;
+package com.todolist.DoToday.config.auth;
 
+import com.todolist.DoToday.jwt.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
