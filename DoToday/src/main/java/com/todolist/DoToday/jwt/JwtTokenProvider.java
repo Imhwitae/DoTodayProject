@@ -1,4 +1,4 @@
-package com.todolist.DoToday.config;
+package com.todolist.DoToday.jwt;
 
 import com.todolist.DoToday.dto.MemberTokenDto;
 import com.todolist.DoToday.entity.MemberRole;

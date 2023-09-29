@@ -1,6 +1,5 @@
-package com.todolist.DoToday.config.auth;
+package com.todolist.DoToday.jwt;
 
-import com.todolist.DoToday.config.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +15,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Slf4j
 @Component
-public class JwtAuthFilter implements AuthenticationSuccessHandler {
+public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHandler {
 
     private final JwtTokenProvider jwtTokenProvider;
 

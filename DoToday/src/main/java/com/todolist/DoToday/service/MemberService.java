@@ -1,6 +1,6 @@
 package com.todolist.DoToday.service;
 
-import com.todolist.DoToday.config.JwtTokenProvider;
+import com.todolist.DoToday.jwt.JwtTokenProvider;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.dto.request.MemberJoinDto;
 import com.todolist.DoToday.entity.Members;
@@ -23,8 +23,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
