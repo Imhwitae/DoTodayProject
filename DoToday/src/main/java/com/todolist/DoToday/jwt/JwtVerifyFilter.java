@@ -1,9 +1,11 @@
 package com.todolist.DoToday.jwt;
 
+import com.todolist.DoToday.dto.MemberTokenDto;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.service.MemberService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,30 +29,48 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberService memberService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String extractedToken = jwtTokenProvider.extractToken(request);  // 헤더에서 토큰 추출
-        String memberId = null;
+        String accessToken = null;
+        String refreshToken = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                String tokenName = cookie.getName();
+                String value = cookie.getValue();
 
-        if (extractedToken != null) {
-            memberId = jwtTokenProvider.getMemberIdFromToken(extractedToken);
-        }
-
-        // SecurityContextHolder에 인증 객체가 있는지 확인
-        if (memberId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // db 접근 말고 객체로 저장하기
-            MemberDetailDto member = memberService.findById(memberId);
-
-            if (!jwtTokenProvider.validateToken(extractedToken)) {
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
-                        = new UsernamePasswordAuthenticationToken(member, null, null);
-
-                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-                log.info("인증 정보 저장 {}", usernamePasswordAuthenticationToken.getName());
-            } else {
-                log.info("저장 실패");
+                if (tokenName.equals("refreshToken")) {
+                    refreshToken = value;
+                    log.info("refreshToken {}", value);
+                } else if (tokenName.equals("accessToken")){
+                    accessToken = value;
+                    log.info("accessToken {}", value);
+                }
             }
         }
+
+//        String memberAccessToken = memberTokenDto.getAccessToken();
+//        String memberRefreshToken = memberTokenDto.getRefreshToken();
+//        log.info("회원의 accessToken {}", memberAccessToken);
+//
+//        String memberId = jwtTokenProvider.getMemberIdFromToken(memberAccessToken);
+//
+//        // SecurityContextHolder에 인증 객체가 있는지 확인
+//        if (memberId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+//            // db 접근 말고 객체로 저장하기
+//            MemberDetailDto member = memberService.findById(memberId);
+//
+//            if (!jwtTokenProvider.validateToken(memberAccessToken)) {
+//                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
+//                        = new UsernamePasswordAuthenticationToken(member, null, null);
+//                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+//
+//                log.info("인증 정보 저장 {}", usernamePasswordAuthenticationToken.getName());
+//            } else {
+//                log.info("저장 실패");
+//            }
+//        }
         filterChain.doFilter(request, response);
     }
 

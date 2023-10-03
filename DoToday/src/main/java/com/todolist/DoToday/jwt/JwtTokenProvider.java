@@ -1,6 +1,7 @@
 package com.todolist.DoToday.jwt;
 
 import com.todolist.DoToday.dto.MemberTokenDto;
+import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.entity.MemberRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -42,7 +43,7 @@ public class JwtTokenProvider {
     private long refreshTokenTime = 4320 * 60 * 1000L;
 
     // JWT 토큰 생성
-    public String createToken(String memberId) {
+    public MemberTokenDto createToken(String memberId) {
         headerMap.put("type", "JWT");
         headerMap.put("alg", "HS256");
 
@@ -60,7 +61,7 @@ public class JwtTokenProvider {
         // accessToken 발급
         String accessToken = Jwts.builder()
                 .setHeader(headerMap)  // 헤더에 들어갈 정보
-                .claim("role", MemberRole.USER)  // 사용자 권한
+                .claim("role", MemberRole.USER.name())  // 사용자 권한
                 .setSubject(memberId)
                 .setIssuedAt(date)  // 토큰 발행 일자
                 .setExpiration(expireTime)  // 토큰 만료 시간
@@ -78,13 +79,14 @@ public class JwtTokenProvider {
                 .compact();
 
         // Dto에 저장
-        MemberTokenDto.builder()
+        return MemberTokenDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
-
-        return accessToken;
     }
+
+    // refreshToken return
+
 
     // JWT 토큰 유효성 검증
     public boolean validateToken(String token) {
@@ -130,7 +132,6 @@ public class JwtTokenProvider {
 
     // JWT 토큰 http header에 response
     public void accessTokenSetHeader(String accessToken, HttpServletResponse response) {
-//        String headerValue = BEARER + accessToken;
         response.setHeader(HttpHeaders.AUTHORIZATION, accessToken);
         log.info(accessToken);
     }
@@ -151,11 +152,8 @@ public class JwtTokenProvider {
      * @StringUtils.hasText() 값이 있을 경우에는 true반환, 공백이거나 null이면 false 반환
      */
     public String extractToken(HttpServletRequest request) {
-        String token = request.getHeader(HttpHeaders.AUTHORIZATION);  // http header의 authorization 이름을 가진 값을 가져옴
-
-//        if (StringUtils.hasText(token) && token.startsWith(BEARER)) {
-//            return token.substring(7);
-        return token;
+        // http header의 authorization 이름을 가진 값을 가져옴
+        return request.getHeader(HttpHeaders.AUTHORIZATION);
     }
 
     public String reCreateAccessToken(String memberId) {
