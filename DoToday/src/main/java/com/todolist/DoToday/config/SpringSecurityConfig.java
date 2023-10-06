@@ -30,14 +30,14 @@ public class SpringSecurityConfig {
                 )
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtVerifyFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(formLogin -> formLogin
                         .loginPage("/members/loginform")  // 사용자 정의 로그인 url
-                        .loginProcessingUrl("/members/login")  // 로그인 진행 url
+                        .loginProcessingUrl("/members/todologin")  // 로그인 진행 url
 //                        .defaultSuccessUrl("/home")  // 로그인 성공 후 이동 url
                         .successHandler(authenticationSuccessHandlerImpl)
                         .failureUrl("/members/loginform?error")  // 로그인 실패시 작동
-                );
+                )
+                .addFilterBefore(jwtVerifyFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

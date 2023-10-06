@@ -3,6 +3,7 @@ package com.todolist.DoToday.jwt;
 import com.todolist.DoToday.dto.MemberTokenDto;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.entity.MemberRole;
+import com.todolist.DoToday.service.MemberService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -13,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -24,9 +27,11 @@ import java.util.Map;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class JwtTokenProvider {
-    private final String BEARER = "Bearer";
+//    private final String BEARER = "Bearer";
     private final Map<String, Object> headerMap = new HashMap<>();
+    private final MemberService memberService;
 
     @Value("${custom.jwt.secret-key}")
     private String secretKey;
@@ -39,7 +44,7 @@ public class JwtTokenProvider {
 
     // acsessToken 유효시간: 30분 (30 * 10분)
     private long tokenTime = 30 * 60 * 1000L;
-    // refreshToken 유효시간: 3일
+    // refreshToken 유효시간: 30일
     private long refreshTokenTime = 4320 * 60 * 1000L;
 
     // JWT 토큰 생성
@@ -85,29 +90,22 @@ public class JwtTokenProvider {
                 .build();
     }
 
-    // refreshToken return
-
-
     // JWT 토큰 유효성 검증
     public boolean validateToken(String token) {
-        try {
-            // 토큰 서명 확인
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(jwtSecretKey())
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+        // 토큰 서명 확인
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(jwtSecretKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
 
-            Date expireDate = claims.getExpiration();  // 토큰 만료 시간
-            Date now = new Date();  // 현재 시간
+        Date expireDate = claims.getExpiration();  // 토큰 만료 시간
+        Date now = new Date();  // 현재 시간
 
-            //  토큰 만료 시간이 현재 시간보다 이전이라면
-            if (expireDate.before(now)) {
-                log.info("accessToken 시간 만료");
-                return false;
-            }
-        } catch (JwtException e) {
-            log.info("토큰 검증 실패");
+        //  토큰 만료 시간이 현재 시간보다 이전이라면
+        if (expireDate.before(now)) {
+            log.info("accessToken 시간 만료");
+            return false;
         }
         return true;
     }
@@ -130,12 +128,6 @@ public class JwtTokenProvider {
         return null;
     }
 
-    // JWT 토큰 http header에 response
-    public void accessTokenSetHeader(String accessToken, HttpServletResponse response) {
-        response.setHeader(HttpHeaders.AUTHORIZATION, accessToken);
-        log.info(accessToken);
-    }
-
     // JWT 토큰에서 사용자 아이디 추출
     public String getMemberIdFromToken(String token) {
         Claims claims = Jwts.parserBuilder()
@@ -156,6 +148,7 @@ public class JwtTokenProvider {
         return request.getHeader(HttpHeaders.AUTHORIZATION);
     }
 
+    // accessToken 재발급
     public String reCreateAccessToken(String memberId) {
         headerMap.put("type", "JWT");
         headerMap.put("alg", "HS256");
@@ -173,5 +166,10 @@ public class JwtTokenProvider {
                 .compact();
 
         return accessToken;
+    }
+
+    public Authentication getAuthentication(String memberId) {
+        MemberDetailDto member = memberService.findById(memberId);
+        return new UsernamePasswordAuthenticationToken(member, null, null);
     }
 }

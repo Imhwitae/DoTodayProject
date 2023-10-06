@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -28,50 +29,43 @@ import java.io.IOException;
 public class JwtVerifyFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final MemberService memberService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String accessToken = null;
         String refreshToken = null;
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                String tokenName = cookie.getName();
-                String value = cookie.getValue();
+        for (Cookie cookie : cookies) {
+            String tokenName = cookie.getName();
+            String value = cookie.getValue();
 
-                if (tokenName.equals("refreshToken")) {
-                    refreshToken = value;
-                    log.info("refreshToken {}", value);
-                } else if (tokenName.equals("accessToken")){
-                    accessToken = value;
-                    log.info("accessToken {}", value);
-                }
+            if (tokenName.equals("refreshToken")) {
+                refreshToken = value;
+                log.info("refreshToken {}", value);
+            } else if (tokenName.equals("accessToken")){
+                accessToken = value;
+                log.info("accessToken {}", value);
             }
         }
 
-//        String memberAccessToken = memberTokenDto.getAccessToken();
-//        String memberRefreshToken = memberTokenDto.getRefreshToken();
-//        log.info("회원의 accessToken {}", memberAccessToken);
-//
-//        String memberId = jwtTokenProvider.getMemberIdFromToken(memberAccessToken);
-//
-//        // SecurityContextHolder에 인증 객체가 있는지 확인
-//        if (memberId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-//            // db 접근 말고 객체로 저장하기
-//            MemberDetailDto member = memberService.findById(memberId);
-//
-//            if (!jwtTokenProvider.validateToken(memberAccessToken)) {
-//                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
-//                        = new UsernamePasswordAuthenticationToken(member, null, null);
-//                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-//
-//                log.info("인증 정보 저장 {}", usernamePasswordAuthenticationToken.getName());
-//            } else {
-//                log.info("저장 실패");
-//            }
-//        }
-        filterChain.doFilter(request, response);
-    }
+        if (accessToken != null) {
 
+            String memberId = jwtTokenProvider.getMemberIdFromToken(accessToken);
+
+            if (memberId != null && jwtTokenProvider.validateToken(accessToken)) {
+                log.info("토큰 검증 후 시큐리티 컨텍스트에 정보 담기");
+                Authentication authentication = jwtTokenProvider.getAuthentication(memberId);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.info("{} 유저 정보 저장", authentication.getName());
+                log.info("인증 여부 = {}", SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
+                filterChain.doFilter(request, response);
+            } else {
+                log.info("멤버를 못 찾았거나, 토큰 오류");
+                log.info("memberId = {}", memberId);
+                log.info("accessToken = {}", accessToken);
+            }
+        } else {
+            filterChain.doFilter(request, response);
+        }
+    }
 }

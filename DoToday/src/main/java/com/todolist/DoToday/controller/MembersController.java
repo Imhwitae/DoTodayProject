@@ -49,7 +49,7 @@ public class MembersController {
     @GetMapping("/mypage")
     public String memberMyPage() {
 //        model.addAttribute(memberDetailDto);
-        return "/member/mypage";
+        return "/todo_main";
     }
 
 }

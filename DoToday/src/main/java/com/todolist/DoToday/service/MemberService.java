@@ -31,7 +31,6 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
 
     private final JdbcTemplate jdbcTemplate;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
     private final RowMapper<MemberDetailDto> rowMapper = new RowMapper<MemberDetailDto>() {
         @Override
         public MemberDetailDto mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -90,6 +89,8 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
         return localDate;
     }
 
+    // 현재는 jwtFilter 통과 시 loadUserByUsername을 호출하여 디비를 거치지 않으므로 시큐리티 컨텍스트에는 엔티티 정보를 온전히 가지지 않는다
+    // 즉 loadUserByUsername을 호출하는 인증 API를 제외하고는 유저네임, 권한만 가지고 있으므로 Account 정보가 필요하다면 디비에서 꺼내와야함
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("멤버 전달");

@@ -11,7 +11,7 @@
 <body>
 <div class="container" id="container">
     <div class="form-container sign-in-container">
-        <form th:action="@{/members/login}" method="post">
+        <form th:action="@{/members/todologin}" method="post">
             <h1>로그인</h1>
             <div th:if="${param.error}">
                 <div class="alert alert-danger">

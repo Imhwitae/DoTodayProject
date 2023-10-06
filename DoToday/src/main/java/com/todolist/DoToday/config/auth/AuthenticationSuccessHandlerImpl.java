@@ -45,7 +45,7 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
 
         response.addCookie(accessToken);
         response.addCookie(refreshToken);
-        response.sendRedirect("/home");
         log.info("{} 로그인 성공", memberId);
+        response.sendRedirect("/members/mypage");
     }
 }
