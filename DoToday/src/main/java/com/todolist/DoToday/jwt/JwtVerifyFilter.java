@@ -35,18 +35,22 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
         String accessToken = null;
         String refreshToken = null;
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            String tokenName = cookie.getName();
-            String value = cookie.getValue();
 
-            if (tokenName.equals("refreshToken")) {
-                refreshToken = value;
-                log.info("refreshToken {}", value);
-            } else if (tokenName.equals("accessToken")){
-                accessToken = value;
-                log.info("accessToken {}", value);
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                String tokenName = cookie.getName();
+                String value = cookie.getValue();
+
+                if (tokenName.equals("refreshToken")) {
+                    refreshToken = value;
+                    log.info("refreshToken {}", value);
+                } else if (tokenName.equals("accessToken")){
+                    accessToken = value;
+                    log.info("accessToken {}", value);
+                }
             }
         }
+
 
         if (accessToken != null) {
 
