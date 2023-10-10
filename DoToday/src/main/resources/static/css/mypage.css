@@ -91,4 +91,11 @@ body {
     color: #000000;
 }
 
+.main {
+    width: 70%;
+    height: 100%;
+    grid-area: main;
+    background-color:#FFFFFF;
+}
+
 
