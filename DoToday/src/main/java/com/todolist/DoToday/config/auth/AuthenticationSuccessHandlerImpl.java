@@ -35,7 +35,7 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
 
         // accessToken 쿠키 생성
         Cookie accessToken = new Cookie("accessToken", getAccessToken);
-        accessToken.setMaxAge(60*60*30);
+        accessToken.setMaxAge(60*60);
         accessToken.setPath("/");
 
         // refreshToken 쿠키 생성

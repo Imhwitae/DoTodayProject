@@ -1,8 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap');
 
-/** {*/
-/*    letter-spacing: -1px;*/
-/*}*/
+a {
+    text-decoration: none;
+    color: inherit;
+}
 
 body {
     background-color: #F5F6F8;
@@ -10,7 +11,10 @@ body {
 
 .container {
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-areas:
+            "    a    main    b    "
+            " footer footer footer "
+    ;
 }
 
 .header {
@@ -76,7 +80,7 @@ body {
 .logout {
     margin-left: auto;
     padding-top: 2rem;
-    padding-left: 3rem;
+    padding-right: 3rem;
     font-style: normal;
     font-weight: 400;
     font-size: 1rem;

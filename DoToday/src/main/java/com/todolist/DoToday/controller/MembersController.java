@@ -52,4 +52,6 @@ public class MembersController {
         return "/member/mypage";
     }
 
+//    @DeleteMapping("/logout")
+
 }
