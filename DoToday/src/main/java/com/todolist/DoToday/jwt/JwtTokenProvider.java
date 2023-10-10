@@ -42,8 +42,8 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(keyBase64Encoded.getBytes());
     }
 
-    // acsessToken 유효시간: 30분 (30 * 10분)
-    private long tokenTime = 30 * 60 * 1000L;
+    // acsessToken 유효시간: 60분 (60 * 10분)
+    private long tokenTime = 60 * 60 * 1000L;
     // refreshToken 유효시간: 30일
     private long refreshTokenTime = 4320 * 60 * 1000L;
 

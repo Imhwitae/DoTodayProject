@@ -73,4 +73,18 @@ body {
     color: #000000;
 }
 
+.logout {
+    margin-left: auto;
+    padding-top: 2rem;
+    padding-left: 3rem;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 22px;
+    align-items: center;
+    text-align: center;
+    letter-spacing: -0.05em;
+    color: #000000;
+}
+
 
