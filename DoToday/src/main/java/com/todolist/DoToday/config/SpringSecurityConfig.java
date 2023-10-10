@@ -37,7 +37,12 @@ public class SpringSecurityConfig {
                         .successHandler(authenticationSuccessHandlerImpl)
                         .failureUrl("/members/loginform?error")  // 로그인 실패시 작동
                 )
-                .addFilterBefore(jwtVerifyFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtVerifyFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(logout -> logout
+                        .logoutUrl("/members/logout")
+                        .deleteCookies("JSESSIONID", "accessToken")
+                        .logoutSuccessUrl("/")
+                );
 
         return http.build();
     }
