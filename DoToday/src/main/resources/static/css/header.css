@@ -14,6 +14,7 @@ body {
     height: 85px;
     background-color: #FFFFFF;
     display: flex;
+    border-bottom: 1.5px solid #DDD;
 }
 
 .main_logo {
@@ -47,13 +48,13 @@ body {
     padding-top: 2rem;
     padding-left: 3rem;
     font-style: normal;
-    font-weight: 700;
+    font-weight: 400;
     font-size: 1rem;
     line-height: 22px;
     align-items: center;
     text-align: center;
     letter-spacing: -0.05em;
-    color: #FF4462;
+    color: #000000;
 }
 
 .go_friend_page {
