@@ -15,7 +15,7 @@
 
 
 .main_container {
-    width: 1440px;
+    width: 75%;
     height: 1080px;
     flex-shrink: 0;
     background: #FFF;
@@ -183,7 +183,7 @@ input:focus {outline:none;}
 .completeForm {
     width: 20px;
     float: right;
-    margin: 0px 5px 0px 0px;
+    margin: 0px 10px 0px 0px;
 }
 
 .updateForm {
