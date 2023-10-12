@@ -1,7 +1,9 @@
 package com.todolist.DoToday.controller;
 
+import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.dto.response.TodoList;
 import com.todolist.DoToday.service.ListService;
+import com.todolist.DoToday.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -17,9 +19,19 @@ import java.util.List;
 public class ListController {
     private final ListService listService;
     private boolean blank;
+    private final MemberService memberService;
+
+    @GetMapping("/todolist")
+    public String showList(Model model,@ModelAttribute("todoList") TodoList todoList){
+        MemberDetailDto mdd = memberService.findById("test");
+        List<TodoList> list = listService.showToday("test");
+        model.addAttribute("list",list);
+        model.addAttribute("memberInfo", mdd);
+        return "list/todolist_test";
+    }
 
     @GetMapping("/view")
-    public String showList(Model model,@ModelAttribute("todoList") TodoList todoList){
+    public String showListTest(Model model,@ModelAttribute("todoList") TodoList todoList){
         List<TodoList> list = listService.showToday("aa");
         model.addAttribute("list",list);
         return "test/todolist_test";
@@ -40,7 +52,7 @@ public class ListController {
             return "/test/error";
         }
         listService.write(todoList);
-        return "redirect:/list/view";
+        return "redirect:/list/todolist";
     }
 
     @PostMapping("/delete")
@@ -71,6 +83,6 @@ public class ListController {
     @PostMapping("/complete")
     public String completeList(@RequestParam("listNum") int listNum){
         listService.updateComplete(listNum);
-        return "redirect:/list/view";
+        return "redirect:/list/todolist";
     }
 }
