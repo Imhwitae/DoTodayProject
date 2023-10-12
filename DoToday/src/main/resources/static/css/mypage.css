@@ -92,7 +92,7 @@ body {
 }
 
 .main {
-    width: 70%;
+    width: 1440px;
     height: 100%;
     grid-area: main;
     background-color:#FFFFFF;

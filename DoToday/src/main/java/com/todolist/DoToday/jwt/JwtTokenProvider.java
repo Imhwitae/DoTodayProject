@@ -139,6 +139,12 @@ public class JwtTokenProvider {
         return claims.getSubject();
     }
 
+    // JWT 토큰에서 멤버 객체 추출
+    public MemberDetailDto getMember(String token) {
+        String memberId = getMemberIdFromToken(token);
+        return memberService.findById(memberId);
+    }
+
     /**
      * 토큰 추출
      * @StringUtils.hasText() 값이 있을 경우에는 true반환, 공백이거나 null이면 false 반환
@@ -172,4 +178,5 @@ public class JwtTokenProvider {
         MemberDetailDto member = memberService.findById(memberId);
         return new UsernamePasswordAuthenticationToken(member, null, null);
     }
+
 }
