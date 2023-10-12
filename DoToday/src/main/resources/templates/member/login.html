@@ -6,9 +6,13 @@
 <head>
     <meta charset="UTF-8">
     <link th:href="@{/css/login.css}" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/header.css}" />
     <title>로그인</title>
 </head>
 <body>
+<div class="header">
+    <div class="main_logo"><a href="/home">DoToday</a></div>
+</div>
 <div class="container" id="container">
     <div class="form-container sign-in-container">
         <form th:action="@{/members/todologin}" method="post">
