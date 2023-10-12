@@ -41,7 +41,7 @@ public class ListController {
     public String ListView(@ModelAttribute("todoList") TodoList todoList, Model model){
         List<TodoList> list = listService.show(todoList.getMemberId(), todoList.getDate());
         model.addAttribute("list",list);
-        return "test/todolist_test";
+        return "list/todolist_test";
     }
 
     @PostMapping("/write")
@@ -58,7 +58,7 @@ public class ListController {
     @PostMapping("/delete")
     public String deleteList(@RequestParam("listNum") int listNum){
         listService.delete(listNum);
-        return "redirect:/list/view";
+        return "redirect:/list/todolist";
     }
 
     @GetMapping("/update")
@@ -73,11 +73,11 @@ public class ListController {
                              @ModelAttribute("todoList") TodoList todoList, Model model){
         blank = listService.validate(todoList);
         if (blank == true){ // todolist의 title이 비어있을때
-            return "redirect:/list/view";
+            return "redirect:/list/todolist";
         }
         todoList.setListNum(listNum);
         listService.updateContent(todoList);
-        return "redirect:/list/view";
+        return "redirect:/list/todolist";
     }
 
     @PostMapping("/complete")
