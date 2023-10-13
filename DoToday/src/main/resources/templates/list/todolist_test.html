@@ -14,8 +14,8 @@
 </head>
 <body>
 <div class="header">
-    <div class="main_logo"><a href="/home">DoToday</a></div>
-    <div class="go_todo_list_on"><a href="/list/todolist">투두 리스트</a></div>
+    <div class="main_logo"><a href="/home">Todo Doit</a></div>
+    <div class="go_todo_list_on"><a href="/home">투두 리스트</a></div>
     <div class="go_my_page"><a href="/members/mypage">마이 페이지</a></div>
     <div class="go_friend_page"><a href="/friend/list">친구 목록</a></div>
     <div class="logout"><a href="/members/logout">로그아웃</a></div>
@@ -27,16 +27,22 @@
     </div>
     <form class="date_form"id="date_form" th:action="@{'/list/view'}" th:object="${todoList}" method="post">
         <input type="hidden" th:value="${memberInfo.memberId}"  th:name="memberId">
-        <input type="date" id="list_date" max="2030-12-31" min="2023-09-01" th:field="*{date}">
+        <input type="date" id="list_date" max="2030-12-31" min="2023-09-01" th:field="*{date}"
+               data-placeholder="날짜 선택" required aria-required="true" placeholder="날짜선택">
         <input class="date_submit" type="submit" value="찾아보기" form="date_form">
     </form><br/>
-    <form class="list_form" id="list_form" th:action="@{'/list/write'}" th:object="${todoList}" method="post">
+    <form class="list_form" id="list_form" th:action="@{'/list/write'}" th:object="${todoList}" method="post"  th:if="${msg} == null">
         <input type="hidden" th:value="${memberInfo.memberId}" th:name="memberId">
-        <input class="list_input" type="text" th:field="*{listTitle}" placeholder="오늘의 할일을 적어보세요!"
-               onfocus="this.placeholder = ''" onblur="this.placeholder = '오늘의 할일을 적어보세요!'">
+        <input class="list_input" type="text" th:field="*{listTitle}" placeholder="해야 할 일을 적어보세요!"
+               onfocus="this.placeholder = ''" onblur="this.placeholder = '해야 할 일을 적어보세요!'">
         <input class="list_submit" type="submit" value="" form="list_form">
     </form>
-    <div class="underLine"></div>
+    <div class="list_form" th:if="${msg} != null" >
+        <input class="list_input" type="text"th:placeholder="${msg}" readonly>
+    </div>
+    <div class="underLine">
+        <p class="date" th:text="${date}"></p>
+    </div>
     <div class="todolist" th:each="todoList : ${list}">
         <div class="complete" th:if="${todoList.complete} == 1">
             <div class="completeTitle" th:text="${todoList.listTitle}">리스트 내용</div>
@@ -65,9 +71,16 @@
             </form>
         </div>
     </div>
+    <div th:if="${exist} == false and ${msg} == null"class="emptyList">
+        해야할 일이 없습니다.<br/>
+        할 일을 추가해 보세요!
+    </div>
+    <div th:if="${exist} == false and ${msg} != null" class="emptyList">
+        계획한 일이 없습니다.<br/>
+    </div>
 </div>
 <script>
-    document.getElementById('list_date').value = new Date().toISOString().substring(0, 10);;
+    // document.getElementById('list_date').value = new Date().toISOString().substring(0, 10);;
 </script>
 </body>
 </html>
