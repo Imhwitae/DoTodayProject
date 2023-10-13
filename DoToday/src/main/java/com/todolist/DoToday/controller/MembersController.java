@@ -42,13 +42,11 @@ public class MembersController {
 
     @GetMapping("/loginform")
     public String memberLoginForm() {
-//        model.addAttribute("loginForm", new MemberLoginDto());
         return "/member/login";
     }
 
     @GetMapping("/mypage")
     public String memberMyPage() {
-//        model.addAttribute(memberDetailDto);
         return "/member/mypage";
     }
 

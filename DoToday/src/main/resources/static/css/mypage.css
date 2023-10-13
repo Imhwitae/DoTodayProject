@@ -26,7 +26,7 @@ body {
     height: 100vh;
     background-color: #FFFFFF;
     margin: 0 auto;
-    padding-top: 4rem;
+    padding-top: 6rem;
 }
 
 .image {
@@ -47,6 +47,79 @@ body {
     background: #FFFFFF;
     border: 1px solid #FF4462;
     border-radius: 5px;
+    margin: 2rem auto;
+    cursor: pointer;
+    text-align: center;
+    color: #FF4462;
+}
+
+.box_container {
+    width: 686px;
+    margin: 0 auto;
+}
+
+.name_box_text {
+    /* 이름 */
+    width: 29px;
+    height: 22px;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 22px;
+    letter-spacing: -0.05em;
+    color: #9F9F9F;
+}
+
+.name_box {
+    box-sizing: border-box;
+    width: 686px;
+    height: 40px;
+    background: #FFFFFF;
+    border: 1px solid #FF4462;
+    border-radius: 3px;
+    margin: 0 auto;
+    padding-left: 2rem;
+    padding-top: 0.3rem;
+}
+
+.email_box_text {
+    width: 94px;
+    height: 22px;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 22px;
+    letter-spacing: -0.05em;
+    color: #9F9F9F;
+    margin-top: 3rem;
+}
+
+.email_box {
+    box-sizing: border-box;
+    width: 686px;
+    height: 40px;
+    border: 1px solid #FF4462;
+    border-radius: 3px;
+    background: #EEEEEE;
+    color: #676767;
+    margin: 0 auto;
+    padding-left: 2rem;
+    padding-top: 0.3rem;
+}
+
+.change_pw_btn {
+    width: 210px;
+    height: 40px;
+    background: #FF4462;
+    border-radius: 5px;
+    margin-top: 1rem;
+    color: #FFFFFF;
+    text-align: center;
+    padding-top: 0.4rem;
+    cursor: pointer;
+}
+
+.new_tab {
+    width: 25px;
+    height: 25px;
 }
 
 
