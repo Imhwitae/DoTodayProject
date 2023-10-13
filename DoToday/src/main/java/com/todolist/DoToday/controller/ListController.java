@@ -47,7 +47,7 @@ public class ListController {
         listExist = listService.emptyList(list);
 
         LocalDate currentDate = LocalDate.now();
-        String currentDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
+        String currentDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy기 MM월 dd일"));
 
         model.addAttribute("date", currentDateStr);
         model.addAttribute("list", list);
@@ -56,16 +56,21 @@ public class ListController {
         return "list/todolist_test";
     }
 
-    @GetMapping("/view")
-    public String showListTest(Model model,@ModelAttribute("todoList") TodoList todoList){
-        List<TodoList> list = listService.showToday("aa");
-        model.addAttribute("list",list);
-        return "test/todolist_test";
-    }
+//    @GetMapping("/view")
+//    public String showListTest(Model model,@ModelAttribute("todoList") TodoList todoList){
+//        List<TodoList> list = listService.showToday("aa");
+//        model.addAttribute("list",list);
+//        return "test/todolist_test";
+//    }
 
     @PostMapping("/view")
     public String ListView(@RequestParam("memberId") String memberId,
                            @ModelAttribute("todoList") TodoList todoList, Model model){
+        log.info(memberId);
+        log.info(todoList.getDate());
+        if (memberId == null || todoList == null){
+            return "redirect:/list/todolist";
+        }
         List<TodoList> list = listService.show(memberId, todoList.getDate());
         MemberDetailDto mdd = memberService.findById(memberId);
 
