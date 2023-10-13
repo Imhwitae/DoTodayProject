@@ -1,5 +1,6 @@
 package com.todolist.DoToday.service;
 
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.todolist.DoToday.jwt.JwtTokenProvider;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.dto.request.MemberJoinDto;
@@ -18,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 public class MemberService implements UserDetailsService, AuthenticationProvider {
 
+    private final AmazonS3Client amazonS3Client;
     private final JdbcTemplate jdbcTemplate;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RowMapper<MemberDetailDto> rowMapper = new RowMapper<MemberDetailDto>() {
@@ -50,8 +53,6 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
 
         }
     };
-
-
 
     @Value("${cloud.aws.s3.basic-image}")
     private String basicImage;
@@ -89,8 +90,6 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
         return localDate;
     }
 
-    // 현재는 jwtFilter 통과 시 loadUserByUsername을 호출하여 디비를 거치지 않으므로 시큐리티 컨텍스트에는 엔티티 정보를 온전히 가지지 않는다
-    // 즉 loadUserByUsername을 호출하는 인증 API를 제외하고는 유저네임, 권한만 가지고 있으므로 Account 정보가 필요하다면 디비에서 꺼내와야함
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("멤버 전달");
@@ -121,7 +120,6 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
-
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         log.info("Authentication 진입");
@@ -141,5 +139,10 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
     @Override
     public boolean supports(Class<?> authentication) {
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
+    }
+
+    // 이미지 수정
+    public void updateMemberImage(MultipartFile multipartFile) {
+        String imageName = multipartFile.getName();
     }
 }

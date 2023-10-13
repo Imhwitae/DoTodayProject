@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/members")
@@ -53,5 +54,10 @@ public class MembersController {
         String accessToken = jwtTokenProvider.extractToken(request.getCookies());
         model.addAttribute("memberDetail", jwtTokenProvider.getMember(accessToken));
         return "/member/mypage";
+    }
+
+    @PostMapping("/update")
+    public void updateMyPage(MultipartFile multipartFile) {
+        memberService.updateMemberImage(multipartFile);
     }
 }

@@ -40,6 +40,23 @@ body {
     margin: 0 auto;
 }
 
+.member_image {
+    width: 120px;
+    height: 120px;
+}
+
+.input_label_box {
+    vertical-align: middle;
+}
+
+.input_label {
+    display: inherit;
+}
+
+#image_file {
+    display: none;
+}
+
 .change_btn {
     box-sizing: border-box;
     width: 63px;
