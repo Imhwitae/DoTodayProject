@@ -95,6 +95,7 @@ input[type='date']::before{
     background: #FFF;
     margin: 0px auto 25px;
 }
+
 .list_input {
     border: none;
     text-align: center;
@@ -107,7 +108,23 @@ input[type='date']::before{
     line-height: normal;
     letter-spacing: -0.8px;
     margin: 6px 0px 6px 0px;
+    padding-left: 30px;
 }
+
+.list_input_denied{
+    border: none;
+    text-align: center;
+    width: 630px;
+    height: 30px;
+    font-family: Noto Sans;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.8px;
+    margin: 6px 0px 6px 0px;
+}
+
 .list_submit{
     text-align:right;
     background: url(./image/add-list.png) no-repeat right 0px center / 25px auto;;
@@ -199,6 +216,7 @@ input:focus {outline:none;}
     letter-spacing: -0.8px;
     width: 590px;
     float: left;
+    padding-left: 94px;
 }
 
 .deleteForm {
@@ -263,6 +281,7 @@ input:focus {outline:none;}
     letter-spacing: -0.8px;
     width: 590px;
     float: left;
+    padding-left: 94px;
 }
 
 .infoImage {

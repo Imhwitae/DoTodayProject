@@ -38,7 +38,7 @@
         <input class="list_submit" type="submit" value="" form="list_form">
     </form>
     <div class="list_form" th:if="${msg} != null" >
-        <input class="list_input" type="text"th:placeholder="${msg}" readonly>
+        <input class="list_input_denied" type="text"th:placeholder="${msg}" readonly>
     </div>
     <div class="underLine">
         <p class="date" th:text="${date}"></p>
