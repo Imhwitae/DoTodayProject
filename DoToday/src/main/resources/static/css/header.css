@@ -5,6 +5,10 @@ a {
     color: inherit;
 }
 
+a:hover { /*a 태그에 커서를 가져갔을때 강조 색 없애기*/
+    color: inherit;
+}
+
 body {
     background-color: #F5F6F8;
 }
