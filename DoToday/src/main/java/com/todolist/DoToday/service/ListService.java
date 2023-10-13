@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -86,9 +88,44 @@ public class ListService {
     public boolean validate(TodoList todoList){
         String title = todoList.getListTitle();
         boolean blank = false;
-        if (title.trim().isEmpty() == true || title == null){//앞뒤로 공백이 있으면 지워줌
+        if (title.trim().isEmpty() == true || title == null){ //앞뒤로 공백이 있으면 지워줌
             blank = true;
         }
         return blank;
+    }
+
+    public String dateCheck(String date){
+        String msg = null;
+
+        LocalDate currentDate = LocalDate.now(); //현재 날짜 호출
+        String currentDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); //호출한 날짜 형식을 입력받은 모양으로 변경
+
+        LocalDate inputDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE); //입력받은 날짜를 타입 변환을 시켜줌
+
+        log.info(inputDate+"");
+        log.info(currentDateStr);
+
+//        if (date.trim().replace(" ","") != currentDateStr.trim().replace(" ","")){
+//            msg = "날짜가 이미 지났습니다.";
+//        }
+        if (currentDate.isAfter(inputDate)){
+            msg = "날짜가 이미 지났습니다.";
+        }
+
+        log.info(msg);
+
+        return msg;
+    }
+
+
+
+    public boolean emptyList(List<TodoList> list){
+        boolean listExist;
+        if (list.isEmpty()){ //투두 리스트가 비어있는지 확인
+            listExist = false;
+        }else{
+            listExist = true;
+        }
+        return listExist;
     }
 }
