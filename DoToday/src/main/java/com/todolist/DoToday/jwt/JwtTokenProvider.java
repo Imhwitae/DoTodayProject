@@ -8,6 +8,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -145,13 +146,27 @@ public class JwtTokenProvider {
         return memberService.findById(memberId);
     }
 
-    /**
-     * 토큰 추출
-     * @StringUtils.hasText() 값이 있을 경우에는 true반환, 공백이거나 null이면 false 반환
-     */
-    public String extractToken(HttpServletRequest request) {
-        // http header의 authorization 이름을 가진 값을 가져옴
-        return request.getHeader(HttpHeaders.AUTHORIZATION);
+    // 쿠키 배열에서 accessToken만 추출
+    public String extractToken(Cookie[] cookies) {
+        String accessToken = null;
+        String refreshToken = null;
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                String tokenName = cookie.getName();
+                String value = cookie.getValue();
+
+                if (tokenName.equals("refreshToken")) {
+                    refreshToken = value;
+                    log.info("refreshToken {}", value);
+                } else if (tokenName.equals("accessToken")){
+                    accessToken = value;
+                    log.info("accessToken {}", value);
+                }
+            }
+        }
+
+        return accessToken;
     }
 
     // accessToken 재발급

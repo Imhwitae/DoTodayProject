@@ -2,7 +2,9 @@ package com.todolist.DoToday.controller;
 
 import com.todolist.DoToday.dto.Gender;
 import com.todolist.DoToday.dto.request.MemberJoinDto;
+import com.todolist.DoToday.jwt.JwtTokenProvider;
 import com.todolist.DoToday.service.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class MembersController {
 
     private final MemberService memberService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/join_form")
     public String addForm(Model model) {
@@ -46,9 +49,9 @@ public class MembersController {
     }
 
     @GetMapping("/mypage")
-    public String memberMyPage() {
+    public String memberMyPage(HttpServletRequest request, Model model) {
+        String accessToken = jwtTokenProvider.extractToken(request.getCookies());
+        model.addAttribute("memberDetail", jwtTokenProvider.getMember(accessToken));
         return "/member/mypage";
     }
-
-
 }
