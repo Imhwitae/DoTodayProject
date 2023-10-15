@@ -305,23 +305,51 @@ input:focus {outline:none;}
     color: #b4b4b4;
 }
 
-#cUpdateOpen, #cUpdateClose {
+/*#cUpdateOpen, #cUpdateClose {*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*#cUpdate {*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    position: fixed;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    background: rgba(0, 0, 0, 0.5);*/
+/*}*/
+
+/*#cUpdateForm {*/
+/*    position: absolute;*/
+/*    background-color: #ffffff;*/
+/*    width: 300px;*/
+/*    height: 150px;*/
+/*    padding: 15px;*/
+/*}*/
+
+/*#cUpdate.hidden {*/
+/*    display: none;*/
+/*}*/
+
+.updateButton, .modalClose {
     cursor: pointer;
 }
 
-#cUpdate {
+.updateModal {
     width: 100%;
     height: 100%;
     position: fixed;
     top: 0;
     left: 0;
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     background: rgba(0, 0, 0, 0.5);
 }
 
-#cUpdateForm {
+.modalDiv {
     position: absolute;
     background-color: #ffffff;
     width: 300px;
@@ -329,11 +357,11 @@ input:focus {outline:none;}
     padding: 15px;
 }
 
-#cUpdate.hidden {
+.hidden {
     display: none;
 }
 
-.cUpdateButton {
+.updateButton {
     border: none;
     width: 20px;
     height: 20px;

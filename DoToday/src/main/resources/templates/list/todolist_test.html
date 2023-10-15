@@ -60,16 +60,16 @@
 <!--                <input class="deleteButton" type="submit" value="" form="completeDelete">-->
 <!--            </form>-->
             <!--리스트 수정 모달창 오픈 버튼-->
-            <button th:id="cUpdateOpen+${todoList.listNum}" class="cUpdateButton"></button>
+            <button class="updateButton"></button>
             <!--모달창 내용-->
-            <div id="cUpdate" class="hidden cUpdate">
-                <div id="cUpdateForm" class="cUpdateDiv">
-                    <form id="update_form" class="modalUpdateForm" th:action="@{'/list/update'}" th:object="${todoList}" method="post">
+            <div class="updateModal">
+                <div class="modalDiv">
+                    <form id="update_form" class="modalForm" th:action="@{'/list/update'}" th:object="${todoList}" method="post">
 <!--                        <input type="hidden" th:name="date" th:value="${todoList.date}">-->
                         <input type="hidden" class="" th:name="listNum" th:value="${todoList.listNum}">
                         <input type="text" class="" th:field="*{listTitle}" th:value="${todoList.listNum}">
                         <input type="submit" class="" value="수정" form="update_form">
-                        <button id="cUpdateClose" class="cUpdateClose" >취소</button>
+                        <button class="modalClose" >취소</button>
                     </form>
                 </div>
             </div>
@@ -97,10 +97,24 @@
 <!--                <input type="hidden" th:name="listNum" th:value="${todoList.listNum}">-->
 <!--                <input class="deleteButton" type="submit" value="" form="inCompleteDelete">-->
 <!--            </form>-->
-            <form class="updateForm" id="inCompleteUpdate" th:action="@{'/list/update'}" method="get">
-                <input type="hidden" th:name="listNum" th:value="${todoList.listNum}">
-                <input class="updateButton" type="submit" value="" form="inCompleteUpdate">
-            </form>
+            <!--리스트 수정 모달창 오픈 버튼-->
+            <button class="updateButton"></button>
+            <!--모달창 내용-->
+            <div class="updateModal">
+                <div class="modalDiv">
+                    <form id="incomplete_update_form" class="modalForm" th:action="@{'/list/update'}" th:object="${todoList}" method="post">
+                        <!--                        <input type="hidden" th:name="date" th:value="${todoList.date}">-->
+                        <input type="hidden" class="" th:name="listNum" th:value="${todoList.listNum}">
+                        <input type="text" class="" th:field="*{listTitle}" th:value="${todoList.listNum}">
+                        <input type="submit" class="" value="수정" form="incomplete_update_form">
+                        <button class="modalClose" >취소</button>
+                    </form>
+                </div>
+            </div>
+<!--            <form class="updateForm" id="inCompleteUpdate" th:action="@{'/list/update'}" method="get">-->
+<!--                <input type="hidden" th:name="listNum" th:value="${todoList.listNum}">-->
+<!--                <input class="updateButton" type="submit" value="" form="inCompleteUpdate">-->
+<!--            </form>-->
         </div>
     </div>
     <div th:if="${exist} == false and ${msg} == null"class="emptyList">
@@ -113,20 +127,59 @@
 </div>
 <script>
     // document.getElementById('list_date').value = new Date().toISOString().substring(0, 10);;
-    const cUpdateOpenButton = document.getElementsByClassName('cUpdateButton');
+    //모달 오픈 버튼
+    const openButton = document.getElementsByClassName('updateButton');
     // const cUpdateOpenButton = document.getElementById('cUpdateOpen');
-    const cUpdateCloseButton = document.getElementsByClassName('cUpdateClose');
+    //모달 닫기 버튼
+    const closeButton = document.getElementsByClassName('modalClose');
     // const cUpdateCloseButton = document.getElementById('cUpdateClose');
-    const cUpdateForm = document.getElementsByClassName('cUpdate');
+    //모달 클래스
+    const modal = document.getElementsByClassName('updateModal');
     // const cUpdateForm = document.getElementById('cUpdate');
 
-    cUpdateOpenButton.addEventListener('click', () => {
-        cUpdateForm.classList.remove('hidden');
-    });
+    var funcs = [];
 
-    cUpdateCloseButton.addEventListener('click', () => {
-        cUpdateForm.classList.add('hidden');
-    });
+    function Modal(num) {
+        return function() {
+            // 해당 클래스의 내용을 클릭하면 Modal을 띄웁니다.
+            openButton[num].onclick =  function() {
+                modal[num].style.display = "flex";
+                // modal[num].classList.remove('hidden');
+                console.log(num);
+            };
+
+            // <span> 태그(X 버튼)를 클릭하면 Modal이 닫습니다.
+            closeButton[num].onclick = function() {
+                modal[num].style.display = "none";
+                // modal[num].classList.add('hidden');
+            };
+        };
+    }
+
+    // 원하는 Modal 수만큼 Modal 함수를 호출해서 funcs 함수에 정의합니다.
+    for(var i = 0; i < openButton.length; i++) {
+        funcs[i] = Modal(i);
+    }
+
+    // 원하는 Modal 수만큼 funcs 함수를 호출합니다.
+    for(var j = 0; j < openButton.length; j++) {
+        funcs[j]();
+    }
+
+    // Modal 영역 밖을 클릭하면 Modal을 닫습니다.
+    window.onclick = function(event) {
+        if (event.target.className == "updateModal") {
+            event.target.style.display = "none";
+        }
+    }
+
+    // cUpdateOpenButton.addEventListener('click', () => {
+    //     cUpdateForm.classList.remove('hidden');
+    // });
+    //
+    // cUpdateCloseButton.addEventListener('click', () => {
+    //     cUpdateForm.classList.add('hidden');
+    // });
 </script>
 </body>
 </html>
