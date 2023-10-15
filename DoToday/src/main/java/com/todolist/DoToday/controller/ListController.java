@@ -47,7 +47,7 @@ public class ListController {
         listExist = listService.emptyList(list);
 
         LocalDate currentDate = LocalDate.now();
-        String currentDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy기 MM월 dd일"));
+        String currentDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
 
         model.addAttribute("date", currentDateStr);
         model.addAttribute("list", list);
@@ -63,21 +63,22 @@ public class ListController {
 //        return "test/todolist_test";
 //    }
 
-    @PostMapping("/view")
+    @GetMapping("/view")
     public String ListView(@RequestParam("memberId") String memberId,
                            @ModelAttribute("todoList") TodoList todoList, Model model){
-        log.info(memberId);
-        log.info(todoList.getDate());
         if (memberId == null || todoList == null){
             return "redirect:/list/todolist";
         }
         List<TodoList> list = listService.show(memberId, todoList.getDate());
         MemberDetailDto mdd = memberService.findById(memberId);
 
+        //리스트가 비어있으면 true 있으면 false를 반환
         listExist = listService.emptyList(list);
 
+        //오늘날짜와 받아온 날짜를 비교해 이미 지난 날이면 '날짜가 이미 지났습니다.'라고 받아옴
         String message = listService.dateCheck(todoList.getDate());
 
+        //받아온 날짜를 지정된 형태로 형 변환 하여 다시 값 전달
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
         LocalDate inputDate = LocalDate.parse(todoList.getDate(), DateTimeFormatter.ISO_LOCAL_DATE);
         String date = inputDate.format(formatter);
@@ -92,28 +93,36 @@ public class ListController {
 
     @PostMapping("/write")
     public String writeList(@RequestParam("memberId") String memberId,
-                            @ModelAttribute("todoList") TodoList todoList,Model model){
+                            @ModelAttribute("todoList") TodoList todoList,Model model,
+                            HttpServletRequest request){
         blank = listService.validate(todoList);
         if (blank == true){ // todolist의 title이 비어있을때
             model.addAttribute("error","오늘의 할일을 작성해 주세요!");
             return "/test/error";
         }
         listService.write(todoList);
-        return "redirect:/list/todolist";
+//        return "redirect:/list/todolist";
+
+        String referer = request.getHeader("Referer");
+        return "redirect:"+ referer;
     }
 
-    @PostMapping("/delete")
-    public String deleteList(@RequestParam("listNum") int listNum){
+    @GetMapping("/delete/{num}")
+    public String deleteList(@PathVariable("num") int listNum,
+                             HttpServletRequest request){
+        log.info(listNum+"");
         listService.delete(listNum);
-        return "redirect:/list/todolist";
+//        return "redirect:/list/todolist";
+        String referer = request.getHeader("Referer");
+        return "redirect:"+ referer;
     }
 
-    @GetMapping("/update")
-    public String updateForm(@RequestParam("listNum") int listNum,
-                             @ModelAttribute("todoList") TodoList todoList, Model model){
-        model.addAttribute("view",listService.view(listNum));
-        return "test/todolist_updateForm_test";
-    }
+//    @GetMapping("/update")
+//    public String updateForm(@RequestParam("listNum") int listNum,
+//                             @ModelAttribute("todoList") TodoList todoList, Model model){
+//        model.addAttribute("view",listService.view(listNum));
+//        return "test/todolist_updateForm_test";
+//    }
 
     @PostMapping("/update")
     public String updateList(@RequestParam("listNum") int listNum,
@@ -124,11 +133,17 @@ public class ListController {
         }
         todoList.setListNum(listNum);
         listService.updateContent(todoList);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
+        LocalDate inputDate = LocalDate.parse(todoList.getDate(), DateTimeFormatter.ISO_LOCAL_DATE);
+        String date = inputDate.format(formatter);
+
         return "redirect:/list/todolist";
     }
 
-    @PostMapping("/complete")
-    public String completeList(@RequestParam("listNum") int listNum){
+    @GetMapping("/complete/{num}")
+    public String completeList(@PathVariable("num") int listNum){
+        log.info(listNum+"");
         listService.updateComplete(listNum);
         return "redirect:/list/todolist";
     }
