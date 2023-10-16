@@ -1,6 +1,7 @@
 package com.todolist.DoToday.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.todolist.DoToday.jwt.JwtTokenProvider;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.dto.request.MemberJoinDto;
@@ -21,8 +22,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -58,7 +62,14 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
     private String basicImage;
 
     @Value("${cloud.aws.s3.bucket}")
+    private String s3BucketName;
+
+    @Value("${cloud.aws.s3.bucket-url}")
     private String s3BucketLink;
+
+    @Value("${part.upload.path}")
+    private String dirPath;
+
 
     public Long join(Members members) throws Exception {
         validateDuplicateMember(members);
@@ -142,7 +153,30 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
     }
 
     // 이미지 수정
-    public void updateMemberImage(MultipartFile multipartFile) {
-        String imageName = multipartFile.getName();
+    public String uploadImage(MultipartFile multipartFile) throws IOException {
+        String originalImageName = Normalizer.normalize(multipartFile.getOriginalFilename(), Normalizer.Form.NFC);
+        String uploadImageName = "profile_image/" +  originalImageName;
+
+        // 폴더 생성
+        File folder = new File(dirPath);
+        if (!folder.exists()) {
+            try {
+                folder.mkdir();
+                log.info("폴더 생성");
+            } catch (Exception e) {
+                log.info("폴더가 이미 생성되어있음");
+            }
+        }
+
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(multipartFile.getSize());  // 이미지 크기
+        objectMetadata.setContentType(multipartFile.getContentType());  // 이미지 타입
+
+        amazonS3Client.putObject(s3BucketName, uploadImageName, multipartFile.getInputStream(), objectMetadata);
+        log.info("이미지 경로 {}", amazonS3Client.getResourceUrl(s3BucketName, uploadImageName));
+        // 폴더 삭제
+        folder.delete();
+
+        return amazonS3Client.getResourceUrl(s3BucketName, uploadImageName).toString();
     }
 }

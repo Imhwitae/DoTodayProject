@@ -19,11 +19,11 @@
     </div>
     <div class="main_content" th:object="${memberDetail}">
         <div class="image"><img class="member_image" th:src="*{memberImage}"></div>
-        <form action="/members/update" method="post">
+        <form action="/members/update" method="post" enctype="multipart/form-data">
             <div class="input_label_box">
                 <label class="input_label" for="image_file">
                     <div class="change_btn">변경</div>
-                    <input id="image_file" type="file">
+                    <input id="image_file" type="file" name="image_file">
                 </label>
             </div>
 
@@ -35,6 +35,10 @@
                 <div class="email_box"><span th:text="*{memberId}"></span></div>
 
                 <div class="change_pw_btn">비밀번호 변경<img class="new_tab" th:src="@{/css/image/new_tab.png}"></div>
+            </div>
+            <div class="box_footer">
+                <button class="cancel_btn">취소</button>
+                <button class="update_btn">저장</button>
             </div>
         </form>
     </div>
