@@ -57,11 +57,11 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
             String memberId = jwtTokenProvider.getMemberIdFromToken(accessToken);
 
             if (memberId != null && jwtTokenProvider.validateToken(accessToken)) {
-                log.info("토큰 검증 후 시큐리티 컨텍스트에 정보 담기");
+//                log.info("토큰 검증 후 시큐리티 컨텍스트에 정보 담기");
                 Authentication authentication = jwtTokenProvider.getAuthentication(memberId);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 log.info("{} 유저 정보 저장", authentication.getName());
-                log.info("인증 여부 = {}", SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
+//                log.info("인증 여부 = {}", SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
                 filterChain.doFilter(request, response);
             } else {
                 log.info("멤버를 못 찾았거나, 토큰 오류");
