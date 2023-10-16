@@ -51,14 +51,10 @@
         <div class="complete" th:if="${todoList.complete} == 1"> <!--완료된 리스트-->
             <div class="completeTitle" th:text="${todoList.listTitle}">리스트 내용</div>
             <!--리스트 삭제-->
-            <div class="deleteForm">
-                <a th:href="@{'/list/delete/'+${todoList.listNum}}" class="deleteButton"></a>
-            </div>
-            <!--ㅅㅂ 포스트로 리스트 넘버 넘기면 왜 자기 번호가 아니라 제일 앞 번호가 전달 되냐고-->
-<!--            <form class="deleteForm" id="completeDelete" th:action="@{'/list/delete/'+${todoList.listNum}}" method="post">-->
-<!--                <input type="hidden" th:name="listNum" th:value="${todoList.listNum}">-->
-<!--                <input class="deleteButton" type="submit" value="" form="completeDelete">-->
-<!--            </form>-->
+            <form class="deleteForm" id="completeDelete" th:action="@{'/list/delete'}" method="post">
+                <input type="hidden" th:name="listNum" th:value="${todoList.listNum}">
+                <input class="deleteButton" type="submit" value="">
+            </form>
             <!--리스트 수정 모달창 오픈 버튼-->
             <button class="updateButton"></button>
             <!--모달창 내용-->
@@ -68,35 +64,24 @@
 <!--                        <input type="hidden" th:name="date" th:value="${todoList.date}">-->
                         <input type="hidden" class="" th:name="listNum" th:value="${todoList.listNum}">
                         <input type="text" class="" th:field="*{listTitle}" th:value="${todoList.listNum}">
-                        <input type="submit" class="" value="수정" form="update_form">
-                        <button class="modalClose" >취소</button>
+                        <input type="submit" class="" value="수정">
+                        <button class="modalClose" type="button">취소</button>
                     </form>
                 </div>
             </div>
-<!--            <form class="updateForm" id="completeUpdate" th:action="@{'/list/update'}" method="get">-->
-<!--                <input type="hidden" th:name="listNum" th:value="${todoList.listNum}">-->
-<!--                <input class="updateButton" type="submit" value="" form="completeUpdate">-->
-<!--            </form>-->
         </div>
         <div class="incomplete" th:if="${todoList.complete} == 0"><!--미완료된 리스트-->
             <div class="incompleteTitle" th:text="${todoList.listTitle}">리스트 내용</div>
             <!--리스트 완료-->
-            <div class="completeForm">
-                <a th:href="@{'/list/complete/'+${todoList.listNum}}" class="completeButton"></a>
-            </div>
-<!--            <form class="completeForm" id="inCompleteComplete" th:action="@{'/list/complete/'+${todoList.listNum}}" method="post">-->
-<!--                <input type="hidden" th:name="listNum" th:value="${todoList.listNum}">-->
-<!--                <input class="completeButton" type="submit" value="" form="inCompleteComplete">-->
-<!--                <a th:href="@{'/list/complete/'+${todoList.listNum}}" class="completeButton"></a>-->
-<!--            </form>-->
+            <form class="completeForm" id="inCompleteComplete" th:action="@{'/list/complete'}" method="post">
+                <input type="hidden" th:name="listNum" th:value="${todoList.listNum}">
+                <input class="completeButton" type="submit" value="">
+            </form>
             <!--리스트 삭제-->
-            <div class="deleteForm">
-                <a th:href="@{'/list/delete/'+${todoList.listNum}}" class="deleteButton"></a>
-            </div>
-<!--            <form class="deleteForm" id="inCompleteDelete" th:action="@{'/list/delete/'+${todoList.listNum}}" method="post">-->
-<!--                <input type="hidden" th:name="listNum" th:value="${todoList.listNum}">-->
-<!--                <input class="deleteButton" type="submit" value="" form="inCompleteDelete">-->
-<!--            </form>-->
+            <form class="deleteForm" id="inCompleteDelete" th:action="@{'/list/delete'}" method="post">
+                <input type="hidden" th:name="listNum" th:value="${todoList.listNum}">
+                <input class="deleteButton" type="submit" value="">
+            </form>
             <!--리스트 수정 모달창 오픈 버튼-->
             <button class="updateButton"></button>
             <!--모달창 내용-->
@@ -106,15 +91,11 @@
                         <!--                        <input type="hidden" th:name="date" th:value="${todoList.date}">-->
                         <input type="hidden" class="" th:name="listNum" th:value="${todoList.listNum}">
                         <input type="text" class="" th:field="*{listTitle}" th:value="${todoList.listNum}">
-                        <input type="submit" class="" value="수정" form="incomplete_update_form">
-                        <button class="modalClose" >취소</button>
+                        <input type="submit" class="" value="수정">
+                        <button class="modalClose" type="button">취소</button>
                     </form>
                 </div>
             </div>
-<!--            <form class="updateForm" id="inCompleteUpdate" th:action="@{'/list/update'}" method="get">-->
-<!--                <input type="hidden" th:name="listNum" th:value="${todoList.listNum}">-->
-<!--                <input class="updateButton" type="submit" value="" form="inCompleteUpdate">-->
-<!--            </form>-->
         </div>
     </div>
     <div th:if="${exist} == false and ${msg} == null"class="emptyList">

@@ -56,13 +56,6 @@ public class ListController {
         return "list/todolist_test";
     }
 
-//    @GetMapping("/view")
-//    public String showListTest(Model model,@ModelAttribute("todoList") TodoList todoList){
-//        List<TodoList> list = listService.showToday("aa");
-//        model.addAttribute("list",list);
-//        return "test/todolist_test";
-//    }
-
     @GetMapping("/view")
     public String ListView(@RequestParam("memberId") String memberId,
                            @ModelAttribute("todoList") TodoList todoList, Model model){
@@ -107,8 +100,8 @@ public class ListController {
         return "redirect:"+ referer;
     }
 
-    @GetMapping("/delete/{num}")
-    public String deleteList(@PathVariable("num") int listNum,
+    @PostMapping("/delete")
+    public String deleteList(@RequestParam("listNum") int listNum,
                              HttpServletRequest request){
         log.info(listNum+"");
         listService.delete(listNum);
@@ -116,13 +109,6 @@ public class ListController {
         String referer = request.getHeader("Referer");
         return "redirect:"+ referer;
     }
-
-//    @GetMapping("/update")
-//    public String updateForm(@RequestParam("listNum") int listNum,
-//                             @ModelAttribute("todoList") TodoList todoList, Model model){
-//        model.addAttribute("view",listService.view(listNum));
-//        return "test/todolist_updateForm_test";
-//    }
 
     @PostMapping("/update")
     public String updateList(@RequestParam("listNum") int listNum,
@@ -141,10 +127,13 @@ public class ListController {
         return "redirect:/list/todolist";
     }
 
-    @GetMapping("/complete/{num}")
-    public String completeList(@PathVariable("num") int listNum){
+    @PostMapping("/complete")
+    public String completeList(@RequestParam("listNum") int listNum,
+                               HttpServletRequest request){
         log.info(listNum+"");
         listService.updateComplete(listNum);
-        return "redirect:/list/todolist";
+//        return "redirect:/list/todolist";
+        String referer = request.getHeader("Referer");
+        return "redirect:"+ referer;
     }
 }
