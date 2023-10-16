@@ -24,7 +24,6 @@ import java.util.List;
 public class ListController {
     private final ListService listService;
     private boolean blank, listExist;
-    private final MemberService memberService;
     private final JwtTokenProvider jtp;
 
     @GetMapping("/todolist")
@@ -57,13 +56,27 @@ public class ListController {
     }
 
     @GetMapping("/view")
-    public String ListView(@RequestParam("memberId") String memberId,
+    public String ListView(HttpServletRequest request,
                            @ModelAttribute("todoList") TodoList todoList, Model model){
-        if (memberId == null || todoList == null){
+        Cookie[] cookies = request.getCookies();
+
+        MemberDetailDto mdd = null;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                String tokenName = cookie.getName();
+                String value = cookie.getValue();
+
+                if (tokenName.equals("accessToken")) {
+                    mdd = jtp.getMember(value);
+                }
+            }
+        }
+
+        if (mdd.getMemberId() == null || todoList == null){
             return "redirect:/list/todolist";
         }
-        List<TodoList> list = listService.show(memberId, todoList.getDate());
-        MemberDetailDto mdd = memberService.findById(memberId);
+
+        List<TodoList> list = listService.show(mdd.getMemberId(), todoList.getDate());
 
         //리스트가 비어있으면 true 있으면 false를 반환
         listExist = listService.emptyList(list);
@@ -89,12 +102,17 @@ public class ListController {
                             @ModelAttribute("todoList") TodoList todoList,Model model,
                             HttpServletRequest request){
         blank = listService.validate(todoList);
+
         if (blank == true){ // todolist의 title이 비어있을때
+            LocalDate currentDate = LocalDate.now();
+            String currentDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
             model.addAttribute("error","오늘의 할일을 작성해 주세요!");
+            model.addAttribute("todolist",currentDateStr);
             return "/test/error";
         }
+
         listService.write(todoList);
-//        return "redirect:/list/todolist";
 
         String referer = request.getHeader("Referer");
         return "redirect:"+ referer;
