@@ -27,7 +27,7 @@
     </div>
     <!--날짜 선택-->
     <form class="date_form"id="date_form" th:action="@{'/list/view'}" th:object="${todoList}" method="get">
-        <input type="hidden" th:value="${memberInfo.memberId}"  th:name="memberId">
+<!--        <input type="hidden" th:value="${memberInfo.memberId}"  th:name="memberId">-->
         <input type="date" id="list_date" max="2030-12-31" min="2023-09-01" th:field="*{date}" th:name="pathDate"
                data-placeholder="날짜 선택" required aria-required="true" placeholder="날짜선택">
         <input class="date_submit" type="submit" value="찾아보기" form="date_form">
@@ -62,9 +62,11 @@
                 <div class="modalDiv">
                     <form id="update_form" class="modalForm" th:action="@{'/list/update'}" th:object="${todoList}" method="post">
 <!--                        <input type="hidden" th:name="date" th:value="${todoList.date}">-->
-                        <input type="hidden" class="" th:name="listNum" th:value="${todoList.listNum}">
-                        <input type="text" class="" th:field="*{listTitle}" th:value="${todoList.listNum}">
-                        <input type="submit" class="" value="수정">
+                        <input type="hidden"  th:name="listNum" th:value="${todoList.listNum}">
+                        <input type="text" class="updateTitle" th:field="*{listTitle}" th:value="${todoList.listNum}"
+                               placeholder="수정할 내용을 작성하세요."
+                               onfocus="this.placeholder = ''" onblur="this.placeholder = '수정할 내용을 작성하세요.'">
+                        <input type="submit" class="updateSubmit" value="수정">
                         <button class="modalClose" type="button">취소</button>
                     </form>
                 </div>
@@ -89,9 +91,11 @@
                 <div class="modalDiv">
                     <form id="incomplete_update_form" class="modalForm" th:action="@{'/list/update'}" th:object="${todoList}" method="post">
                         <!--                        <input type="hidden" th:name="date" th:value="${todoList.date}">-->
-                        <input type="hidden" class="" th:name="listNum" th:value="${todoList.listNum}">
-                        <input type="text" class="" th:field="*{listTitle}" th:value="${todoList.listNum}">
-                        <input type="submit" class="" value="수정">
+                        <input type="hidden" th:name="listNum" th:value="${todoList.listNum}">
+                        <input type="text" class="updateTitle" th:field="*{listTitle}" th:value="${todoList.listNum}"
+                               placeholder="수정할 내용을 작성하세요."
+                               onfocus="this.placeholder = ''" onblur="this.placeholder = '수정할 내용을 작성하세요.'">
+                        <input type="submit" class="updateSubmit" value="수정">
                         <button class="modalClose" type="button">취소</button>
                     </form>
                 </div>
