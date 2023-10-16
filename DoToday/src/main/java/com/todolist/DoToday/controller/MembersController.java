@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @Controller
 @RequestMapping("/members")
 @RequiredArgsConstructor
@@ -57,7 +59,10 @@ public class MembersController {
     }
 
     @PostMapping("/update")
-    public void updateMyPage(MultipartFile multipartFile) {
-        memberService.updateMemberImage(multipartFile);
+    public String updateMyPage(@RequestParam("image_file") MultipartFile image) throws IOException {
+        log.info("이미지 받음 {}", image.getOriginalFilename());
+        memberService.uploadImage(image);
+
+        return "redirect:/members/mypage";
     }
 }

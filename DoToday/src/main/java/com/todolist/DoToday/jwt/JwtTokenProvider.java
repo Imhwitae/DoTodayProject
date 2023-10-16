@@ -158,10 +158,10 @@ public class JwtTokenProvider {
 
                 if (tokenName.equals("refreshToken")) {
                     refreshToken = value;
-                    log.info("refreshToken {}", value);
+//                    log.info("refreshToken {}", value);
                 } else if (tokenName.equals("accessToken")){
                     accessToken = value;
-                    log.info("accessToken {}", value);
+//                    log.info("accessToken {}", value);
                 }
             }
         }
