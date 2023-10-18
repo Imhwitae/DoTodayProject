@@ -97,18 +97,25 @@ public class ListController {
         return "list/todolist_test";
     }
 
-    @PostMapping("/write")
+    @PostMapping("/write/{date}")
     public String writeList(@RequestParam("memberId") String memberId,
+                            @PathVariable("date") String date,
                             @ModelAttribute("todoList") TodoList todoList,Model model,
                             HttpServletRequest request){
         blank = listService.validate(todoList);
 
-        if (blank == true){ // todolist의 title이 비어있을때
-            LocalDate currentDate = LocalDate.now();
-            String currentDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        date = date.replaceAll("[년월]","-").replaceAll("[ 일]","");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate inputDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+        String setDateStr = inputDate.format(formatter);
 
+        todoList.setMemberId(memberId);
+        todoList.setDate(setDateStr);
+        log.info(setDateStr);
+        log.info(memberId);
+
+        if (blank == true){ // todolist의 title이 비어있을때
             model.addAttribute("error","오늘의 할일을 작성해 주세요!");
-            model.addAttribute("todolist",currentDateStr);
             return "/test/error";
         }
 
@@ -123,33 +130,45 @@ public class ListController {
                              HttpServletRequest request){
         log.info(listNum+"");
         listService.delete(listNum);
-//        return "redirect:/list/todolist";
+
         String referer = request.getHeader("Referer");
         return "redirect:"+ referer;
     }
 
     @PostMapping("/update")
     public String updateList(@RequestParam("listNum") int listNum,
-                             @ModelAttribute("todoList") TodoList todoList, Model model){
+                             @ModelAttribute("todoList") TodoList todoList,
+                             HttpServletRequest request){
+        String referer = request.getHeader("Referer");
+
         blank = listService.validate(todoList);
         if (blank == true){ // todolist의 title이 비어있을때
-            return "redirect:/list/todolist";
+            return "redirect:"+ referer;
         }
         todoList.setListNum(listNum);
         listService.updateContent(todoList);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
-        LocalDate inputDate = LocalDate.parse(todoList.getDate(), DateTimeFormatter.ISO_LOCAL_DATE);
-        String date = inputDate.format(formatter);
-
-        return "redirect:/list/todolist";
+//        return "redirect:/list/todolist";
+        return "redirect:"+ referer;
     }
 
-    @PostMapping("/complete")
-    public String completeList(@RequestParam("listNum") int listNum,
-                               HttpServletRequest request){
+    @PostMapping("/complete/{date}")
+    public String completeList(@PathVariable("date") String date,
+                               @RequestParam("listNum") int listNum,
+                               HttpServletRequest request, Model model){
+        date = date.replaceAll("[년월]","-").replaceAll("[ 일]","");
+        LocalDate inputDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+
+        LocalDate currentDate = LocalDate.now();
+
+        if (currentDate.isAfter(inputDate) || currentDate.isEqual(inputDate)) { //변수로 받아온 날짜가 오늘날짜와 같거나 과거일때
+            listService.updateComplete(listNum);
+        }else{
+            model.addAttribute("error","아직 지나지 않은 날짜는 완료 할 수 없습니다!");
+            return "/test/error";
+        }
         log.info(listNum+"");
-        listService.updateComplete(listNum);
+
 //        return "redirect:/list/todolist";
         String referer = request.getHeader("Referer");
         return "redirect:"+ referer;
