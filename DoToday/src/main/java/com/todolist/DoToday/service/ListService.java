@@ -58,8 +58,14 @@ public class ListService {
 
     //할일 작성
     public int write(TodoList todoList){
-        int result = jdbcTemplate.update("insert into list(list_title,member_id) values(?,?)"
-                , todoList.getListTitle(), todoList.getMemberId());
+        int result = 0;
+        if (todoList.getDate() != null){
+            result = jdbcTemplate.update("insert into list(list_title,member_id,write_date) values(?,?,?)"
+                    , todoList.getListTitle(), todoList.getMemberId(), todoList.getDate());
+        }else {
+            result = jdbcTemplate.update("insert into list(list_title,member_id) values(?,?)"
+                    , todoList.getListTitle(), todoList.getMemberId());
+        }
         return result;
     }
 
