@@ -29,6 +29,7 @@ import java.sql.SQLException;
 import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -69,19 +70,6 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
 
     @Value("${part.upload.path}")
     private String dirPath;
-
-
-    public Long join(Members members) throws Exception {
-        validateDuplicateMember(members);
-        return members.getMembersId();
-    }
-
-    private void validateDuplicateMember(Members member) throws Exception {
-        Members findMember = null;
-        if (findMember != null) {
-            throw new IllegalStateException("이미 가입된 회원입니다.");
-        }
-    }
 
     //  문자열로 받은 생년월일 값 하나로 합쳐서 LocalDate타입으로 변경
     private LocalDate stringToDate(MemberJoinDto memberJoinDto) {
@@ -152,10 +140,11 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
 
-    // 이미지 수정
+    // 이미지 업로드
     public String uploadImage(MultipartFile multipartFile) throws IOException {
         String originalImageName = Normalizer.normalize(multipartFile.getOriginalFilename(), Normalizer.Form.NFC);
-        String uploadImageName = "profile_image/" +  originalImageName;
+        String uid = UUID.randomUUID().toString();
+        String uploadImageName = "profile_image/" + uid + originalImageName;
 
         // 폴더 생성
         File folder = new File(dirPath);
@@ -178,5 +167,12 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
         folder.delete();
 
         return amazonS3Client.getResourceUrl(s3BucketName, uploadImageName).toString();
+    }
+
+    // 이미지 수정
+    public void updateMemberImg(MultipartFile image, String memberId) throws IOException {
+        String updateImgUrl = uploadImage(image);
+        jdbcTemplate.update("update member set member_image = ? where member_id = ?", updateImgUrl, memberId);
+        log.info("{} 유저 이미지 url 변경 {}", memberId, updateImgUrl);
     }
 }
