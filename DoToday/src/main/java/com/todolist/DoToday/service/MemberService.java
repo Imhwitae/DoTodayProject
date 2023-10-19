@@ -143,7 +143,7 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
     // 이미지 업로드
     public String uploadImage(MultipartFile multipartFile) throws IOException {
         String originalImageName = Normalizer.normalize(multipartFile.getOriginalFilename(), Normalizer.Form.NFC);
-        String uid = UUID.randomUUID().toString();
+        String uid = UUID.randomUUID().toString();  // 고유 uid 생성
         String uploadImageName = "profile_image/" + uid + originalImageName;
 
         // 폴더 생성
