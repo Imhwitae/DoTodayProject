@@ -59,9 +59,12 @@ public class MembersController {
     }
 
     @PostMapping("/update")
-    public String updateMyPage(@RequestParam("image_file") MultipartFile image) throws IOException {
+    public String updateMyPage(HttpServletRequest request,
+                               @RequestParam("image_file") MultipartFile image) throws IOException {
         log.info("이미지 받음 {}", image.getOriginalFilename());
-        memberService.uploadImage(image);
+
+        String memberId = jwtTokenProvider.getMemberIdFromToken(jwtTokenProvider.extractToken(request.getCookies()));
+        memberService.updateMemberImg(image, memberId);
 
         return "redirect:/members/mypage";
     }

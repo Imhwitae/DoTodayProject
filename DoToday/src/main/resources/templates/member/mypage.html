@@ -32,7 +32,7 @@
                 <div class="name_box"><span th:text="*{memberName}"></span></div>
 
                 <p class="email_box_text">아이디(이메일)</p>
-                <div class="email_box"><span th:text="*{memberId}"></span></div>
+                <div class="email_box" name="member_id", id="member_id"><span name="member_id" th:text="*{memberId}"></span></div>
 
                 <div class="change_pw_btn">비밀번호 변경<img class="new_tab" th:src="@{/css/image/new_tab.png}"></div>
             </div>
