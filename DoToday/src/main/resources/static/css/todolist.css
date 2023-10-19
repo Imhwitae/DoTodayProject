@@ -1,3 +1,7 @@
+body {
+    background-color: #ffffff;
+}
+
 .back {
     z-index: -1;
     position: absolute;
@@ -22,26 +26,27 @@
 
 
 .main_container {
-    width: 75%;
+    width: 37.6045%;
     height: auto;
-    flex-shrink: 0;
-    background: #FFF;
-    margin: 0px auto;
+    border-radius: 20px;
+    background: #F9F9F9;
+    margin: 4.9481% auto;
     text-align: center;
-    padding: 100px 0px 100px 0px;
+    padding: 59px 0px 5.209% 0px;
 }
 
 .date_form{
-    width:243px;
-    height:100px;
+    width: 33.657%;
+    height: 100px;
     margin: 0px auto 21px;
 }
 input[type='date']{
-    position : relative;
-    width:243px;
-    height:50px;
-    text-align:center;
-    border:0px;
+    border-radius: 10px;
+    position: relative;
+    width: 100%;
+    height: 50px;
+    text-align: center;
+    border: 0px;
     border-bottom: 1px solid #FF4462;
     font-family: Noto Sans;
     font-size: 16px;
@@ -49,7 +54,7 @@ input[type='date']{
     font-weight: 500;
     line-height: normal;
     letter-spacing: -0.8px;
-    background: url(./image/calendar.png) no-repeat right 10px center / 25px auto;;
+    background: url(./image/calendar.png) no-repeat right 10px center / 25px auto #ffffff;
     margin: 0px auto 22px;
 }
 input[type='date']::-webkit-clear-button,
@@ -79,7 +84,7 @@ input[type='date']::before{
 
 .date_submit{
     text-align:center;
-    width: 101px;
+    width: 45%;
     height: 30px;
     flex-shrink: 0;
     border-radius: 5px;
@@ -94,19 +99,20 @@ input[type='date']::before{
     border:none;
 }
 .list_form{
-    border:none;
-    width: 688px;
+    border: none;
+    width: 86.289%;
     height: 54px;
     flex-shrink: 0;
     border-bottom: 1px solid #FF4462;
     background: #FFF;
     margin: 0px auto 25px;
+    border-radius: 10px;
 }
 
 .list_input {
     border: none;
     text-align: center;
-    width: 630px;
+    width: 92.296%;
     height: 30px;
     font-family: Noto Sans;
     font-size: 16px;
@@ -121,7 +127,7 @@ input[type='date']::before{
 .list_input_denied{
     border: none;
     text-align: center;
-    width: 630px;
+    width: 100%;
     height: 30px;
     font-family: Noto Sans;
     font-size: 16px;
@@ -130,16 +136,16 @@ input[type='date']::before{
     line-height: normal;
     letter-spacing: -0.8px;
     margin: 6px 0px 6px 0px;
+    padding-top: 10px;
 }
 
 .list_submit{
-    text-align:right;
-    background: url(./image/add-list.png) no-repeat right 0px center / 25px auto;;
+    text-align: right;
+    background: url(./image/add-list.png) no-repeat right 0px center / 25px auto;
     border: none;
     width: 24px;
     height: 24px;
-    flex-shrink: 0;
-    margin: 0px auto -7px;
+    margin: 15px 4px -7px 0px;
 }
 input:focus {outline:none;}
 
@@ -155,21 +161,32 @@ input:focus {outline:none;}
     margin: 0px auto 56px;
 }
 
+.userImageBorder {
+    width: 120px;
+    height: 120px;
+    border-radius: 120px;
+    border: 3px solid #FF4462;
+    margin: 0px auto -120px;
+    z-index: 7;
+    position: relative;
+}
+
 .userImage {
     width: 120px;
     height: 120px;
-    flex-shrink: 0;
     border-radius: 120px;
     border: 2px solid #FF4462;
     margin: 0px auto 33px;
+    z-index: 1;
+    position: relative;
 }
 
 .underLine {
-    width: 688px;
-    height: 45px;
+    width: 95.291%;
+    height: 40px;
     border-bottom: 1px solid #000;
     margin: 0px auto;
-    padding-bottom: 5px;
+    padding-bottom: 2px;
     text-align: center;
 }
 
@@ -200,43 +217,47 @@ input:focus {outline:none;}
 }
 
 .complete {
-    width: 688px;
-    height: 40px;
+    width: 100%;
+    height: 54px;
     border-bottom: 1px solid #00BA00;
     background: #FFF;
     margin: 18px 0px 0px 0px;
+    border-radius: 10px;
 }
 
 .todolist {
     margin: 0px auto;
-    width: 688px;
+    width: 86.289%;
 }
 
 .completeTitle {
     color: #6A6A6A;
-    text-align: center;
+    text-align: left;
     font-family: Noto Sans;
     font-size: 16px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
     letter-spacing: -0.8px;
-    width: 590px;
+    width: 72.232%;
     float: left;
-    padding-left: 94px;
+    margin-left: 8.026%;
+    margin-top: 17px;
     text-decoration-line: line-through;
 }
 
 .deleteForm {
     float: right;
     width: 20px;
-    margin: 0px 10px 0px 0px;
+    margin-top: 17px;
+    margin-right: 1.606%;
 }
 
 .completeForm {
     width: 20px;
     float: right;
-    margin: 0px 10px 0px 0px;
+    margin-top: 17px;
+    margin-right: 1.606%;
 }
 
 .updateForm {
@@ -249,7 +270,6 @@ input:focus {outline:none;}
     border: none;
     width: 20px;
     height: 20px;
-    flex-shrink: 0;
     background: url(./image/delete.svg), rgb(255, 255, 255) 50% / cover no-repeat;
     display: block;
 }
@@ -258,7 +278,6 @@ input:focus {outline:none;}
     border: none;
     width: 20px;
     height: 20px;
-    flex-shrink: 0;
     background: url(./image/check.svg), rgb(255, 255, 255) 50% / cover no-repeat;
     display: block;
 }
@@ -267,36 +286,43 @@ input:focus {outline:none;}
     border: none;
     width: 20px;
     height: 20px;
-    flex-shrink: 0;
     background: url(./image/refresh.svg), rgb(255, 255, 255) 50% / cover no-repeat;
+    float: right;
+    margin-right: 1.606%;
+    margin-top: 17px;
 }
 
 
 .incomplete {
-    width: 688px;
-    height: 40px;
+    width: 100%;
+    height: 54px;
     border-bottom: 1px solid #FF4462;
     background: #FFF;
     margin: 18px 0px 0px 0px;
+    border-radius: 10px;
 }
 
 .incompleteTitle {
     color: #000;
-    text-align: center;
+    text-align: left;
     font-family: Noto Sans;
     font-size: 16px;
     font-style: normal;
-    font-weight: 400;
+    font-weight: 500;
     line-height: normal;
     letter-spacing: -0.8px;
-    width: 590px;
+    width: 70%;
     float: left;
-    padding-left: 94px;
+    margin-left: 8.026%;
+    margin-top: 17px;
 }
 
 .infoImage {
-    width: 100%;
-    height: 100%;
+    width: 120px;
+    height: 120px;
+    margin: 0px -2px;
+    border-radius: 120px;
+    background-color: white;
 }
 
 .emptyList {
@@ -326,11 +352,12 @@ input:focus {outline:none;}
     justify-content: center;
     align-items: center;
     background: rgba(0, 0, 0, 0.5);
+    z-index: 10;
 }
 
 .modalDiv {
     position: absolute;
-    background-color: #ffffff;
+    background-color: #f9f9f9;
     width: 35.9%;
     height: 17.7%;
     /* padding: 15px; */
@@ -357,6 +384,7 @@ input:focus {outline:none;}
     padding: 2% 0% 2.5% 0%;
     text-align: center;
     color: #6c757d;
+    border-radius: 10px;
 }
 
 .updateSubmit {
