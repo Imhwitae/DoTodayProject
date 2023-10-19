@@ -27,6 +27,7 @@ a{
     margin: auto; /*중앙 정렬*/
     padding: 0 20px;
     margin-bottom: 20px;
+    margin-top: 75px;
 }
 
 .member .logo{
@@ -46,11 +47,12 @@ a{
 }
 
 /*input 중 radio 는 width 가 100%면 안되니까 */
-.member input:not(input[type=radio]),.member select{
-    border: 1px solid #dadada;
+.member input:not(input[type=radio]), .member select {
     padding: 15px;
     width: 100%;
     margin-bottom: 5px;
+    border: 1px solid #DDD;
+    background: #F9F9F9;
 }
 
 .member input[type=button],
@@ -86,10 +88,10 @@ a{
     flex:1;
 }
 
-.field.gender div{
-    border: 1px solid #dadada;
+.field.gender div {
+    border: 1px solid #DDD;
+    background: #F9F9F9;
     padding: 15px 5px;
-    background-color: #fff;
 }
 
 .placehold-text{
@@ -144,6 +146,11 @@ a{
 
 .member-footer div a:last-child:after{
     display: none;
+}
+
+.memberFormSubmit {
+    border: 1px solid #DDD;
+    background: #FF4462;
 }
 
 @media (max-width:768px) {
