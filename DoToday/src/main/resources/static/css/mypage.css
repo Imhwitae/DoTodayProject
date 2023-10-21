@@ -18,7 +18,7 @@ body {
     align-items: center;
     text-align: center;
     letter-spacing: -0.05em;
-    color: #FF4462;
+    color: rgba(255,68,98,0.9);
 }
 
 .main_content {
@@ -34,7 +34,7 @@ body {
     width: 120px;
     height: 120px;
     box-sizing: border-box;
-    border: 2px solid #FF4462;
+    border: 2px solid rgba(255,68,98,0.9);
     justify-content: center;
     border-radius: 120px;
     margin: 0 auto;
@@ -62,12 +62,12 @@ body {
     width: 63px;
     height: 27px;
     background: #FFFFFF;
-    border: 1px solid #FF4462;
+    border: 1px solid rgba(255,68,98,0.9);
     border-radius: 5px;
     margin: 2rem auto;
     cursor: pointer;
     text-align: center;
-    color: #FF4462;
+    color: rgba(255,68,98,0.9);
 }
 
 .box_container {
@@ -91,7 +91,7 @@ body {
     width: 686px;
     height: 40px;
     background: #FFFFFF;
-    border: 1px solid #FF4462;
+    border: 1px solid rgba(255,68,98,0.9);
     border-radius: 3px;
     margin: 0 auto;
     padding-left: 2rem;
@@ -113,7 +113,7 @@ body {
     box-sizing: border-box;
     width: 686px;
     height: 40px;
-    border: 1px solid #FF4462;
+    border: 1px solid rgba(255,68,98,0.9);
     border-radius: 3px;
     background: #EEEEEE;
     color: #676767;
@@ -125,7 +125,7 @@ body {
 .change_pw_btn {
     width: 210px;
     height: 40px;
-    background: #FF4462;
+    background: rgba(255,68,98,0.9);
     border-radius: 5px;
     margin-top: 1rem;
     color: #FFFFFF;

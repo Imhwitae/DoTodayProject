@@ -31,7 +31,7 @@ body {
     align-items: center;
     text-align: center;
     letter-spacing: -0.05em;
-    color: #FF4462;
+    color: rgba(255,68,98,0.9);
 }
 
 .go_my_page:hover,.go_friend_page:hover,.go_todo_list:hover {
