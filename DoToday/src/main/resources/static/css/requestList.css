@@ -12,13 +12,29 @@
     color: #FF4462;
 }
 
-.friendList_container {
+.requestList_container {
     width: 820px;
     height: auto;
     border-radius: 20px;
     background: #F9F9F9;
     margin: 150px auto 210px;
     padding: 39px 50px;
+}
+
+.img_block {
+    float: left;
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 68, 98, 0.90);
+}
+
+.memberImage {
+    max-width: 50px;
+    max-height: 50px;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 68, 98, 0.90);
 }
 
 .title_box {
@@ -28,9 +44,10 @@
     border-bottom: 1px solid rgba(255, 68, 98, 0.90);
     background: #FFF;
     padding: 15px 4.167%;
+    margin-bottom: 86px;
 }
 
-.friendList_title {
+.requestList_list {
     color: rgba(255, 68, 98, 0.90);
     font-family: Noto Sans;
     font-size: 24px;
@@ -38,91 +55,52 @@
     font-weight: 700;
     line-height: normal;
     letter-spacing: -1.2px;
-}
-
-.btn_contents {
-    width: 58.334%;
-    height: 40px;
-    margin: 40px auto;
-}
-
-.requestList {
-    width: 28.572%;
-    height: 100%;
     float: left;
-    margin-right: 7.144%;
+    margin-left: 88px;
 }
 
-.blockList {
-    width: 28.572%;
-    height: 100%;
+.requestList_and {
     float: left;
-    margin-right: 7.144%;
-}
-
-.friendSearch{
-    width: 28.572%;
-    height: 100%;
-    float: left;
-}
-
-.submitButton {
-    border: none;
-    width: 100%;
-    height: 100%;
-    border-radius: 5px;
-    background: rgba(255, 68, 98, 0.90);
-    color: #FFF;
+    color: rgba(255, 68, 98, 0.90);
     text-align: center;
     font-family: Noto Sans;
-    font-size: 16px;
+    font-size: 24px;
     font-style: normal;
-    font-weight: 600;
+    font-weight: 400;
     line-height: normal;
-    letter-spacing: -0.8px;
+    letter-spacing: -1.2px;
+    margin-left: 101px;
 }
 
-.submitButton:hover {
-    border: 1px solid #FF4462;
-    background: #FFF;
+.requestList_add {
+    float: left;
+    margin-left: 116px;
+}
+
+.go_friend_search {
+    color: #000;
+    text-align: center;
+    font-family: Noto Sans;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    letter-spacing: -1.2px;
+    border: none;
+    background: none;
+    transition: all 0.15s;
+}
+
+.go_friend_search:hover {
+    font-size: 25px;
+    font-weight: 700;
     color: rgba(255, 68, 98, 0.90);
 }
 
-.countBox {
-    border: none;
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    background: #FE5671;
-    text-align: center;
-    border-radius: 120px;
-    color: white;
-    margin: -0.7814%;
-}
-
-.noFriendComment {
-    color: #7D7D7D;
-    text-align: center;
-    font-family: Noto Sans;
-    font-size: 21px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    letter-spacing: -1.05px;
-}
-
-.noFriend {
-    margin-top: 21.528%;
-    margin-bottom: 25%;
-}
-
 .goBack_box {
-    width: 22.223%;
+    width: 200px;
     height: 40px;
-    border-radius: 5px;
-    margin: auto;
-    text-align: center;
-    margin-bottom: 1.389%;
+    margin: 0px auto 19px;
 }
 
 .goBack_content {
@@ -147,19 +125,24 @@
     color: rgba(255, 68, 98, 0.90);
 }
 
-.friendList {
-    width: 100%;
-    height: 82px;
-    border-radius: 5px;
-    border: 1px solid rgba(255, 68, 98, 0.90);
+.goBack_content:hover {
+    border: 1px solid #FF4462;
     background: #FFF;
-    margin-bottom: 20px;
+    color: rgba(255, 68, 98, 0.90);
 }
 
-.friendInfo {
-    width: 690px;
-    height: 50px;
-    margin: 16px 10px 16px 20px;
+.requestList_content {
+    margin-bottom: 67px;
+}
+
+.requestList_info {
+    width: 722px;
+    height: 82px;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 68, 98, 0.95);
+    background: #FFF;
+    padding: 16px 10px 16px 20px;
+    margin-bottom: 20px;
 }
 
 .img_block {
@@ -203,17 +186,32 @@
     margin: 14px 0px;
 }
 
-.friendsInfo {
+.requestList_accept {
     float: right;
-    width: 100px;
+    width: 99px;
     height: 30px;
-    margin: 10px 10px;
+    margin: 10px 15px 10px 0px;
 }
 
+.requestList_block{
+    float: right;
+    width: 60px;
+    height: 30px;
+    margin: 10px 15px 10px 0px;
+}
 
-.friendList_listView {
+.requestList_denied {
+    float: right;
+    width: 60px;
+    height: 30px;
+    margin: 10px 0px;}
+
+.acceptBtn {
     width: 100%;
     height: 100%;
+    border: none;
+    border-radius: 5px;
+    background: rgba(255, 68, 98, 0.95);
     color: #FFF;
     text-align: center;
     font-family: Noto Sans;
@@ -222,25 +220,20 @@
     font-weight: 400;
     line-height: normal;
     letter-spacing: -0.8px;
-    border-radius: 5px;
-    background: rgba(255, 68, 98, 0.90);
+}
+
+.acceptBtn:hover {
+    color: rgba(255, 68, 98, 0.90);
+    background: white;
     border: 1px solid rgba(255, 68, 98, 0.90);
 }
 
-.friendList_listView:hover {
-    color: rgba(255, 68, 98, 0.90);
-    background: white;
-}
-
-.deleteFriend {
-    float: right;
-    width: 60px;
-    height: 30px;
-    margin: 10px 0px;
-}
-.friendList_delete {
+.blockBtn {
     width: 100%;
     height: 100%;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 68, 98, 0.90);
+    background: #FFF;
     color: rgba(255, 68, 98, 0.90);
     text-align: center;
     font-family: Noto Sans;
@@ -249,12 +242,30 @@
     font-weight: 400;
     line-height: normal;
     letter-spacing: -0.8px;
+}
+
+.blockBtn:hover {
+    background: rgba(255, 68, 98, 0.90);
+    color: white;
+}
+
+.deniedBtn {
+    width: 100%;
+    height: 100%;
     border-radius: 5px;
     border: 1px solid rgba(255, 68, 98, 0.90);
     background: #FFF;
+    color: rgba(255, 68, 98, 0.90);
+    text-align: center;
+    font-family: Noto Sans;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.8px;
 }
 
-.friendList_delete:hover {
+.deniedBtn:hover{
     background: rgba(255, 68, 98, 0.90);
     color: white;
 }
