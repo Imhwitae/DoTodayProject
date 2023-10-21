@@ -34,24 +34,27 @@
                 <div class="memberName" th:text="${request.memberName}"></div>
                 <div class="memberId" th:text="${request.memberId}"></div>
                 <form id="denied" th:action="@{'/request/denied'}" method="post" class="requestList_denied">
+                    <input type="hidden" name="userId" th:value="${userInfo.memberId}">
                     <input type="hidden" th:name="friendId" th:value="${request.memberId}">
                     <input type="submit" value="거절" class="deniedBtn">
                 </form>
                 <form id="block" th:action="@{'/request/block'}" method="post" class="requestList_block">
+                    <input type="hidden" name="userId" th:value="${userInfo.memberId}">
                     <input type="hidden" th:name="friendId" th:value="${request.memberId}">
                     <input type="submit" value="차단" class="blockBtn">
                 </form>
                 <form id="accept" th:action="@{'/request/accept'}" method="post" class="requestList_accept">
+                    <input type="hidden" name="userId" th:value="${userInfo.memberId}">
                     <input type="hidden" th:name="friendId" th:value="${request.memberId}">
                     <input type="submit" value="신청 수락" class="acceptBtn">
                 </form>
             </div><br/>
         </div>
         <div th:if="${rCount} == 0" class="noRequest">
-            <p>친구 신청이 없습니다.</p>
+            <p>수락 대기중인 친구 신청이 없습니다.</p>
         </div>
         <div class="goBack_box">
-            <input type="button" th:onclick="|location.href='@{/request/list}'|" class="goBack_content" value="친구목록으로 돌아가기">
+            <input type="button" th:onclick="|location.href='@{/friend/list}'|" class="goBack_content" value="친구목록으로 돌아가기">
         </div>
     </div>
 </body>

@@ -269,3 +269,16 @@
     background: rgba(255, 68, 98, 0.90);
     color: white;
 }
+
+.noRequest {
+    color: #7D7D7D;
+    text-align: center;
+    font-family: Noto Sans;
+    font-size: 21px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -1.05px;
+    margin-top: 133px;
+    margin-bottom: 133px;
+}

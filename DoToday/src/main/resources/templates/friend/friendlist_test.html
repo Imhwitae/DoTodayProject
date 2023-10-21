@@ -50,9 +50,8 @@
                 <input type="hidden" name="friendId" th:value="${flist.memberId}">
                 <input type="submit" value="삭제" class="friendList_delete">
             </form>
-            <form id="info" th:action="@{'/list/'+${flist.memberId}+'/view'}" method="get" class="friendsInfo">
+            <form id="info" th:action="@{'/list/'+${flist.memberId}+'/todolist'}" method="get" class="friendsInfo">
                 <input type="hidden" name="userId" th:value="${userDto.memberId}">
-                <input type="hidden" th:value="${flist.memberId}" name="friendId">
                 <input type="submit" value="리스트 보기" class="friendList_listView">
             </form>
         </div><br/>
