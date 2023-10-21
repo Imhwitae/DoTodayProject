@@ -57,35 +57,38 @@ public class AddRequestController {
 
     //친구신청 수락
     @PostMapping("/accept")
-    public String requestAccept(@RequestParam("friendId") String friendId){
+    public String requestAccept(@RequestParam("userId") String userId,
+                                @RequestParam("friendId") String friendId){
         AddRequest add = new AddRequest();
         add.setSenderId(friendId);
-        add.setReceiverId("cor2580");
+        add.setReceiverId(userId);
         addRequestService.acceptRequest(add);
         return "redirect:/request/list";
     }
 
     //차단
     @PostMapping("/block")
-    public String block(@RequestParam("friendId") String friendId){
+    public String block(@RequestParam("userId") String userId,
+                        @RequestParam("friendId") String friendId){
         AddRequest add = new AddRequest();
         add.setSenderId(friendId);
-        add.setReceiverId("cor2580");
+        add.setReceiverId(userId);
         addRequestService.blockUser(add);
         return "redirect:/request/list";
     }
 
     //거절
     @PostMapping("/denied")
-    public String requestDenied(@RequestParam("friendId") String friendId){
+    public String requestDenied(@RequestParam("userId") String userId,
+                                @RequestParam("friendId") String friendId){
         AddRequest add = new AddRequest();
         add.setSenderId(friendId);
-        add.setReceiverId("cor2580");
+        add.setReceiverId(userId);
         addRequestService.deniedRequest(add);
         return "redirect:/request/list";
     }
 
-    //유저 검색 페이락
+    //유저 검색 페이지
     @GetMapping("/search")
     public String searchForm(Model model){
         model.addAttribute("exist",0);
