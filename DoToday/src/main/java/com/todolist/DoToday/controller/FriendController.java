@@ -70,12 +70,27 @@ public class FriendController {
         return "redirect:/friend/list";
     }
 
-    //친구 신청 수락
+    //친구 요청
     @PostMapping("/apply")
-    public String applyFriend(@RequestParam("friendId") String friendId){
+    public String applyFriend(HttpServletRequest request,
+                              @RequestParam("friendId") String friendId){
+        Cookie[] cookies = request.getCookies();
+
+        MemberDetailDto mdd = null;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                String tokenName = cookie.getName();
+                String value = cookie.getValue();
+
+                if (tokenName.equals("accessToken")) {
+                    mdd = jtp.getMember(value);
+                }
+            }
+        }
+
         AddRequest add = new AddRequest();
         add.setReceiverId(friendId);
-        add.setSenderId("cor2580");
+        add.setSenderId(mdd.getMemberId());
         friendService.addFriend(add);
         return "redirect:/request/search";
     }

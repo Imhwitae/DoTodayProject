@@ -11,6 +11,7 @@ import com.todolist.DoToday.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/request")
@@ -47,6 +49,7 @@ public class AddRequestController {
             }
         }
         List<FriendInfoDto> requests = addRequestService.selectRequestList(mdd.getMemberId());
+
         int requestCount = addRequestService.listCount(mdd.getMemberId());
 
         model.addAttribute("userInfo", mdd);
@@ -92,23 +95,51 @@ public class AddRequestController {
     @GetMapping("/search")
     public String searchForm(Model model){
         model.addAttribute("exist",0);
-//        FriendInfoDto fid = new FriendInfoDto();
-//        model.addAttribute("memberInfo", fid);
         return "friend/add_form_test";
     }
 
     //검색
     @PostMapping("/search")
-    public String search(@RequestParam("memberId") String memberId, Model model){
-        FriendList fl = new FriendList();
-        fl.setUserId("cor2580");
-        fl.setFriendId(memberId);
-        int status = friendService.friendStatus(fl);
-        if (status == 1){
-            model.addAttribute("status",1);
-        } else{
-            model.addAttribute("status", 0);
+    public String search(HttpServletRequest request,
+                         @RequestParam("memberId") String memberId, Model model){
+        Cookie[] cookies = request.getCookies();
+
+        MemberDetailDto mdd = null;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                String tokenName = cookie.getName();
+                String value = cookie.getValue();
+
+                if (tokenName.equals("accessToken")) {
+                    mdd = jtp.getMember(value);
+                }
+            }
         }
+
+        MemberDetailDto user = memberService.findById(memberId);
+
+        if (user == null){ //검색한 유저가 없을때
+            model.addAttribute("exist", -1);
+            return "friend/add_form_test";
+        }
+
+        FriendList fl = new FriendList();
+        fl.setUserId(mdd.getMemberId());
+        fl.setFriendId(memberId);
+
+        int status = friendService.friendStatus(fl);
+
+        if (memberId.equals(mdd.getMemberId())){
+            model.addAttribute("status", -1);
+            log.info("내정보");
+        } else if (status == 1){
+            model.addAttribute("status",1);
+            log.info("이미 친구");
+        } else if (status == 0){
+            model.addAttribute("status", 0);
+            log.info("친구 신청 가능");
+        }
+
         FriendInfoDto fid = new FriendInfoDto();
         MemberDetailDto detailDto = memberService.findById(memberId);
 
@@ -118,7 +149,7 @@ public class AddRequestController {
 
         model.addAttribute("memberInfo", fid);
         model.addAttribute("exist", 1);
-        return "test/add_form_test";
+        return "friend/add_form_test";
     }
 
 
