@@ -2,34 +2,45 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
-        .img_block{
-            width: 50px;
-            height: 50px;
-        }
-        .memberImage{
-            width: 50px;
-            height: 50px;
-        }
-    </style>
+    <title>Todo!Doit!</title>
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" th:href="@{/css/header.css}" />
+    <link rel="stylesheet" th:href="@{/css/blockList.css}" />
 </head>
 <body>
-<a th:href="@{'/friend/list'}">뒤로가기</a>
-<div th:if="${bCount} > 0">
-    <div th:each="blist : ${blockList}">
-        <div class="img_block">
-            <img class="memberImage" th:src="${blist.memberImage}" alt="유저 이미지">
-        </div>
-        <div class="memberName" th:text="${blist.memberName}"></div>
-        <form id="delete" th:action="@{'/block/delete'}" method="post">
-            <input type="hidden" th:name="bUserId" th:value="${blist.memberId}">
-            <input type="submit" value="차단 취소" form="delete">
-        </form>
-    </div><br/>
+<div class="header">
+    <div class="main_logo"><a href="/home">Todo!Doit!</a></div>
+    <div class="go_todo_list"><a href="/home">투두 리스트</a></div>
+    <div class="go_my_page"><a href="/members/mypage">마이 페이지</a></div>
+    <div class="go_friend_page_on"><a href="/friend/list">친구 목록</a></div>
+    <div class="logout"><a href="/members/logout">로그아웃</a></div>
 </div>
-<div th:if="${bCount} == 0">
-    <p>차단한 유저가 없습니다.</p>
+<div class="blockList_container">
+    <div class="title_box">
+        <div class="blockList_title">차단 리스트</div>
+    </div>
+    <div th:if="${bCount} > 0" class="blockList_content">
+        <div th:each="blist : ${blockList}" class="blockList_info">
+            <div class="img_block">
+                <img class="memberImage" th:src="${blist.memberImage}" alt="유저 이미지">
+            </div>
+            <div class="memberName" th:text="${blist.memberName}"></div>
+            <div class="memberId" th:text="${blist.memberId}"></div>
+            <form id="delete" th:action="@{'/block/delete'}" method="post" class="blockList_delete">
+                <input type="hidden" th:name="bUserId" th:value="${blist.memberId}">
+                <input type="submit" value="차단 취소" class="deleteBtn">
+            </form>
+        </div><br/>
+    </div>
+    <div th:if="${bCount} == 0" class="noBlockUser">
+        <p>차단한 유저가 없습니다.</p>
+    </div>
+    <div class="goBack_box">
+        <input type="button" th:onclick="|location.href='@{/friend/list}'|" class="goBack_content" value="친구목록으로 돌아가기">
+    </div>
 </div>
 </body>
 </html>

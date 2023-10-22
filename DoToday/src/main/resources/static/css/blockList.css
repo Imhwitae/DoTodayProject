@@ -1,0 +1,170 @@
+.go_friend_page_on {
+    /* 친구 리스트 */
+    padding-top: 2rem;
+    padding-left: 3rem;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 22px;
+    align-items: center;
+    text-align: center;
+    letter-spacing: -0.05em;
+    color: #FF4462;
+}
+
+.blockList_container {
+    width: 820px;
+    height: auto;
+    border-radius: 20px;
+    background: #F9F9F9;
+    margin: 150px auto 210px;
+    padding: 39px 50px;
+}
+
+.title_box {
+    width: 100%;
+    height: 56px;
+    border-radius: 10px;
+    border-bottom: 1px solid rgba(255, 68, 98, 0.90);
+    background: #FFF;
+    padding: 15px 4.167%;
+}
+
+.blockList_title {
+    color: rgba(255, 68, 98, 0.90);
+    font-family: Noto Sans;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -1.2px;
+}
+
+.goBack_box {
+    width: 22.223%;
+    height: 40px;
+    border-radius: 5px;
+    margin: auto;
+    text-align: center;
+    margin-bottom: 1.389%;
+    margin-top: 50px;
+}
+
+.goBack_content {
+    border: none;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    background: rgba(255, 68, 98, 0.90);
+    color: #FFF;
+    text-align: center;
+    font-family: Noto Sans;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.8px;
+}
+
+.goBack_content:hover {
+    border: 1px solid #FF4462;
+    background: #FFF;
+    color: rgba(255, 68, 98, 0.90);
+}
+
+.noBlockUser {
+    color: #7D7D7D;
+    text-align: center;
+    font-family: Noto Sans;
+    font-size: 21px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -1.05px;
+    margin-top: 133px;
+    margin-bottom: 133px;
+}
+
+.blockList_content {
+    margin-top: 50px;
+    margin-bottom: 67px;
+}
+
+.blockList_info {
+    width: 722px;
+    height: 82px;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 68, 98, 0.95);
+    background: #FFF;
+    padding: 16px 10px 16px 20px;
+    margin-bottom: 20px;
+}
+
+.img_block {
+    float: left;
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 68, 98, 0.90);
+}
+
+.memberImage {
+    width: 100%;
+    height: 100%;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 68, 98, 0.90);
+    font-size: 14px;
+}
+
+.memberName {
+    float: left;
+    color: #000;
+    text-align: center;
+    font-family: Noto Sans;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.8px;
+    margin: 14px 30px 14px 9px;
+}
+
+.memberId {
+    float: left;
+    color: #818181;
+    font-family: Noto Sans;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.8px;
+    margin: 14px 0px;
+}
+
+.blockList_delete {
+    float: right;
+    width: 85px;
+    height: 30px;
+    margin: 10px 15px 10px 0px;
+}
+
+.deleteBtn {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 68, 98, 0.90);
+    background: #FFF;
+    color: rgba(255, 68, 98, 0.90);
+    text-align: center;
+    font-family: Noto Sans;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.8px;
+}
+
+.deleteBtn:hover {
+    background: rgba(255, 68, 98, 0.90);
+    color: white;
+}
