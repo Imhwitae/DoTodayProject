@@ -9,6 +9,7 @@ import com.todolist.DoToday.entity.Members;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -115,9 +116,14 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
     }
 
     public MemberDetailDto findById(String id) {
-        String sql = "select * from member where member_id = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        try {
+            String sql = "select * from member where member_id = ?";
+            return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        } catch (IncorrectResultSizeDataAccessException error) { // 쿼리문에 해당하는 결과가 없거나 2개 이상일 때
+            return null;
+        }
     }
+
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
