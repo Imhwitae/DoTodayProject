@@ -23,7 +23,7 @@
             <div class="requestList_list">받은 친구 신청</div>
             <div class="requestList_and">/</div>
             <div class="requestList_add">
-                <input type="submit" value="친구 신청" class="go_friend_search">
+                <input type="button" value="친구 신청" class="go_friend_search" th:onclick="|location.href='@{/request/search}'|">
             </div>
         </div>
         <div th:if="${rCount} > 0" class="requestList_content">
