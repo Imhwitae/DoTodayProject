@@ -66,7 +66,7 @@ public class AddRequestService {
 
     // 친구 신청 목록 개수
     public int listCount(String userId) {
-        String sql = "select count(*) from add_request where receiver_id =?";
+        String sql = "select count(*) from add_request where receiver_id =? and req_status = 1";//차단 상태일때도 db에는 남아있기때문 조건을 하다 더 걸어둠
         int result = this.jdbcTemplate.queryForObject(sql, Integer.class, userId);
         return result;
     }

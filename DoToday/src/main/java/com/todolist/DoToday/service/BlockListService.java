@@ -20,11 +20,6 @@ public class BlockListService {
     private final JdbcTemplate jdbcTemplate;
     private final MemberService memberService;
 
-//    public BlockListService(DataSource dataSource) {
-//        this.jdbcTemplate = new JdbcTemplate(dataSource);
-//    }
-
-
     //차단된 유저 리스트
     public List<FriendInfoDto> blockUserList(String userId){
         String sql = "select * from add_request where receiver_id = ? and req_status = 0";
@@ -46,8 +41,9 @@ public class BlockListService {
 
     //차단 삭제
     public int blockListDelete(FriendList friendList){
-        String sql = "delete from add_request where receiver_id = ? and sender_id = ? and req_status = 0";
-        int result = jdbcTemplate.update(sql, friendList.getUserId(), friendList.getFriendId());//본인 리스트에서 삭제
+        //친구 req_status 값을 변경하여 다시 친구 신청 페이지에 뜨도록 만듬
+        String sql = "update add_request set req_status = 1 where receiver_id = ? and sender_id = ?";
+        int result = jdbcTemplate.update(sql, friendList.getUserId(), friendList.getFriendId());
 
         return result;
     }
