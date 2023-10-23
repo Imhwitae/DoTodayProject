@@ -1,12 +1,15 @@
 package com.todolist.DoToday.controller;
 
 import com.todolist.DoToday.dto.Gender;
+import com.todolist.DoToday.dto.request.MemberChangePwDto;
 import com.todolist.DoToday.dto.request.MemberJoinDto;
+import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.jwt.JwtTokenProvider;
 import com.todolist.DoToday.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -56,6 +59,7 @@ public class MembersController {
     public String memberMyPage(HttpServletRequest request, Model model) {
         String accessToken = jwtTokenProvider.extractToken(request.getCookies());
         model.addAttribute("memberDetail", jwtTokenProvider.getMember(accessToken));
+        model.addAttribute("changePw", new MemberChangePwDto());
         return "/member/mypage";
     }
 
@@ -68,6 +72,12 @@ public class MembersController {
         memberService.updateMemberImg(image, memberId);
 
         return "redirect:/list/todolist";
+    }
+
+    @PostMapping("/pwupdate")
+    public String updatePw(@AuthenticationPrincipal MemberDetailDto memberDetailDto, MemberChangePwDto memberChangePwDto) {
+
+        return "/mypage";
     }
 
 }

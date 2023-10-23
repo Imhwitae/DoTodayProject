@@ -35,8 +35,11 @@
                 <p class="email_box_text">아이디(이메일)</p>
                 <div class="email_box" name="member_id", id="member_id"><span name="member_id" th:text="*{memberId}"></span></div>
 
-                <div class="change_pw_btn">비밀번호 변경<img class="new_tab" th:src="@{/css/image/new_tab.png}"></div>
+                <button class="change_pw_btn" id="popup_btn" type="button">
+                    비밀번호 변경<img class="new_tab" th:src="@{/css/image/new_tab.png}">
+                </button>
             </div>
+
             <div class="box_footer">
                 <button class="cancel_btn" type="button">
                     <a href="/list/todolist">취소</a>
@@ -45,5 +48,41 @@
             </div>
         </form>
     </div>
+
+    <form action="/members/pwupdate" method="post" th:object="${changePw}">
+        <!--modal-->
+        <div id="modal_wrap" class="modal_hidden">
+            <div id="modal_body">
+                <div id="modal_pw_input">
+                    <p class="pw_modal_text">기존 비밀번호</p>
+                    <input type="password" class="prev_pw" th:field="*{memberPrevPw}">
+
+                    <p class="pw_modal_text">새 비밀번호</p>
+                    <input type="password" class="update_pw" th:field="*{memberNewPw}">
+
+                    <p class="pw_modal_text">새 비밀번호 확인</p>
+                    <input type="password" class="update_pw_confirm" th:field="*{memberConfNewPw}">
+                </div>
+                <div class="modal_footer">
+                    <button id="modal_close_btn" class="modal_close_btn" type="button">닫기</button>
+                    <button id="modal_pw_change_btn" class="modal_ok_btn">확인</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        const modalOpenBtn = document.getElementById('popup_btn');
+        const modal = document.getElementById('modal_wrap');
+        const modalCloseBtn = document.getElementById('modal_close_btn');
+
+        modalOpenBtn.addEventListener('click', () => {
+            modal.classList.remove('modal_hidden');
+        });
+
+        modalCloseBtn.addEventListener('click', () => {
+            modal.classList.add('modal_hidden');
+        });
+    </script>
 </body>
 </html>

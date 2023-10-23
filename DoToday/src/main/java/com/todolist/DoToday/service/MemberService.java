@@ -2,6 +2,7 @@ package com.todolist.DoToday.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.todolist.DoToday.dto.request.MemberChangePwDto;
 import com.todolist.DoToday.jwt.JwtTokenProvider;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.dto.request.MemberJoinDto;
@@ -183,5 +184,31 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
             log.info("{} 유저 이미지 url 변경 {}", memberId, updateImgUrl);
         }
         throw new RuntimeException("이미지가 없습니다.");
+    }
+
+    // 비밀번호 변경
+    public void updateMemberPw(MemberDetailDto memberDetailDto, MemberChangePwDto memberChangePwDto) {
+        String memberPrevPw = memberChangePwDto.getMemberPrevPw();
+        String memberNewPw = memberChangePwDto.getMemberNewPw();
+        String memberConfNewPw = memberChangePwDto.getMemberConfNewPw();
+        log.info("비밀번호 변경" +
+                "기존 비밀번호: {}" +
+                "새 비밀번호: {}" +
+                "새 비밀번화 확인: {}", memberPrevPw, memberNewPw, memberConfNewPw);
+
+        String memberId = memberDetailDto.getMemberId();
+        String memberPw = memberDetailDto.getMemberPw();
+        log.info("memberId: {}" +
+                "memberPw: {}", memberId, memberPw);
+
+        if (bCryptPasswordEncoder.matches(memberPrevPw, memberPw)) {
+            if (memberNewPw.equals(memberConfNewPw)) {
+                String encodedNewPw = bCryptPasswordEncoder.encode(memberNewPw);
+                jdbcTemplate.update("update member set member_pw = ? where member_id = ?", encodedNewPw, memberId);
+            }
+        } else {
+            log.info("기존 비밀번호가 틀림");
+        }
+
     }
 }
