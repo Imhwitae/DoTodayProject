@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,12 +61,19 @@ public class MembersController {
 
     @PostMapping("/update")
     public String updateMyPage(HttpServletRequest request,
-                               @RequestParam("image_file") MultipartFile image) throws IOException {
+                               @RequestParam("image_file") MultipartFile image,
+                               BindingResult bindingResult) throws IOException {
         log.info("이미지 받음 {}", image.getOriginalFilename());
 
         String memberId = jwtTokenProvider.getMemberIdFromToken(jwtTokenProvider.extractToken(request.getCookies()));
-        memberService.updateMemberImg(image, memberId);
 
-        return "redirect:/members/mypage";
+        if (bindingResult.hasErrors()) {
+            memberService.updateMemberImg(image, memberId);
+            log.info("error={}", bindingResult);
+            return "/mypage";
+        }
+
+        return "redirect:/list/todolist";
     }
+
 }

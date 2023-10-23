@@ -177,8 +177,11 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
 
     // 이미지 수정
     public void updateMemberImg(MultipartFile image, String memberId) throws IOException {
-        String updateImgUrl = uploadImage(image);
-        jdbcTemplate.update("update member set member_image = ? where member_id = ?", updateImgUrl, memberId);
-        log.info("{} 유저 이미지 url 변경 {}", memberId, updateImgUrl);
+        if (!image.isEmpty()) {
+            String updateImgUrl = uploadImage(image);
+            jdbcTemplate.update("update member set member_image = ? where member_id = ?", updateImgUrl, memberId);
+            log.info("{} 유저 이미지 url 변경 {}", memberId, updateImgUrl);
+        }
+        throw new RuntimeException("이미지가 없습니다.");
     }
 }
