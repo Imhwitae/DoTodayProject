@@ -31,19 +31,9 @@ public class FriendController {
     @GetMapping("/list")
     public String friendList(HttpServletRequest request,
                              Model model, @ModelAttribute("friend") FriendList friendList){
-        Cookie[] cookies = request.getCookies();
-
+        String token = jtp.extractToken(request.getCookies());
         MemberDetailDto mdd = null;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                String tokenName = cookie.getName();
-                String value = cookie.getValue();
-
-                if (tokenName.equals("accessToken")) {
-                    mdd = jtp.getMember(value);
-                }
-            }
-        }
+        mdd = jtp.getMember(token);
 
         List<FriendInfoDto> infoDtoList = friendService.info(mdd.getMemberId());
 
@@ -74,19 +64,9 @@ public class FriendController {
     @PostMapping("/apply")
     public String applyFriend(HttpServletRequest request,
                               @RequestParam("friendId") String friendId){
-        Cookie[] cookies = request.getCookies();
-
+        String token = jtp.extractToken(request.getCookies());
         MemberDetailDto mdd = null;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                String tokenName = cookie.getName();
-                String value = cookie.getValue();
-
-                if (tokenName.equals("accessToken")) {
-                    mdd = jtp.getMember(value);
-                }
-            }
-        }
+        mdd = jtp.getMember(token);
 
         AddRequest add = new AddRequest();
         add.setReceiverId(friendId);
