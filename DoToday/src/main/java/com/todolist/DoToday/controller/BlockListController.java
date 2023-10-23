@@ -24,19 +24,9 @@ public class BlockListController {
     
     @GetMapping("/list")
     public String blockList(HttpServletRequest request, Model model){
-        Cookie[] cookies = request.getCookies();
-
+        String token = jtp.extractToken(request.getCookies());
         MemberDetailDto mdd = null;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                String tokenName = cookie.getName();
-                String value = cookie.getValue();
-
-                if (tokenName.equals("accessToken")) {
-                    mdd = jtp.getMember(value);
-                }
-            }
-        }
+        mdd = jtp.getMember(token);
 
         List<FriendInfoDto> blist = blockListService.blockUserList(mdd.getMemberId());
         int blockListCount = blockListService.bListCount(mdd.getMemberId());
@@ -48,19 +38,9 @@ public class BlockListController {
     @PostMapping("/delete")
     public String deleteBlockList(HttpServletRequest request,
                                   @RequestParam("bUserId") String bMemberId){
-        Cookie[] cookies = request.getCookies();
-
+        String token = jtp.extractToken(request.getCookies());
         MemberDetailDto mdd = null;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                String tokenName = cookie.getName();
-                String value = cookie.getValue();
-
-                if (tokenName.equals("accessToken")) {
-                    mdd = jtp.getMember(value);
-                }
-            }
-        }
+        mdd = jtp.getMember(token);
 
         FriendList fl = new FriendList();
         fl.setUserId(mdd.getMemberId());

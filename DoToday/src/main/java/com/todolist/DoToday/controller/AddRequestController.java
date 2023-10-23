@@ -35,19 +35,10 @@ public class AddRequestController {
     //자신에게온 신청 목록 불러오기
     @GetMapping("/list")
     public String requestList(HttpServletRequest request, Model model){
-        Cookie[] cookies = request.getCookies();
-
+        String token = jtp.extractToken(request.getCookies());
         MemberDetailDto mdd = null;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                String tokenName = cookie.getName();
-                String value = cookie.getValue();
+        mdd = jtp.getMember(token);
 
-                if (tokenName.equals("accessToken")) {
-                    mdd = jtp.getMember(value);
-                }
-            }
-        }
         List<FriendInfoDto> requests = addRequestService.selectRequestList(mdd.getMemberId());
 
         int requestCount = addRequestService.listCount(mdd.getMemberId());
@@ -102,19 +93,9 @@ public class AddRequestController {
     @PostMapping("/search")
     public String search(HttpServletRequest request,
                          @RequestParam("memberId") String memberId, Model model){
-        Cookie[] cookies = request.getCookies();
-
+        String token = jtp.extractToken(request.getCookies());
         MemberDetailDto mdd = null;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                String tokenName = cookie.getName();
-                String value = cookie.getValue();
-
-                if (tokenName.equals("accessToken")) {
-                    mdd = jtp.getMember(value);
-                }
-            }
-        }
+        mdd = jtp.getMember(token);
 
         MemberDetailDto user = memberService.findById(memberId);
 

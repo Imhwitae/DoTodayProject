@@ -34,19 +34,10 @@ public class ListController {
     @GetMapping("/todolist")
     public String showMyList(HttpServletRequest request,
                            Model model, @ModelAttribute("todoList") TodoList todoList) {
-        Cookie[] cookies = request.getCookies();
-
+        String token = jtp.extractToken(request.getCookies());
         MemberDetailDto mdd = null;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                String tokenName = cookie.getName();
-                String value = cookie.getValue();
+        mdd = jtp.getMember(token);
 
-                if (tokenName.equals("accessToken")) {
-                    mdd = jtp.getMember(value);
-                }
-            }
-        }
         List<TodoList> list = listService.showToday(mdd.getMemberId());
 
         listExist = listService.emptyList(list);
@@ -65,19 +56,9 @@ public class ListController {
     @GetMapping("/view")
     public String showDateMyList(HttpServletRequest request,
                                  @ModelAttribute("todoList") TodoList todoList, Model model){
-        Cookie[] cookies = request.getCookies();
-
+        String token = jtp.extractToken(request.getCookies());
         MemberDetailDto mdd = null;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                String tokenName = cookie.getName();
-                String value = cookie.getValue();
-
-                if (tokenName.equals("accessToken")) {
-                    mdd = jtp.getMember(value);
-                }
-            }
-        }
+        mdd = jtp.getMember(token);
 
         if (mdd.getMemberId() == null || todoList == null){
             return "redirect:/list/todolist";
@@ -109,18 +90,9 @@ public class ListController {
     public String viewListOfFriend(HttpServletRequest request,
                                    @ModelAttribute("todoList") TodoList todoList,
                                    @PathVariable("memberId") String friendId, Model model){
-        Cookie[] cookies = request.getCookies();
+        String token = jtp.extractToken(request.getCookies());
         MemberDetailDto mdd = null;
-
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                String tokenName = cookie.getName();
-                String value = cookie.getValue();
-                if (tokenName.equals("accessToken")) {
-                    mdd = jtp.getMember(value);
-                }
-            }
-        }
+        mdd = jtp.getMember(token);
 
         FriendList friendList = new FriendList();
         friendList.setUserId(mdd.getMemberId());
@@ -158,20 +130,9 @@ public class ListController {
     public String viewDateListOfFriend(HttpServletRequest request,
                                        @ModelAttribute("todoList") TodoList todoList,
                                        @PathVariable("memberId") String friendId, Model model){
-        log.info(friendId);
-        log.info(todoList.getDate());
-        Cookie[] cookies = request.getCookies();
+        String token = jtp.extractToken(request.getCookies());
         MemberDetailDto mdd = null;
-
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                String tokenName = cookie.getName();
-                String value = cookie.getValue();
-                if (tokenName.equals("accessToken")) {
-                    mdd = jtp.getMember(value);
-                }
-            }
-        }
+        mdd = jtp.getMember(token);
 
         FriendList friendList = new FriendList();
         friendList.setUserId(mdd.getMemberId());
