@@ -61,17 +61,11 @@ public class MembersController {
 
     @PostMapping("/update")
     public String updateMyPage(HttpServletRequest request,
-                               @RequestParam("image_file") MultipartFile image,
-                               BindingResult bindingResult) throws IOException {
+                               @RequestParam("image_file") MultipartFile image) throws IOException {
         log.info("이미지 받음 {}", image.getOriginalFilename());
 
         String memberId = jwtTokenProvider.getMemberIdFromToken(jwtTokenProvider.extractToken(request.getCookies()));
-
-        if (bindingResult.hasErrors()) {
-            memberService.updateMemberImg(image, memberId);
-            log.info("error={}", bindingResult);
-            return "/mypage";
-        }
+        memberService.updateMemberImg(image, memberId);
 
         return "redirect:/list/todolist";
     }
