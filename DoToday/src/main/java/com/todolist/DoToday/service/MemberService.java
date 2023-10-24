@@ -191,20 +191,21 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
         String memberPrevPw = memberChangePwDto.getMemberPrevPw();
         String memberNewPw = memberChangePwDto.getMemberNewPw();
         String memberConfNewPw = memberChangePwDto.getMemberConfNewPw();
-        log.info("비밀번호 변경" +
-                "기존 비밀번호: {}" +
-                "새 비밀번호: {}" +
-                "새 비밀번화 확인: {}", memberPrevPw, memberNewPw, memberConfNewPw);
+        log.info("기존 비밀번호: {}, " +
+                "새 비밀번호: {}, " +
+                "새 비밀번호 확인: {}", memberPrevPw, memberNewPw, memberConfNewPw);
 
-        String memberId = memberDetailDto.getMemberId();
-        String memberPw = memberDetailDto.getMemberPw();
-        log.info("memberId: {}" +
+        String memberId = memberDetailDto.getUsername();
+        String memberPw = memberDetailDto.getPassword();
+        log.info("memberId: {}, " +
                 "memberPw: {}", memberId, memberPw);
 
         if (bCryptPasswordEncoder.matches(memberPrevPw, memberPw)) {
             if (memberNewPw.equals(memberConfNewPw)) {
                 String encodedNewPw = bCryptPasswordEncoder.encode(memberNewPw);
                 jdbcTemplate.update("update member set member_pw = ? where member_id = ?", encodedNewPw, memberId);
+            } else {
+                log.info("새로 입력한 비밀번호가 다름");
             }
         } else {
             log.info("기존 비밀번호가 틀림");

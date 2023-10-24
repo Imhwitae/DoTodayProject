@@ -76,8 +76,8 @@ public class MembersController {
 
     @PostMapping("/pwupdate")
     public String updatePw(@AuthenticationPrincipal MemberDetailDto memberDetailDto, MemberChangePwDto memberChangePwDto) {
-
-        return "/mypage";
+        memberService.updateMemberPw(memberDetailDto, memberChangePwDto);
+        return "redirect:/members/logout";
     }
 
 }
