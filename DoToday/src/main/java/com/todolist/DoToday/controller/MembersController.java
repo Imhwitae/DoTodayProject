@@ -42,6 +42,12 @@ public class MembersController {
 
     @PostMapping("/add")
     public String memberAdd(MemberJoinDto memberJoinDto) {
+        log.info("id: {}, " +
+                "email: {}, " +
+                "pw: {}, " +
+                "name: {}",
+                memberJoinDto.getMemberId(), memberJoinDto.getMemberEmailDomain(), memberJoinDto.getMemberPw(),
+                memberJoinDto.getMemberName());
 
         memberService.joinMember(memberJoinDto);
 

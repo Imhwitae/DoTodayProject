@@ -22,7 +22,14 @@
       <!-- 2. 필드 -->
       <div class="field">
         <b>아이디</b>
-        <span class="placehold-text"><input type="text" name="memberId" th:field="*{memberId}"></span>
+          <div class="input_id_box">
+            <span class="placehold-text"><input type="text" class="id_box" name="memberId" th:field="*{memberId}">@</span>
+              <select class="email_box" name="emailDomain" th:field="*{memberEmailDomain}">
+                  <option th:value="${'@gmail.com'}">gmail.com</option>
+                  <option th:value="${'@naver.com'}">naver.com</option>
+                  <option th:value="${'@daum.net'}">daum.net</option>
+              </select>
+          </div>
       </div>
       <div class="field">
         <b>비밀번호</b>
@@ -34,15 +41,15 @@
       </div>
       <div class="field">
         <b>이름</b>
-        <input type="text" name="memberName" th:field="*{memberName}">
+        <input class="input_box" type="text" name="memberName" th:field="*{memberName}">
       </div>
 
       <!-- 3. 필드(생년월일) -->
       <div class="field birth">
         <b>생년월일</b>
         <div>
-          <input type="text" placeholder="년(4자)" name="year" th:field="*{memberBirthYear}">
-          <select name="month" th:field="*{memberBirthMonth}">
+          <input class="input_box" type="text" placeholder="년(4자)" name="year" th:field="*{memberBirthYear}">
+          <select name="month" th:field="*{memberBirthMonth}" class="input_box">
 <!--            <option value="">월</option>-->
             <option value="" th:value="${'01'}">1월</option>
             <option value="" th:value="${'02'}">2월</option>
@@ -57,7 +64,7 @@
             <option value="" th:value="${'11'}">11월</option>
             <option value="" th:value="${'12'}">12월</option>
           </select>
-          <input type="text" placeholder="일" name="date" th:field="*{memberBirthDate}">
+          <input class="input_box" type="text" placeholder="일" name="date" th:field="*{memberBirthDate}">
         </div>
       </div>
 
@@ -74,10 +81,10 @@
       </div>
 
       <!-- 5. 이메일_전화번호 -->
-      <div class="field">
-        <b>본인 확인 이메일<small>(선택)</small></b>
-        <input type="email" placeholder="선택입력" name="memberEmail" th:field="*{memberEmail}">
-      </div>
+<!--      <div class="field">-->
+<!--        <b>본인 확인 이메일<small>(선택)</small></b>-->
+<!--        <input type="email" placeholder="선택입력" name="memberEmail" th:field="*{memberEmail}">-->
+<!--      </div>-->
 
   <!--    <div class="field tel-number">-->
   <!--      <b>휴대전화</b>-->
@@ -92,7 +99,7 @@
   <!--    </div>-->
 
       <!-- 6. 가입하기 버튼 -->
-      <input type="submit" value="가입하기" style="background: #ff4462">
+      <input class="input_box" type="submit" value="가입하기" style="background: #ff4462">
     </div>
   </form>
   <!-- 7. 푸터 -->

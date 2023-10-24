@@ -50,7 +50,6 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
                         rs.getString("member_id"),
                         rs.getString("member_pw"),
                         rs.getString("member_name"),
-                        rs.getString("member_email"),
                         rs.getString("member_image"),
                         rs.getBoolean("member_enabled")
                 );
@@ -98,22 +97,21 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
     }
 
     public void joinMember(MemberJoinDto memberJoinDto) {
-        String id = memberJoinDto.getMemberId();
+        String id = memberJoinDto.getMemberId() + memberJoinDto.getMemberEmailDomain();
         String pw = memberJoinDto.getMemberPw();
         String name = memberJoinDto.getMemberName();
         String image = basicImage;
         LocalDate birth = stringToDate(memberJoinDto);
         String gender = memberJoinDto.getMemberGender().getGenderSelect();
-        String email = memberJoinDto.getMemberEmail();
         LocalDate regtime = LocalDate.now();
         boolean isEnabled = false;
 
         String encodedPw = bCryptPasswordEncoder.encode(pw);
 
         jdbcTemplate.update("insert into member (member_id, member_pw, member_name, member_image, member_birth," +
-                                "member_regdate, member_gender, member_email, member_enabled) " +
-                                "values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                                id, encodedPw, name, image, birth, regtime, gender, email, isEnabled);
+                                "member_regdate, member_gender, member_enabled) " +
+                                "values (?, ?, ?, ?, ?, ?, ?, ?)",
+                                id, encodedPw, name, image, birth, regtime, gender, isEnabled);
     }
 
     public MemberDetailDto findById(String id) {
@@ -129,6 +127,7 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         log.info("Authentication 진입");
+        log.info("memberId: {}", authentication.getName());
         String memberId = authentication.getName();
         String memberPw = authentication.getCredentials().toString();
         String savedPw = findById(memberId).getMemberPw();
@@ -182,8 +181,9 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
             String updateImgUrl = uploadImage(image);
             jdbcTemplate.update("update member set member_image = ? where member_id = ?", updateImgUrl, memberId);
             log.info("{} 유저 이미지 url 변경 {}", memberId, updateImgUrl);
+        } else {
+            throw new RuntimeException("이미지가 없습니다.");
         }
-        throw new RuntimeException("이미지가 없습니다.");
     }
 
     // 비밀번호 변경

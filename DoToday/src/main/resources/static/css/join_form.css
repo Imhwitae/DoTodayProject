@@ -47,7 +47,8 @@ a{
 }
 
 /*input 중 radio 는 width 가 100%면 안되니까 */
-.member input:not(input[type=radio]), .member select {
+/*input:not(input[type=radio]), .member select*/
+.member .input_box {
     padding: 15px;
     width: 100%;
     margin-bottom: 5px;
@@ -95,7 +96,7 @@ a{
 }
 
 .placehold-text{
-    display: block; /*span 으로 감싸서 크기영역을 블록요소로 만들어ㅜ저야한다*/
+    /*display: block; !*span 으로 감싸서 크기영역을 블록요소로 만들어ㅜ저야한다*!*/
     position:relative;
     /* border: 1px solid #000; */
 }
@@ -111,13 +112,21 @@ a{
 .userpw{
     background:url(./images/images2/icon-01.png) no-repeat center right 15px;
     background-size: 20px;
-    background-color: #fff;
+    padding: 15px;
+    width: 100%;
+    margin-bottom: 5px;
+    border: 1px solid #DDD;
+    background: #F9F9F9;
 }
 
 .userpw-confirm{
     background:url(./images/images2/icon-02.png) no-repeat center right 15px;
     background-size: 20px;
-    background-color: #fff;
+    padding: 15px;
+    width: 100%;
+    margin-bottom: 5px;
+    border: 1px solid #DDD;
+    background: #F9F9F9;
 }
 
 .member-footer {
@@ -157,4 +166,20 @@ a{
     .member{
         width: 100%;
     }
+}
+
+.id_box {
+    width: 47%;
+    padding: 15px;
+    margin-bottom: 5px;
+    border: 1px solid #DDD;
+    background: #F9F9F9;
+}
+
+.email_box {
+    width: 48%;
+    padding: 15px;
+    margin-bottom: 5px;
+    border: 1px solid #DDD;
+    background: #F9F9F9;
 }
