@@ -195,10 +195,10 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
                 "새 비밀번호: {}, " +
                 "새 비밀번호 확인: {}", memberPrevPw, memberNewPw, memberConfNewPw);
 
-        String memberId = memberDetailDto.getUsername();
-        String memberPw = memberDetailDto.getPassword();
-        log.info("memberId: {}, " +
-                "memberPw: {}", memberId, memberPw);
+        String memberId = memberDetailDto.getMemberId();
+        String memberPw = memberDetailDto.getMemberPw();
+//        log.info("memberId: {}, " +
+//                "memberPw: {}", memberId, memberPw);
 
         if (bCryptPasswordEncoder.matches(memberPrevPw, memberPw)) {
             if (memberNewPw.equals(memberConfNewPw)) {
