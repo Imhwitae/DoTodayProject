@@ -120,8 +120,8 @@ input[type='date']::before{
 .list_input {
     border: none;
     text-align: center;
-    width: 92.296%;
-    height: 30px;
+    width: 550px;
+    height: 48px;
     font-family: Noto Sans;
     font-size: 16px;
     font-style: normal;
@@ -129,7 +129,10 @@ input[type='date']::before{
     line-height: normal;
     letter-spacing: -0.8px;
     margin: 6px 0px 6px 0px;
-    padding-left: 30px;
+    border-radius: 5px;
+    border-bottom: 1px solid rgba(255, 68, 98, 0.90);
+    background: #FFF;
+    margin-bottom: 20px;
 }
 
 .list_input_denied{
@@ -148,13 +151,21 @@ input[type='date']::before{
 }
 
 .list_submit{
-    text-align: right;
-    background: url(./image/add-list.png) no-repeat right 0px center / 25px auto;
+    float: left;
+    width: 120px;
+    height: 30px;
+    border-radius: 5px;
+    background: rgba(255, 68, 98, 0.90);
     border: none;
-    width: 24px;
-    height: 24px;
-    margin: 15px 4px -7px 0px;
+    color: #FFF;
+    font-family: Noto Sans;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.8px;
 }
+
 input:focus {outline:none;}
 
 .userName {
@@ -363,12 +374,123 @@ input:focus {outline:none;}
     z-index: 10;
 }
 
+.todolist_input_modal{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+.input_modalDiv {
+    width: 700px;
+    height: 340px;
+    background: #FFF;
+    padding: 30px 60px;
+    border-radius: 5px;
+}
+
+.modal_list_form {
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    background: #F9F9F9;
+    padding: 35px 15px;
+}
+
+.todo_title {
+    width: 121px;
+    height: 33px;
+    border-radius: 5px;
+    border-bottom: 1px solid rgba(255, 68, 98, 0.90);
+    background: #FFF;
+    color: rgba(255, 68, 98, 0.90);
+    text-align: center;
+    font-family: Noto Sans;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.8px;
+    padding: 8px 46px 5px 15px;
+    margin-bottom: 11px;
+}
+
+.when_todo {
+    float: left;
+    width: 154px;
+    height: 40px;
+    border-radius: 5px;
+    border-bottom: 1px solid rgba(255, 68, 98, 0.90);
+    background: #FFF;
+    color: rgba(255, 68, 98, 0.90);
+    text-align: center;
+    font-family: Noto Sans;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.8px;
+    padding: 11px 45px 9px 15px;
+}
+
+.select_when {
+    border: none;
+    text-align: center;
+    float: right;
+    width: 249px;
+    height: 40px;
+    border-radius: 5px;
+    border-bottom: 1px solid rgba(255, 68, 98, 0.90);
+    background: #FFF;
+}
+
+.when_todoDiv {
+    width: 550px;
+    height: 40px;
+    margin-bottom: 21px;
+}
+
+.btnDiv {
+    width: 291px;
+    height: 30px;
+    margin: auto;
+}
+
+.input_modalClose {
+    float: right;
+    width: 120px;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 68, 98, 0.90);
+    background: #FFF;
+    color: rgba(255, 68, 98, 0.90);
+}
+
+.list_submit:hover {
+    background: white;
+    color: rgba(255, 68, 98, 0.90);
+    border: 1px solid rgba(255, 68, 98, 0.90);
+}
+
+.input_modalClose:hover{
+    color: white;
+    background: rgba(255, 68, 98, 0.90);
+    border : 1px solid rgba(255, 68, 98, 0.90);
+}
+
 .modalDiv {
     position: absolute;
     background-color: #f9f9f9;
     width: 35.9%;
     height: 17.7%;
     /* padding: 15px; */
+    border-radius: 10px;
 }
 
 .modalForm {

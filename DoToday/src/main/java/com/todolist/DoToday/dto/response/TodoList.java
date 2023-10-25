@@ -9,4 +9,5 @@ public class TodoList {
     private String memberId;
     private int complete;
     private String date;
+    private String whenToDo;
 }

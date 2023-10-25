@@ -34,13 +34,28 @@
                data-placeholder="날짜 선택" required aria-required="true" placeholder="날짜선택">
         <input class="date_submit" type="submit" value="찾아보기" form="date_form">
     </form><br/>
+<!--    리스트작성 모달 오픈 버튼-->
+    <input type="button" id="list_modal_openBtn" th:if="${msg} == null" class="list_form list_modal_btn" value="투두 리스트 추가하기">
     <!--리스트 작성-->
-    <form class="list_form" id="list_form" th:action="@{'/list/write/'+${date}}" th:object="${todoList}" method="post"  th:if="${msg} == null">
-        <input type="hidden" th:value="${memberInfo.memberId}" th:name="memberId">
-        <input class="list_input" type="text" th:field="*{listTitle}" placeholder="해야 할 일을 적어보세요!"
-               onfocus="this.placeholder = ''" onblur="this.placeholder = '해야 할 일을 적어보세요!'">
-        <input class="list_submit" type="submit" value="" form="list_form">
-    </form>
+    <div class="todolist_input_modal hidden" id="todolist_input_modal">
+        <div class="input_modalDiv" id="input_modalDiv">
+            <form class="modal_list_form" th:action="@{'/list/write/'+${date}}" th:object="${todoList}" method="post">
+                <input type="hidden" th:value="${memberInfo.memberId}" th:name="memberId">
+                <div class="todo_title">투두 제목</div>
+                <input class="list_input" type="text" th:field="*{listTitle}" placeholder="해야 할 일을 적어보세요!"
+                       onfocus="this.placeholder = ''" onblur="this.placeholder = '해야 할 일을 적어보세요!'">
+                <div class="when_todoDiv">
+                <div class="when_todo">언제 하시나요?</div>
+                    <input type="text" class="select_when" placeholder="완료 하고싶은 시간을 적어 주세요!"
+                           onfocus="this.placeholder = ''" onblur="this.placeholder = '완료 하고싶은 시간을 적어 주세요!'">
+                </div>
+                <div class="btnDiv">
+                    <input class="list_submit" type="submit" value="저장">
+                    <button class="input_modalClose" type="button" id="input_modalClose">취소</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <!--날짜가 지난상태면 작성 불가-->
     <div class="list_form" th:if="${msg} != null" >
         <input class="list_input_denied" type="text"th:placeholder="${msg}" readonly>
@@ -116,13 +131,13 @@
     // document.getElementById('list_date').value = new Date().toISOString().substring(0, 10);;
     //모달 오픈 버튼
     const openButton = document.getElementsByClassName('updateButton');
-    // const cUpdateOpenButton = document.getElementById('cUpdateOpen');
+    const inputModalOpen = document.getElementById('list_modal_openBtn');
     //모달 닫기 버튼
     const closeButton = document.getElementsByClassName('modalClose');
-    // const cUpdateCloseButton = document.getElementById('cUpdateClose');
+    const inputModalClose = document.getElementById('input_modalClose');
     //모달 클래스
     const modal = document.getElementsByClassName('updateModal');
-    // const cUpdateForm = document.getElementById('cUpdate');
+    const inputModal = document.getElementById('todolist_input_modal');
 
     var funcs = [];
 
@@ -132,7 +147,6 @@
             openButton[num].onclick =  function() {
                 modal[num].style.display = "flex";
                 // modal[num].classList.remove('hidden');
-                console.log(num);
             };
 
             // <span> 태그(X 버튼)를 클릭하면 Modal이 닫습니다.
@@ -160,13 +174,13 @@
         }
     }
 
-    // cUpdateOpenButton.addEventListener('click', () => {
-    //     cUpdateForm.classList.remove('hidden');
-    // });
-    //
-    // cUpdateCloseButton.addEventListener('click', () => {
-    //     cUpdateForm.classList.add('hidden');
-    // });
+    inputModalOpen.addEventListener('click', () => {
+        inputModal.classList.remove('hidden');
+    });
+
+    inputModalClose.addEventListener('click', () => {
+        inputModal.classList.add('hidden');
+    });
 </script>
 </body>
 </html>
