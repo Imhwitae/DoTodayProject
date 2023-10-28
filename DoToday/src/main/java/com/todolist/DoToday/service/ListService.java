@@ -32,6 +32,7 @@ public class ListService {
             todoList.setComplete(rs.getInt("complete"));
             todoList.setListNum(rs.getInt("list_num"));
             todoList.setMemberId(rs.getString("member_id"));
+            todoList.setWhenToDo(rs.getString("when_todo"));
             return todoList;
         }
     };
@@ -60,11 +61,11 @@ public class ListService {
     public int write(TodoList todoList){
         int result = 0;
         if (todoList.getDate() != null){
-            result = jdbcTemplate.update("insert into list(list_title,member_id,write_date) values(?,?,?)"
-                    , todoList.getListTitle(), todoList.getMemberId(), todoList.getDate());
+            result = jdbcTemplate.update("insert into list(list_title,member_id,write_date,when_todo) values(?,?,?,?)"
+                    , todoList.getListTitle(), todoList.getMemberId(), todoList.getDate(), todoList.getWhenToDo());
         }else {
-            result = jdbcTemplate.update("insert into list(list_title,member_id) values(?,?)"
-                    , todoList.getListTitle(), todoList.getMemberId());
+            result = jdbcTemplate.update("insert into list(list_title,member_id,when_todo) values(?,?,?)"
+                    , todoList.getListTitle(), todoList.getMemberId(), todoList.getWhenToDo());
         }
         return result;
     }
@@ -77,10 +78,26 @@ public class ListService {
     }
 
     //수정
-    public int updateContent(TodoList todoList){
+    public int updateWhenTodo(TodoList todoList){
+        int result = 0;
+        result = jdbcTemplate.update("update list set when_todo = ? where list_num = ?"
+                , todoList.getWhenToDo(), todoList.getListNum());
+        return result;
+    }
+
+    //수정
+    public int updateTitle(TodoList todoList){
         int result = 0;
         result = jdbcTemplate.update("update list set list_title = ? where list_num = ?"
                 , todoList.getListTitle(), todoList.getListNum());
+        return result;
+    }
+
+    //수정
+    public int updateAll(TodoList todoList){
+        int result = 0;
+        result = jdbcTemplate.update("update list set list_title = ? , when_todo = ? where list_num = ?"
+                , todoList.getListTitle(), todoList.getWhenToDo(), todoList.getListNum());
         return result;
     }
 
@@ -91,8 +108,24 @@ public class ListService {
         return result;
     }
 
-    public boolean validate(TodoList todoList){
+    //미완료처리
+    public int updateInComplete(int num){
+        int result = jdbcTemplate.update("update list set complete = 0 where list_num = ?"
+                , num);
+        return result;
+    }
+
+    public boolean titleValidate(TodoList todoList){
         String title = todoList.getListTitle();
+        boolean blank = false;
+        if (title.trim().isEmpty() == true || title == null){ //앞뒤로 공백이 있으면 지워줌
+            blank = true;
+        }
+        return blank;
+    }
+
+    public boolean whenValidate(TodoList todoList){
+        String title = todoList.getWhenToDo();
         boolean blank = false;
         if (title.trim().isEmpty() == true || title == null){ //앞뒤로 공백이 있으면 지워줌
             blank = true;

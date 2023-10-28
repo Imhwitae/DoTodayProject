@@ -26,7 +26,7 @@ import java.util.List;
 public class ListController {
     private final ListService listService;
     private final FriendService friendService;
-    private boolean blank, listExist;
+    private boolean tBlank, wBlank, listExist;
     private final JwtTokenProvider jtp;
     private final MemberService memberService;
 
@@ -177,7 +177,8 @@ public class ListController {
                             @PathVariable("date") String date,
                             @ModelAttribute("todoList") TodoList todoList,Model model,
                             HttpServletRequest request){
-        blank = listService.validate(todoList);
+        tBlank = listService.titleValidate(todoList);
+        wBlank = listService.whenValidate(todoList);
 
         date = date.replaceAll("[년월]","-").replaceAll("[ 일]","");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -189,9 +190,12 @@ public class ListController {
         log.info(setDateStr);
         log.info(memberId);
 
-        if (blank == true){ // todolist의 title이 비어있을때
+        if (tBlank == true){ // todolist의 title 비어있을때
             model.addAttribute("error","오늘의 할일을 작성해 주세요!");
             return "/message/error";
+        }
+        if (wBlank == true){
+            todoList.setWhenToDo("아무때나");
         }
 
         listService.write(todoList);
@@ -217,15 +221,30 @@ public class ListController {
                              @ModelAttribute("todoList") TodoList todoList,
                              HttpServletRequest request){
         String referer = request.getHeader("Referer");
+        tBlank = listService.titleValidate(todoList);
+        wBlank = listService.whenValidate(todoList);
 
-        blank = listService.validate(todoList);
-        if (blank == true){ // todolist의 title이 비어있을때
+        if (tBlank == true && wBlank == true){
             return "redirect:"+ referer;
         }
-        todoList.setListNum(listNum);
-        listService.updateContent(todoList);
 
-//        return "redirect:/list/todolist";
+        todoList.setListNum(listNum);
+
+        if (tBlank != true && wBlank != true){
+            listService.updateAll(todoList);
+        } else if (tBlank == true){
+            listService.updateWhenTodo(todoList);
+        } else {
+            listService.updateTitle(todoList);
+        }
+
+//        if (blank == true){ // todolist의 title이 비어있을때
+//            return "redirect:"+ referer;
+//        }
+//
+//        todoList.setListNum(listNum);
+//        listService.updateContent(todoList);
+
         return "redirect:"+ referer;
     }
 
@@ -245,6 +264,18 @@ public class ListController {
             model.addAttribute("error","아직 지나지 않은 날짜는 완료 할 수 없습니다!");
             return "/message/error";
         }
+        log.info(listNum+"");
+
+//        return "redirect:/list/todolist";
+        String referer = request.getHeader("Referer");
+        return "redirect:"+ referer;
+    }
+
+    //작성된 투두리스트 완료
+    @PostMapping("/inComplete")
+    public String inCompleteList(@RequestParam("listNum") int listNum,
+                                 HttpServletRequest request, Model model){
+        listService.updateInComplete(listNum);
         log.info(listNum+"");
 
 //        return "redirect:/list/todolist";
