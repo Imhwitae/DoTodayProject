@@ -40,14 +40,15 @@
     <div class="todolist_input_modal hidden" id="todolist_input_modal">
         <div class="input_modalDiv" id="input_modalDiv">
             <form class="modal_list_form" th:action="@{'/list/write/'+${date}}" th:object="${todoList}" method="post">
+                <div class="modal_list_title">나의 할일 작성하기</div>
                 <input type="hidden" th:value="${memberInfo.memberId}" th:name="memberId">
                 <div class="todo_title">투두 제목</div>
                 <input class="list_input" type="text" th:field="*{listTitle}" placeholder="해야 할 일을 적어보세요!"
                        onfocus="this.placeholder = ''" onblur="this.placeholder = '해야 할 일을 적어보세요!'">
                 <div class="when_todoDiv">
-                <div class="when_todo">언제 하시나요?</div>
-                    <input type="text" class="select_when" placeholder="완료 하고싶은 시간을 적어 주세요!"
-                           onfocus="this.placeholder = ''" onblur="this.placeholder = '완료 하고싶은 시간을 적어 주세요!'">
+                    <div class="when_todo">언제 하시나요?</div>
+                        <input type="text" class="select_when" th:field="*{whenToDo}" placeholder="완료 하고싶은 시간을 적어 주세요!"
+                               onfocus="this.placeholder = ''" onblur="this.placeholder = '완료 하고싶은 시간을 적어 주세요!'">
                 </div>
                 <div class="btnDiv">
                     <input class="list_submit" type="submit" value="저장">
@@ -66,7 +67,15 @@
     </div>
     <div class="todolist" th:each="todoList : ${list}">
         <div class="complete" th:if="${todoList.complete} == 1"> <!--완료된 리스트-->
-            <div class="completeTitle" th:text="${todoList.listTitle}">리스트 내용</div>
+            <div class="todolist_text">
+                <div class="completeTitle" th:text="${todoList.listTitle}">리스트 내용</div>
+                <div class="completeWhenToDo" th:text="${todoList.whenToDo}">언제까지 할것인지</div>
+            </div>
+<!--            리스트 미완료로 변경-->
+            <form class="changeInCompleteForm" id="changeInComplete" th:action="@{'/list/inComplete'}" method="post">
+                <input type="hidden" th:name="listNum" th:value="${todoList.listNum}">
+                <input class="changeButton" type="submit" value="">
+            </form>
             <!--리스트 삭제-->
             <form class="deleteForm" id="completeDelete" th:action="@{'/list/delete'}" method="post">
                 <input type="hidden" th:name="listNum" th:value="${todoList.listNum}">
@@ -78,19 +87,28 @@
             <div class="updateModal">
                 <div class="modalDiv">
                     <form id="update_form" class="modalForm" th:action="@{'/list/update'}" th:object="${todoList}" method="post">
-<!--                        <input type="hidden" th:name="date" th:value="${todoList.date}">-->
+                        <div class="modal_list_title">나의 할일 수정하기</div>
                         <input type="hidden"  th:name="listNum" th:value="${todoList.listNum}">
-                        <input type="text" class="updateTitle" th:field="*{listTitle}" th:value="${todoList.listNum}"
-                               placeholder="수정할 내용을 작성하세요."
+                        <div class="todo_title">투두 제목</div>
+                        <input type="text" class="list_input" th:field="*{listTitle}" placeholder="수정할 내용을 작성하세요."
                                onfocus="this.placeholder = ''" onblur="this.placeholder = '수정할 내용을 작성하세요.'">
-                        <input type="submit" class="updateSubmit" value="수정">
-                        <button class="modalClose" type="button">취소</button>
+                        <div class="when_todoDiv">
+                            <div class="when_todo">언제 하시나요?</div>
+                            <input type="text" class="select_when" th:field="*{whenToDo}" th:placeholder="${todoList.whenToDo}">
+                        </div>
+                        <div class="btnDiv">
+                            <input class="list_submit" type="submit" value="수정">
+                            <button class="modalClose" type="button">취소</button>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
         <div class="incomplete" th:if="${todoList.complete} == 0"><!--미완료된 리스트-->
-            <div class="incompleteTitle" th:text="${todoList.listTitle}">리스트 내용</div>
+            <div class="todolist_text">
+                <div class="incompleteTitle" th:text="${todoList.listTitle}">리스트 내용</div>
+                <div class="completeWhenToDo" th:text="${todoList.whenToDo}">언제까지 할것인지</div>
+            </div>
             <!--리스트 완료-->
             <form class="completeForm" id="inCompleteComplete" th:action="@{'/list/complete/'+${date}}" method="post">
                 <input type="hidden" th:name="listNum" th:value="${todoList.listNum}">
@@ -107,13 +125,19 @@
             <div class="updateModal">
                 <div class="modalDiv">
                     <form id="incomplete_update_form" class="modalForm" th:action="@{'/list/update'}" th:object="${todoList}" method="post">
-                        <!--                        <input type="hidden" th:name="date" th:value="${todoList.date}">-->
+                        <div class="modal_list_title">나의 할일 수정하기</div>
                         <input type="hidden" th:name="listNum" th:value="${todoList.listNum}">
-                        <input type="text" class="updateTitle" th:field="*{listTitle}" th:value="${todoList.listNum}"
-                               placeholder="수정할 내용을 작성하세요."
+                        <div class="todo_title">투두 제목</div>
+                        <input type="text" class="list_input" th:field="*{listTitle}" placeholder="수정할 내용을 작성하세요."
                                onfocus="this.placeholder = ''" onblur="this.placeholder = '수정할 내용을 작성하세요.'">
-                        <input type="submit" class="updateSubmit" value="수정">
-                        <button class="modalClose" type="button">취소</button>
+                        <div class="when_todoDiv">
+                            <div class="when_todo">언제 하시나요?</div>
+                            <input type="text" class="select_when" th:field="*{whenToDo}" th:placeholder="${todoList.whenToDo}">
+                        </div>
+                        <div class="btnDiv">
+                            <input class="list_submit" type="submit" value="수정">
+                            <button class="modalClose" type="button">취소</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -147,12 +171,14 @@
             openButton[num].onclick =  function() {
                 modal[num].style.display = "flex";
                 // modal[num].classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
             };
 
             // <span> 태그(X 버튼)를 클릭하면 Modal이 닫습니다.
             closeButton[num].onclick = function() {
                 modal[num].style.display = "none";
                 // modal[num].classList.add('hidden');
+                document.body.style.removeProperty('overflow');
             };
         };
     }
@@ -176,10 +202,12 @@
 
     inputModalOpen.addEventListener('click', () => {
         inputModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
     });
 
     inputModalClose.addEventListener('click', () => {
         inputModal.classList.add('hidden');
+        document.body.style.removeProperty('overflow');
     });
 </script>
 </body>

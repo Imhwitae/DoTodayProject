@@ -11,7 +11,7 @@ body {
 }
 
 .go_todo_list_on {
-    /* 투두 리스트 */
+    /* íˆ¬ë‘ ë¦¬ìŠ¤íŠ¸ */
     padding-top: 2rem;
     padding-left: 3rem;
     font-style: normal;
@@ -258,10 +258,8 @@ input:focus {outline:none;}
     font-weight: 500;
     line-height: normal;
     letter-spacing: -0.8px;
-    width: 72.232%;
+    width: 100%;
     float: left;
-    margin-left: 8.026%;
-    margin-top: 17px;
     text-decoration-line: line-through;
 }
 
@@ -311,6 +309,40 @@ input:focus {outline:none;}
     margin-top: 17px;
 }
 
+.changeInCompleteForm {
+    float: right;
+    width: 20px;
+    margin-top: 17px;
+    margin-right: 10px;
+}
+
+.changeButton {
+    border: none;
+    width: 20px;
+    height: 20px;
+    background: url(./image/failed.svg), rgb(255, 255, 255) 50% / cover no-repeat;
+    display: block;
+}
+
+.completeWhenToDo {
+    float: left;
+    width: 100%;
+    height: 22px;
+    text-align: left;
+    color: #6A6A6A;
+    font-family: Noto Sans;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.6px;
+}
+
+.todolist_text {
+    margin: 11px 0px 7px 50px;
+    float: left;
+    width: 65%;
+}
 
 .incomplete {
     width: 100%;
@@ -330,10 +362,8 @@ input:focus {outline:none;}
     font-weight: 500;
     line-height: normal;
     letter-spacing: -0.8px;
-    width: 70%;
+    width: 100%;
     float: left;
-    margin-left: 8.026%;
-    margin-top: 17px;
 }
 
 .infoImage {
@@ -389,7 +419,7 @@ input:focus {outline:none;}
 
 .input_modalDiv {
     width: 700px;
-    height: 340px;
+    height: 375px;
     background: #FFF;
     padding: 30px 60px;
     border-radius: 5px;
@@ -398,9 +428,27 @@ input:focus {outline:none;}
 .modal_list_form {
     width: 100%;
     height: 100%;
-    border-radius: 15px;
+    border-radius: 10px;
     background: #F9F9F9;
-    padding: 35px 15px;
+    padding: 22px 15px 30px 15px;
+}
+
+.modal_list_title {
+    color: rgba(255, 68, 98, 0.90);
+    font-family: Noto Sans;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.8px;
+    border-bottom: 1px solid;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.modalClose:hover {
+    color: white;
+    background: rgba(255, 68, 98, 0.90);
 }
 
 .todo_title {
@@ -485,24 +533,19 @@ input:focus {outline:none;}
 }
 
 .modalDiv {
-    position: absolute;
-    background-color: #f9f9f9;
-    width: 35.9%;
-    height: 17.7%;
-    /* padding: 15px; */
-    border-radius: 10px;
+    background-color: #ffffff;
+    width: 700px;
+    height: 375px;
+    border-radius: 5px;
+    padding: 30px 60px;
 }
 
 .modalForm {
-    text-align: center;
-    font-family: Noto Sans;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    letter-spacing: -0.8px;
-    width: 80%;
-    height: 63%;
-    margin: 5% auto;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background: #F9F9F9;
+    padding: 22px 15px 30px 15px;
 }
 
 .updateTitle {
@@ -529,13 +572,13 @@ input:focus {outline:none;}
 }
 
 .modalClose {
-    width: 18%;
-    text-align: center;
-    height: 27%;
+    float: right;
+    width: 120px;
+    height: 30px;
     border-radius: 5px;
-    background: #ffffff;
-    color: rgba(255,68,98,0.9);
-    border: 1px solid rgba(255,68,98,0.9);
+    border: 1px solid rgba(255, 68, 98, 0.90);
+    background: #FFF;
+    color: rgba(255, 68, 98, 0.90);
 }
 
 .hidden {
