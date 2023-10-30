@@ -47,17 +47,4 @@ public class SpringSecurityConfig {
 
         return http.build();
     }
-
-
-    // 패스워드 인코더 빈 등록
-//    @Bean
-//    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-
-//    @Bean
-//    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-//        return authenticationConfiguration.getAuthenticationManager();
-//    }
-
 }

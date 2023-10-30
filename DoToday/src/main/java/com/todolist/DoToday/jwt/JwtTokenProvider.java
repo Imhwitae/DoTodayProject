@@ -30,7 +30,6 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class JwtTokenProvider {
-//    private final String BEARER = "Bearer";
     private final Map<String, Object> headerMap = new HashMap<>();
     private final MemberService memberService;
 
@@ -43,10 +42,11 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(keyBase64Encoded.getBytes());
     }
 
+    // 시간은 밀리초 단위
     // acsessToken 유효시간: 60분 (60 * 10분)
     private long tokenTime = 60 * 60 * 1000L;
-    // refreshToken 유효시간: 30일
-    private long refreshTokenTime = 4320 * 60 * 1000L;
+    // refreshToken 유효시간: 1일
+    private long refreshTokenTime = 60 * 60 * 24 * 1000L;
 
     // JWT 토큰 생성
     public MemberTokenDto createToken(String memberId) {
