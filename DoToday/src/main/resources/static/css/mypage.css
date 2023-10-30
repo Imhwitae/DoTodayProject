@@ -41,8 +41,9 @@ body {
 }
 
 .member_image {
-    width: 120px;
-    height: 120px;
+    width: 117px;
+    height: 116px;
+    border-radius: 120px;
 }
 
 .input_label_box {

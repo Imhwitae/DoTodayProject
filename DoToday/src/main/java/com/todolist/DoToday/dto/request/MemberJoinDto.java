@@ -9,6 +9,7 @@ import lombok.Setter;
 public class MemberJoinDto {
     private String memberId;
     private String memberEmailDomain;
+    private String memberDirectEmail;
     private String memberPw;
     private String memberName;
     private String memberBirthYear;

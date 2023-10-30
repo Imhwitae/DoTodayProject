@@ -9,6 +9,7 @@
     <link rel="icon" href="./images/images2/favicon.png">
     <link rel="stylesheet" th:href="@{/css/join_form.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
     <div class="header">
@@ -24,11 +25,13 @@
         <b>아이디</b>
           <div class="input_id_box">
             <span class="placehold-text"><input type="text" class="id_box" name="memberId" th:field="*{memberId}">@</span>
-              <select class="email_box" name="emailDomain" th:field="*{memberEmailDomain}">
+              <select class="email_box" id="selbox" name="emailDomain" th:field="*{memberEmailDomain}">
                   <option th:value="${'@gmail.com'}">gmail.com</option>
                   <option th:value="${'@naver.com'}">naver.com</option>
                   <option th:value="${'@daum.net'}">daum.net</option>
+                  <option value="direct">직접입력</option>
               </select>
+              <input type="text" id="selboxDirect" name="selboxDirect" th:field="*{memberDirectEmail}"/>
           </div>
       </div>
       <div class="field">
@@ -112,5 +115,20 @@
     </div>
     <span><a href="/">DoToday</a></span>
   </div>
+
+    <script>
+        $(function(){
+            //직접입력 인풋박스 기존에는 숨어있다가
+            $("#selboxDirect").hide();
+            $("#selbox").change(function() {
+                //직접입력을 누를 때 나타남
+                if($("#selbox").val() == "direct") {
+                    $("#selboxDirect").show();
+                }  else {
+                    $("#selboxDirect").hide();
+                }
+            })
+        });
+    </script>
 </body>
 </html>

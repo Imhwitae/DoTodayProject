@@ -22,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -97,7 +98,13 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
     }
 
     public void joinMember(MemberJoinDto memberJoinDto) {
-        String id = memberJoinDto.getMemberId() + memberJoinDto.getMemberEmailDomain();
+        String emailDomain = memberJoinDto.getMemberEmailDomain();
+
+        if (StringUtils.hasText(memberJoinDto.getMemberDirectEmail())) {
+            emailDomain = "@" + memberJoinDto.getMemberDirectEmail();
+        }
+
+        String id = memberJoinDto.getMemberId() + emailDomain;
         String pw = memberJoinDto.getMemberPw();
         String name = memberJoinDto.getMemberName();
         String image = basicImage;

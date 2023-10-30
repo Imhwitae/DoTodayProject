@@ -168,6 +168,10 @@ a{
     }
 }
 
+.input_id_box #selboxDirect{
+    margin-left: 51%;
+}
+
 .id_box {
     width: 47%;
     padding: 15px;
@@ -178,6 +182,14 @@ a{
 
 .email_box {
     width: 48%;
+    padding: 15px;
+    margin-bottom: 5px;
+    border: 1px solid #DDD;
+    background: #F9F9F9;
+}
+
+#selboxDirect {
+    width: 48.7%;
     padding: 15px;
     margin-bottom: 5px;
     border: 1px solid #DDD;
