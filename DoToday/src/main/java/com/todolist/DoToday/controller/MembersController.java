@@ -61,6 +61,7 @@ public class MembersController {
         return "/member/login";
     }
 
+    // @AuthenticationPricipal로 바꾸기
     @GetMapping("/mypage")
     public String memberMyPage(HttpServletRequest request, Model model) {
         String accessToken = jwtTokenProvider.extractToken(request.getCookies());
@@ -68,6 +69,14 @@ public class MembersController {
         model.addAttribute("changePw", new MemberChangePwDto());
         return "/member/mypage";
     }
+
+//    @GetMapping("/changeMemInfo")
+//    public String changeMemberInfo(@AuthenticationPrincipal MemberDetailDto memberDetailDto,
+//                                   Model birthModel,
+//                                   Model changePwModel) {
+//        changePwModel.addAttribute("changePw", new MemberChangePwDto());
+//        return "/member/change_mem_info";
+//    }
 
     @PostMapping("/update")
     public String updateMyPage(HttpServletRequest request,

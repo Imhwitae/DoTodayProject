@@ -22,11 +22,18 @@ body {
 }
 
 .main_content {
-    width: 75%;
-    height: 100vh;
-    background-color: #FFFFFF;
-    margin: 0 auto;
-    padding-top: 6rem;
+    width: 37.6045%;
+    height: auto;
+    border-radius: 20px;
+    background: #F9F9F9;
+    margin: 4.9481% auto;
+    padding: 59px 0px 5.209% 0px;
+
+    /*width: 75%;*/
+    /*height: 100vh;*/
+    /*background-color: #FFFFFF;*/
+    /*margin: 0 auto;*/
+    /*padding-top: 6rem;*/
 }
 
 .image {
@@ -72,7 +79,7 @@ body {
 }
 
 .box_container {
-    width: 686px;
+    width: 86.289%;
     margin: 0 auto;
 }
 
@@ -89,7 +96,6 @@ body {
 
 .name_box {
     box-sizing: border-box;
-    width: 686px;
     height: 40px;
     background: #FFFFFF;
     border: 1px solid rgba(255,68,98,0.9);
@@ -112,7 +118,6 @@ body {
 
 .email_box {
     box-sizing: border-box;
-    width: 686px;
     height: 40px;
     border: 1px solid rgba(255,68,98,0.9);
     border-radius: 3px;
@@ -137,7 +142,7 @@ body {
 }
 
 .box_footer {
-    width: 686px;
+    width: 86.289%;
     margin: 0 auto;
     text-align: right;
 }
