@@ -42,7 +42,7 @@
     <form method="post">
       <h1>로그인</h1>
       <a th:href="@{/members/loginform}"><button type="button">회원 로그인</button></a>
-      <a href="https://accounts.google.com/o/oauth2/auth?client_id=180149997803-eq2ht84npp10lhv50hbp18temhuip25b.apps.googleusercontent.com&redirect_uri=http://localhost:8080/login/oauth2/code/callback/google&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"><img th:src="@{/css/image/btn_google_signin_light_normal_web.png}"></a>
+      <a href="https://accounts.google.com/o/oauth2/auth?client_id=180149997803-eq2ht84npp10lhv50hbp18temhuip25b.apps.googleusercontent.com&redirect_uri=http://localhost:8080/login/oauth2/code/callback/google&response_type=code&scope=email profile&access_type=offline"><img th:src="@{/css/image/btn_google_signin_light_normal_web.png}"></a>
       <a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=bd418e40192dec1008813e6eab065492&redirect_uri=http://localhost:8080/kakao/login">
         <img th:src="@{/css/image/kakao_login_medium_narrow.png}"height="45" width="191"/></a>
     </form>
