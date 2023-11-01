@@ -2,6 +2,7 @@ package com.todolist.DoToday.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.todolist.DoToday.dto.request.KakaoMemberJoinDto;
 import com.todolist.DoToday.dto.request.MemberChangePwDto;
 import com.todolist.DoToday.jwt.JwtTokenProvider;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
@@ -119,6 +120,22 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
                                 "member_regdate, member_gender, member_enabled) " +
                                 "values (?, ?, ?, ?, ?, ?, ?, ?)",
                                 id, encodedPw, name, image, birth, regtime, gender, isEnabled);
+    }
+
+    public void kakaoJoinMember(KakaoMemberJoinDto memberJoinDto) {
+        String id = memberJoinDto.getMemberId();
+        String name = memberJoinDto.getMemberName();
+        String image = memberJoinDto.getMemberImage();
+        LocalDate birth = LocalDate.parse(memberJoinDto.getMemberBirthDay(),DateTimeFormatter.ISO_LOCAL_DATE);
+        String gender = memberJoinDto.getMemberGender().getGenderSelect();
+        LocalDate regtime = LocalDate.now();
+        boolean isEnabled = false;
+
+        String encodedPw = bCryptPasswordEncoder.encode("q1w2e3r4t5");
+        jdbcTemplate.update("insert into member (member_id, member_pw, member_name, member_image, member_birth," +
+                        "member_regdate, member_gender, member_enabled) " +
+                        "values (?, ?, ?, ?, ?, ?, ?, ?)",
+                id, encodedPw, name, image, birth, regtime, gender, isEnabled);
     }
 
     public MemberDetailDto findById(String id) {

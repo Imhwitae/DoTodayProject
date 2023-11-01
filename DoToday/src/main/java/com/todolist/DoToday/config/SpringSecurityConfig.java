@@ -26,7 +26,7 @@ public class SpringSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/members/join_form", "/members/loginform", "/members/add",
-                                "/css/**", "/scripts/**", "/plugin/**", "/image/**").permitAll()
+                                "/css/**", "/scripts/**", "/plugin/**", "/image/**", "/kakao/login").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement((session) -> session
