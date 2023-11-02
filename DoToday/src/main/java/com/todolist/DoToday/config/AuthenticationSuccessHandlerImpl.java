@@ -1,4 +1,4 @@
-package com.todolist.DoToday.config.auth;
+package com.todolist.DoToday.config;
 
 import com.todolist.DoToday.jwt.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
@@ -40,7 +40,7 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
 
         // refreshToken 쿠키 생성
         Cookie refreshToken = new Cookie("refreshToken", getRefreshToken);
-        refreshToken.setMaxAge(60*60*24*30);
+        refreshToken.setMaxAge(60*60*24);
         refreshToken.setPath("/");
 
         response.addCookie(accessToken);

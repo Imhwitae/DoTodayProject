@@ -4,13 +4,11 @@ import com.todolist.DoToday.dto.request.AddRequest;
 import com.todolist.DoToday.dto.request.FriendInfoDto;
 import com.todolist.DoToday.dto.response.FriendList;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
-import com.todolist.DoToday.entity.Members;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;

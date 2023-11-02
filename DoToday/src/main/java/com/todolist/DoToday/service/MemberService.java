@@ -4,10 +4,8 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.todolist.DoToday.dto.request.KakaoMemberJoinDto;
 import com.todolist.DoToday.dto.request.MemberChangePwDto;
-import com.todolist.DoToday.jwt.JwtTokenProvider;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.dto.request.MemberJoinDto;
-import com.todolist.DoToday.entity.Members;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,7 +41,7 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
     private final AmazonS3Client amazonS3Client;
     private final JdbcTemplate jdbcTemplate;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final RowMapper<MemberDetailDto> rowMapper = new RowMapper<MemberDetailDto>() {
+    protected RowMapper<MemberDetailDto> rowMapper = new RowMapper<MemberDetailDto>() {
         @Override
         public MemberDetailDto mapRow(ResultSet rs, int rowNum) throws SQLException {
             try {

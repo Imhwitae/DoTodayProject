@@ -2,7 +2,7 @@ package com.todolist.DoToday.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.todolist.DoToday.config.auth.OAuthToken;
+import com.todolist.DoToday.config.oAuth.OAuthToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

@@ -1,4 +1,4 @@
-package com.todolist.DoToday.config.auth;
+package com.todolist.DoToday.config.oAuth;
 
 import lombok.Data;
 

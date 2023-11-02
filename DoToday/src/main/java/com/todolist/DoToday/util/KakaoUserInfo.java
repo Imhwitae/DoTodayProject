@@ -2,11 +2,10 @@ package com.todolist.DoToday.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.todolist.DoToday.config.auth.OAuthToken;
+import com.todolist.DoToday.config.oAuth.OAuthToken;
 import com.todolist.DoToday.dto.Gender;
 import com.todolist.DoToday.dto.request.KakaoMemberJoinDto;
 import com.todolist.DoToday.dto.response.KakaoProfile;
-import com.todolist.DoToday.entity.Members;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;

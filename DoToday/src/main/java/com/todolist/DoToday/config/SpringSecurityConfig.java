@@ -1,10 +1,10 @@
 package com.todolist.DoToday.config;
 
-import com.todolist.DoToday.config.auth.AuthenticationSuccessHandlerImpl;
 import com.todolist.DoToday.jwt.JwtVerifyFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -39,6 +39,7 @@ public class SpringSecurityConfig {
                         .successHandler(authenticationSuccessHandlerImpl)
                         .failureUrl("/members/loginform?error")  // 로그인 실패시 작동
                 )
+                .oauth2Login(Customizer.withDefaults())  // 기본 설정으로 놔둠
                 .addFilterBefore(jwtVerifyFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout
                         .logoutUrl("/members/logout")

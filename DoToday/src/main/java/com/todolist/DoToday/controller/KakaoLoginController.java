@@ -1,16 +1,13 @@
 package com.todolist.DoToday.controller;
 
-import com.todolist.DoToday.config.auth.OAuthToken;
+import com.todolist.DoToday.config.oAuth.OAuthToken;
 import com.todolist.DoToday.dto.request.KakaoMemberJoinDto;
-import com.todolist.DoToday.entity.Members;
 import com.todolist.DoToday.service.MemberService;
 import com.todolist.DoToday.util.KakaoToken;
 import com.todolist.DoToday.util.KakaoUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.naming.CommunicationException;
 

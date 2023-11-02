@@ -6,7 +6,13 @@ public enum MemberRole {
 
     @Getter
     ADMIN("ROLE_ADMIN"),
-    USER("ROLE_USER");
+    @Getter
+    USER("ROLE_USER"),
+    @Getter
+    KAKAO_USER("KAKAO"),
+    @Getter
+    GOOGLE_USER("GOOGLE");
+
 
     MemberRole(String value) {
         this.value = value;
