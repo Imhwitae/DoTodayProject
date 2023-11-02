@@ -24,6 +24,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -40,7 +45,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class GoogleMemberService implements UserDetailsService, AuthenticationProvider {
+public class GoogleMemberService implements OAuth2UserService<OAuth2UserRequest, OAuth2User>, AuthenticationProvider {
 
     private final GoogleOauth googleOauth;
     private final JdbcTemplate jdbcTemplate;
@@ -115,24 +120,7 @@ public class GoogleMemberService implements UserDetailsService, AuthenticationPr
                 memberRole);
     }
 
-    public ResponseEntity<String> responseUserName(GoogleMemberInfoDto googleMemberInfoDto) {
-        RestTemplate restTemplate = new RestTemplate();
-        Map<String, String> form = new HashMap<>();
-        form.put("username", googleMemberInfoDto.getEmail());
-        ResponseEntity<String> response = restTemplate.postForEntity(LOGIN_URL, form, String.class);
-        System.out.println(response);
-        return response;
-    }
-
     // SpringSecurity와 연계해서 로그인
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return memberService.findById(username);
-    }
-
-//    public void loadUser(String memberName) {
-//        memberService.loadUserByUsername(memberName);
-//    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -157,5 +145,12 @@ public class GoogleMemberService implements UserDetailsService, AuthenticationPr
     @Override
     public boolean supports(Class<?> authentication) {
         return false;
+    }
+
+    @Override
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        OAuth2UserService<OAuth2UserRequest, OAuth2User> service = new DefaultOAuth2UserService();
+
+        return null;
     }
 }

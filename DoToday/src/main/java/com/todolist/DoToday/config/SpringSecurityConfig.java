@@ -1,6 +1,7 @@
 package com.todolist.DoToday.config;
 
 import com.todolist.DoToday.jwt.JwtVerifyFilter;
+import com.todolist.DoToday.service.GoogleMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,7 @@ public class SpringSecurityConfig {
 
     private final AuthenticationSuccessHandlerImpl authenticationSuccessHandlerImpl;
     private final JwtVerifyFilter jwtVerifyFilter;
+    private final GoogleMemberService googleMemberService;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -39,7 +41,11 @@ public class SpringSecurityConfig {
                         .successHandler(authenticationSuccessHandlerImpl)
                         .failureUrl("/members/loginform?error")  // 로그인 실패시 작동
                 )
-                .oauth2Login(Customizer.withDefaults())  // 기본 설정으로 놔둠
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(googleMemberService)
+                        )
+                )  // 기본 설정으로 놔둠
                 .addFilterBefore(jwtVerifyFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout
                         .logoutUrl("/members/logout")
