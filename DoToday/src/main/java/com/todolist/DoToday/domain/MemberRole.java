@@ -1,4 +1,4 @@
-package com.todolist.DoToday.entity;
+package com.todolist.DoToday.domain;
 
 import lombok.Getter;
 

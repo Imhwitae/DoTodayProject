@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class GoogleMemberInfoDto implements OAuth2User {
+public class GoogleMemberInfoDto {
     private String id;
     private String email;
     private boolean verified_email;
@@ -19,14 +19,4 @@ public class GoogleMemberInfoDto implements OAuth2User {
     private String family_name;
     private String picture;
     private String locale;
-
-    @Override
-    public Map<String, Object> getAttributes() {
-        return null;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
 }

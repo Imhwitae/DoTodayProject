@@ -2,23 +2,18 @@ package com.todolist.DoToday.jwt;
 
 import com.todolist.DoToday.dto.MemberTokenDto;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
-import com.todolist.DoToday.entity.MemberRole;
+import com.todolist.DoToday.domain.MemberRole;
 import com.todolist.DoToday.service.MemberService;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import java.util.Base64;

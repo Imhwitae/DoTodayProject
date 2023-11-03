@@ -3,49 +3,27 @@ package com.todolist.DoToday.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.todolist.DoToday.config.GoogleOauth;
-import com.todolist.DoToday.dto.request.GoogleJoinMemberDto;
 import com.todolist.DoToday.dto.request.GoogleMemberInfoDto;
 import com.todolist.DoToday.dto.request.GoogleTokenDto;
-import com.todolist.DoToday.dto.response.MemberDetailDto;
-import com.todolist.DoToday.entity.MemberRole;
+import com.todolist.DoToday.domain.MemberRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class GoogleMemberService implements OAuth2UserService<OAuth2UserRequest, OAuth2User>, AuthenticationProvider {
+public class GoogleMemberService {
 
     private final GoogleOauth googleOauth;
     private final JdbcTemplate jdbcTemplate;
@@ -118,39 +96,5 @@ public class GoogleMemberService implements OAuth2UserService<OAuth2UserRequest,
         jdbcTemplate.update("insert into member (member_id, member_pw, member_name, member_image, member_regdate, " +
                 "member_role) values (?, ?, ?, ?, ?, ?)", memberId, memberPw, memberName, memberImage, memberRegdate,
                 memberRole);
-    }
-
-    // SpringSecurity와 연계해서 로그인
-
-    @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-//        GoogleMemberInfoDto member;
-//
-//        try {
-//            member = getMemberInfoDto(requestGooglecode);
-//        } catch (JsonProcessingException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        String memberId = authentication.getName();
-//        String encodedPw = authentication.getCredentials().toString();
-//        String usedGoogleIdForPw = member.getId();
-//
-//        if (bCryptPasswordEncoder.matches(usedGoogleIdForPw, encodedPw)) {
-//            return new UsernamePasswordAuthenticationToken()
-//        }
-        return null;
-    }
-
-    @Override
-    public boolean supports(Class<?> authentication) {
-        return false;
-    }
-
-    @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2UserService<OAuth2UserRequest, OAuth2User> service = new DefaultOAuth2UserService();
-
-        return null;
     }
 }
