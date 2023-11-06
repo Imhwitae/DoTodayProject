@@ -13,8 +13,9 @@ import java.util.Collection;
 @Builder
 public class SocialMemberJoinDto {
     private String memberId;
-    private String memnerPw;
+    private String memberPw;
     private String memberName;
     private String memberImage;
-    private Collection<GrantedAuthority> role; // DB에 적용 되는지 안되는지 확인
+    private char gender;
+//    private Collection<GrantedAuthority> role; // DB에 적용 되는지 안되는지 확인
 }
