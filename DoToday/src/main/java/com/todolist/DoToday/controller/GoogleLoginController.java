@@ -18,12 +18,12 @@ public class GoogleLoginController {
     private final GoogleOauth googleOauth;
     private final GoogleMemberService googleMemberService;
 
-//    @GetMapping("/login/oauth2/code/callback/google")
-//    public ResponseEntity<String> getGoogleCode(@RequestParam(name = "code") String code) throws JsonProcessingException {
-////        ResponseEntity<String> responseEntity = googleMemberService.responseTokenUrl(code);
-////        GoogleTokenDto googleTokenDto = googleMemberService.googleTokenDto(responseEntity);
-////        ResponseEntity<String> info = googleMemberService.requestMemberInfo(googleTokenDto);
+    @GetMapping("/login/oauth2/code/callback/google")
+    public ResponseEntity<String> getGoogleCode(@RequestParam(name = "code") String code) throws JsonProcessingException {
+        ResponseEntity<String> responseEntity = googleMemberService.responseTokenUrl(code);
+        GoogleTokenDto googleTokenDto = googleMemberService.googleTokenDto(responseEntity);
+        ResponseEntity<String> info = googleMemberService.requestMemberInfo(googleTokenDto);
 //        GoogleMemberInfoDto memberInfoDto = googleMemberService.getMemberInfoDto(code);
-//        return googleMemberService.responseUserName(memberInfoDto);
-//    }
+        return info;
+    }
 }

@@ -41,11 +41,12 @@ public class SpringSecurityConfig {
                         .successHandler(authenticationSuccessHandlerImpl)
                         .failureUrl("/members/loginform?error")  // 로그인 실패시 작동
                 )
-                .oauth2Login(oauth2 -> oauth2
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .userService(googleMemberService)
-                        )
-                )  // 기본 설정으로 놔둠
+                .oauth2Login(Customizer.withDefaults())
+//                .oauth2Login(oauth2 -> oauth2
+////                        .userInfoEndpoint(userInfo -> userInfo
+////                                .userService(googleMemberService)
+//                        )
+//                )
                 .addFilterBefore(jwtVerifyFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout
                         .logoutUrl("/members/logout")
