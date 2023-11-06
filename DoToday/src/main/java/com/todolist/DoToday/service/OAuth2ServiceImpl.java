@@ -1,7 +1,7 @@
 package com.todolist.DoToday.service;
 
 import com.todolist.DoToday.dto.OAuth2Attributes;
-import com.todolist.DoToday.dto.request.MemberJoinDto;
+import com.todolist.DoToday.dto.request.SocialMemberJoinDto;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -25,5 +25,7 @@ public class OAuth2ServiceImpl implements OAuth2UserService<OAuth2UserRequest,OA
         return null;
     }
 
-//    private MemberJoinDto
+//    private SocialMemberJoinDto socialMemberJoin(OAuth2Attributes attributes) {
+//
+//    }
 }
