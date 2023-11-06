@@ -230,11 +230,11 @@ public class ListController {
 
         todoList.setListNum(listNum);
 
-        if (tBlank != true && wBlank != true){
+        if (tBlank != true && wBlank != true){ //todolist_title, whenTodo 둘다 값이 있을때
             listService.updateAll(todoList);
-        } else if (tBlank == true){
+        } else if (tBlank == true){ //title만 값이 없을때
             listService.updateWhenTodo(todoList);
-        } else {
+        } else { //whenTodo 값이 없을때
             listService.updateTitle(todoList);
         }
 

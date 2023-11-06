@@ -30,16 +30,18 @@ public class KakaoLoginController {
         OAuthToken oAuthToken = kakaoToken.getToken(code);
 
         System.out.println("카카오 엑세스 토큰 : "+ oAuthToken.getAccess_token());
+        System.out.println("카카오 id_token : " + oAuthToken.getId_token());
 
         KakaoMemberJoinDto kakaoProfile = kakaoUserInfo.getUserInfo(oAuthToken);
 
         System.out.println("kakao이메일 = " + kakaoProfile.getMemberId());
+        System.out.println("kakao성별 = " + kakaoProfile.getMemberGender());
 
-        if (memberService.findById(kakaoProfile.getMemberId()) == null){//카카오 유저 정보가 없을때
-            memberService.kakaoJoinMember(kakaoProfile);
-        }else{
-            kakaoUserInfo.kakaoLogout(oAuthToken);
-        }
+//        if (memberService.findById(kakaoProfile.getMemberId()) == null){//카카오 유저 정보가 없을때
+//            memberService.kakaoJoinMember(kakaoProfile);
+//        }else{
+//            kakaoUserInfo.kakaoLogout(oAuthToken);
+//        }
 
         return "redirect:/";
     }
