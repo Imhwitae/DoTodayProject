@@ -1,4 +1,4 @@
-package com.todolist.DoToday.config;
+package com.todolist.DoToday.handler;
 
 import com.todolist.DoToday.jwt.JwtTokenProvider;
 import jakarta.servlet.FilterChain;

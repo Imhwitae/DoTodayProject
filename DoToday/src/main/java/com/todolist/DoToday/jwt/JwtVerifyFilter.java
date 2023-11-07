@@ -70,6 +70,7 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
             }
         } else {
             filterChain.doFilter(request, response);
+            log.info("토큰 없음");
         }
     }
 }

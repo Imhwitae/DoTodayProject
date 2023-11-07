@@ -1,12 +1,11 @@
 package com.todolist.DoToday.config;
 
+import com.todolist.DoToday.handler.AuthenticationSuccessHandlerImpl;
 import com.todolist.DoToday.jwt.JwtVerifyFilter;
-import com.todolist.DoToday.service.GoogleMemberService;
-import com.todolist.DoToday.service.OAuth2ServiceImpl;
+import com.todolist.DoToday.config.oAuth.OAuth2ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -42,12 +41,11 @@ public class SpringSecurityConfig {
                         .successHandler(authenticationSuccessHandlerImpl)
                         .failureUrl("/members/loginform?error")  // 로그인 실패시 작동
                 )
-//                .oauth2Login(Customizer.withDefaults())
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2Service)
                         )
-                        .defaultSuccessUrl("/home")
+                        .successHandler(authenticationSuccessHandlerImpl)
                 )
                 .addFilterBefore(jwtVerifyFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout

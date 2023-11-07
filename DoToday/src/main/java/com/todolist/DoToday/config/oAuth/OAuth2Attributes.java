@@ -1,14 +1,16 @@
-package com.todolist.DoToday.dto;
+package com.todolist.DoToday.config.oAuth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
 @Getter
 @AllArgsConstructor
 @Builder
+@Slf4j
 public class OAuth2Attributes {
     private Map<String, Object> attributes;  // OAuth2ServiceImpl에서 받아온 attribute
     private String registrationId;
@@ -20,6 +22,7 @@ public class OAuth2Attributes {
 
 //     소셜 종류를 확인하는 메서드
     public static OAuth2Attributes divideSocial(String socialType, Map<String, Object> attributes) {
+        log.info("divideSocial() 진입");
         if (socialType.equals("google")) {
             return typeGoogle(socialType, attributes);
         } else if (socialType.equals("kakao")) {
