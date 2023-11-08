@@ -1,5 +1,6 @@
 package com.todolist.DoToday.controller;
 
+//import com.todolist.DoToday.config.oAuth.CustomOAuth2User;
 import com.todolist.DoToday.dto.response.FriendList;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.dto.response.TodoList;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +34,15 @@ public class ListController {
 
     //자신의 투두리스트 확인
     @GetMapping("/todolist")
-    public String showMyList(HttpServletRequest request,
-                           Model model, @ModelAttribute("todoList") TodoList todoList) {
+    public String showMyList(@AuthenticationPrincipal MemberDetailDto member,
+                             HttpServletRequest request,
+                             Model model,
+                             @ModelAttribute("todoList") TodoList todoList) {
         String token = jtp.extractToken(request.getCookies());
         MemberDetailDto mdd = null;
-        mdd = jtp.getMember(token);
-
-        List<TodoList> list = listService.showToday(mdd.getMemberId());
+//        mdd = jtp.getMember(token);
+        log.info("{}", member);
+        List<TodoList> list = listService.showToday(member.getName());
 
         listExist = listService.emptyList(list);
 
@@ -47,7 +51,8 @@ public class ListController {
 
         model.addAttribute("date", currentDateStr);
         model.addAttribute("list", list);
-        model.addAttribute("memberInfo", mdd);
+//        model.addAttribute("memberInfo", mdd);
+        model.addAttribute("memberInfo", member);
         model.addAttribute("exist", listExist);
         return "list/todolist_user";
     }

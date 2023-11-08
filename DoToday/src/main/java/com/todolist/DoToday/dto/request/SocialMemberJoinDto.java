@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.time.LocalDate;
 import java.util.Collection;
 
 @Getter
@@ -16,6 +17,8 @@ public class SocialMemberJoinDto {
     private String memberPw;
     private String memberName;
     private String memberImage;
-    private char gender;
+    private String gender;
+    private LocalDate regdate;
+    private boolean memberExpired;
 //    private Collection<GrantedAuthority> role; // DB에 적용 되는지 안되는지 확인
 }

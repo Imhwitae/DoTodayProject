@@ -1,9 +1,10 @@
 package com.todolist.DoToday.config.oAuth;
 
 import com.todolist.DoToday.dao.MemberDao;
-import com.todolist.DoToday.config.oAuth.CustomOAuth2User;
+//import com.todolist.DoToday.config.oAuth.CustomOAuth2User;
 import com.todolist.DoToday.config.oAuth.OAuth2Attributes;
 import com.todolist.DoToday.dto.request.SocialMemberJoinDto;
+import com.todolist.DoToday.dto.response.MemberDetailDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +16,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +24,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Service
 @Slf4j
-public class OAuth2ServiceImpl implements OAuth2UserService<OAuth2UserRequest,OAuth2User> {
+public class OAuth2ServiceImpl implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     private final MemberDao memberDao;
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -57,8 +59,9 @@ public class OAuth2ServiceImpl implements OAuth2UserService<OAuth2UserRequest,OA
         SocialMemberJoinDto socialMember = socialMember(attributes);
         memberDao.joinSocialMember(socialMember);
 
-        return new CustomOAuth2User(grantedAuthorities, originAttribute, userNameAttributeName,
-                socialMember.getMemberId(), registrationId);
+//        return new CustomOAuth2User(grantedAuthorities, originAttribute, userNameAttributeName,
+//                socialMember.getMemberId(), registrationId);
+        return new MemberDetailDto(socialMember);
     }
 
     private SocialMemberJoinDto socialMember(OAuth2Attributes attributes) {
@@ -67,6 +70,8 @@ public class OAuth2ServiceImpl implements OAuth2UserService<OAuth2UserRequest,OA
                 .memberPw(attributes.getUserId())
                 .memberName(attributes.getName())
                 .memberImage(attributes.getImageUrl())
+                .regdate(LocalDate.now())
+                .memberExpired(false)
                 .build();
     }
 }

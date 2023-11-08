@@ -17,7 +17,7 @@ public class OAuth2Attributes {
     private String userId;
     private String name;
     private String email;
-    private char gender;
+    private String gender;
     private String imageUrl;
 
 //     소셜 종류를 확인하는 메서드
@@ -32,16 +32,19 @@ public class OAuth2Attributes {
     }
 
     private static OAuth2Attributes typeKakao(String registrationId, Map<String, Object> attributes) {
-        String kakaoGender = String.valueOf(attributes.get("gender"));
-        char gender =  kakaoGender.charAt(0);
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+        Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
+
+        String kakaoGender = String.valueOf(kakaoProfile.get("gender"));
+        String gender =  kakaoGender.substring(0, 1);
 
         return OAuth2Attributes.builder()
                 .registrationId(registrationId)
                 .userId(String.valueOf(attributes.get("id")))
-                .name(String.valueOf(attributes.get("nick_name")))  // String.valueOf()로 값이 없으면 null이 담김
-                .email(String.valueOf(attributes.get("email")))
+                .name(String.valueOf(kakaoProfile.get("nickname")))  // String.valueOf()로 값이 없으면 null이 담김
+                .email(String.valueOf(kakaoAccount.get("email")))
                 .gender(gender)
-                .imageUrl(String.valueOf(attributes.get("profile_image_url")))
+                .imageUrl(String.valueOf(kakaoProfile.get("profile_image_url")))
                 .attributes(attributes)
                 .build();
     }

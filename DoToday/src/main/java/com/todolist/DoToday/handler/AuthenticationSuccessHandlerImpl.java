@@ -1,5 +1,6 @@
 package com.todolist.DoToday.handler;
 
+//import com.todolist.DoToday.config.oAuth.CustomOAuth2User;
 import com.todolist.DoToday.jwt.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -9,8 +10,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 
@@ -30,6 +33,16 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String memberId = authentication.getName();
+
+//        CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+//        String registrationId = oAuth2User.getRegistrationId();
+//
+//        if (StringUtils.hasText(registrationId)) {
+//            String email = oAuth2User.getEmail();
+//            log.info("id: {}", email);
+//            memberId = email;
+//        }
+
         String getAccessToken = jwtTokenProvider.createToken(memberId).getAccessToken();
         String getRefreshToken = jwtTokenProvider.createToken(memberId).getRefreshToken();
 
