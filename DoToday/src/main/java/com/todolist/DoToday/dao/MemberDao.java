@@ -69,17 +69,27 @@ public class MemberDao {
         String encodePw = bCryptPasswordEncoder.encode(socialMemberJoinDto.getMemberPw());
         String memberName = socialMemberJoinDto.getMemberName();
         String memberImage = socialMemberJoinDto.getMemberImage();
-        String memberGender = socialMemberJoinDto.getGender();
+        String memberGender = socialMemberJoinDto.getMemberGender();
         LocalDate memberRegdate = socialMemberJoinDto.getRegdate();
         boolean memberExpired = socialMemberJoinDto.isMemberExpired();
-        if (memberGender == null) {
-            memberGender = "M";
+
+        if (!StringUtils.hasText(memberGender)) {
+            memberGender = "x";
         }
 
         jdbcTemplate.update("insert into member(member_id, member_pw, member_name, member_image, member_gender, " +
                 "member_regdate, member_enabled)" +
                 "values (?, ?, ?, ?, ?, ?, ?)", memberId, encodePw, memberName, memberImage, memberGender, memberRegdate,
                 memberExpired);
+    }
+
+    public void updateSocialMember(SocialMemberJoinDto socialMemberJoinDto) {
+        String memberId = socialMemberJoinDto.getMemberId();
+        String memberName = socialMemberJoinDto.getMemberName();
+        String memberImage = socialMemberJoinDto.getMemberImage();
+
+        jdbcTemplate.update("update member set member_name = ?, member_image = ? where member_id = ?;",
+                memberName, memberImage, memberId);
     }
 
     public MemberDetailDto findById(String id) {

@@ -41,7 +41,6 @@ public class ListController {
         String token = jtp.extractToken(request.getCookies());
         MemberDetailDto mdd = null;
 //        mdd = jtp.getMember(token);
-        log.info("{}", member);
         List<TodoList> list = listService.showToday(member.getName());
 
         listExist = listService.emptyList(list);

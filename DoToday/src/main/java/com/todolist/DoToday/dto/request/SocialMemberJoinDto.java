@@ -17,8 +17,7 @@ public class SocialMemberJoinDto {
     private String memberPw;
     private String memberName;
     private String memberImage;
-    private String gender;
+    private String memberGender;
     private LocalDate regdate;
     private boolean memberExpired;
-//    private Collection<GrantedAuthority> role; // DB에 적용 되는지 안되는지 확인
 }

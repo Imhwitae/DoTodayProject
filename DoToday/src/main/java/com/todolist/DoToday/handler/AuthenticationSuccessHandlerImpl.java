@@ -34,15 +34,6 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String memberId = authentication.getName();
 
-//        CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-//        String registrationId = oAuth2User.getRegistrationId();
-//
-//        if (StringUtils.hasText(registrationId)) {
-//            String email = oAuth2User.getEmail();
-//            log.info("id: {}", email);
-//            memberId = email;
-//        }
-
         String getAccessToken = jwtTokenProvider.createToken(memberId).getAccessToken();
         String getRefreshToken = jwtTokenProvider.createToken(memberId).getRefreshToken();
 

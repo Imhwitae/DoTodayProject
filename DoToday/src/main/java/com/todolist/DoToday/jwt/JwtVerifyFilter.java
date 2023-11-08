@@ -59,7 +59,7 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
 //                log.info("토큰 검증 후 시큐리티 컨텍스트에 정보 담기");
                 Authentication authentication = jwtTokenProvider.getAuthentication(memberId);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                log.info("{} 유저 정보 저장", authentication.getName());
+//                log.info("{} 유저 정보 저장", authentication.getName());
 //                log.info("인증 여부 = {}", SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
                 filterChain.doFilter(request, response);
             } else {
@@ -69,7 +69,6 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
             }
         } else {
             filterChain.doFilter(request, response);
-//            log.info("토큰 없음");
         }
     }
 }

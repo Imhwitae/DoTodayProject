@@ -1,7 +1,6 @@
 package com.todolist.DoToday.config.oAuth;
 
 import com.todolist.DoToday.dao.MemberDao;
-//import com.todolist.DoToday.config.oAuth.CustomOAuth2User;
 import com.todolist.DoToday.config.oAuth.OAuth2Attributes;
 import com.todolist.DoToday.dto.request.SocialMemberJoinDto;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
@@ -46,32 +45,41 @@ public class OAuth2ServiceImpl implements OAuth2UserService<OAuth2UserRequest, O
          */
         String registrationId = userRequest.getClientRegistration().getRegistrationId();  // 소셜 로그인 정보
         log.info(registrationId);
-        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
-                .getUserInfoEndpoint().getUserNameAttributeName();  // OAuth 로그인시 키가 되는 값
-        log.info(userNameAttributeName);
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();  // 권한 설정
-        grantedAuthorities.add(new SimpleGrantedAuthority(registrationId));
+//        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
+//                .getUserInfoEndpoint().getUserNameAttributeName();  // OAuth 로그인시 키가 되는 값
+//        log.info(userNameAttributeName);
+//        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();  // 권한 설정
+//        grantedAuthorities.add(new SimpleGrantedAuthority(registrationId));
 
         // 가져올 attributes는 각 소셜 서비스마다 다르기 때문에 각각에 맞게 대응해야 한다.
         Map<String, Object> originAttribute = oAuth2User.getAttributes();
         OAuth2Attributes attributes = OAuth2Attributes.divideSocial(registrationId, originAttribute);
 
         SocialMemberJoinDto socialMember = socialMember(attributes);
-        memberDao.joinSocialMember(socialMember);
+        insertOrUpdate(socialMember);
 
-//        return new CustomOAuth2User(grantedAuthorities, originAttribute, userNameAttributeName,
-//                socialMember.getMemberId(), registrationId);
         return new MemberDetailDto(socialMember);
     }
 
+    // OAuth2Attributes 객체를 받아 SocialMemberJoinDto로 반환
     private SocialMemberJoinDto socialMember(OAuth2Attributes attributes) {
         return SocialMemberJoinDto.builder()
                 .memberId(attributes.getEmail())
                 .memberPw(attributes.getUserId())
                 .memberName(attributes.getName())
                 .memberImage(attributes.getImageUrl())
+                .memberGender(attributes.getGender())
                 .regdate(LocalDate.now())
                 .memberExpired(false)
                 .build();
+    }
+
+    // 소셜 로그인한 멤버가 있는지 없는지 확인하고 없다면 DB에 저장, 있다면 이름과 이미지 url 변경
+    private void insertOrUpdate(SocialMemberJoinDto socialMember) {
+        if (memberDao.findById(socialMember.getMemberId()) == null) {
+            memberDao.joinSocialMember(socialMember);
+        } else {
+            memberDao.updateSocialMember(socialMember);
+        }
     }
 }

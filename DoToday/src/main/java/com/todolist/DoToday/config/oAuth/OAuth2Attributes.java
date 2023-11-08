@@ -35,8 +35,10 @@ public class OAuth2Attributes {
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
         Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
 
-        String kakaoGender = String.valueOf(kakaoProfile.get("gender"));
+        String kakaoGender = String.valueOf(kakaoAccount.get("gender"));
+        log.info(kakaoGender);
         String gender =  kakaoGender.substring(0, 1);
+        log.info(gender);
 
         return OAuth2Attributes.builder()
                 .registrationId(registrationId)
