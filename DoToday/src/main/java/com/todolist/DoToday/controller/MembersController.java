@@ -2,6 +2,7 @@ package com.todolist.DoToday.controller;
 
 import com.todolist.DoToday.dto.Gender;
 import com.todolist.DoToday.dto.request.MemberChangePwDto;
+import com.todolist.DoToday.dto.request.MemberEtcInfoDto;
 import com.todolist.DoToday.dto.request.MemberJoinDto;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.jwt.JwtTokenProvider;
@@ -93,6 +94,12 @@ public class MembersController {
     public String updatePw(@AuthenticationPrincipal MemberDetailDto memberDetailDto, MemberChangePwDto memberChangePwDto) {
         memberService.updateMemberPw(memberDetailDto, memberChangePwDto);
         return "redirect:/members/logout";
+    }
+
+    @GetMapping("/inputetc")
+    public String inputEtc(Model model) {
+        model.addAttribute("memberEtcInfo", new MemberEtcInfoDto());
+        return "/member/memberInputEtcInfo";
     }
 
 }

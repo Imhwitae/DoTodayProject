@@ -1,5 +1,6 @@
 package com.todolist.DoToday.config.oAuth;
 
+import com.todolist.DoToday.dto.response.MemberDetailDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,9 +37,7 @@ public class OAuth2Attributes {
         Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
 
         String kakaoGender = String.valueOf(kakaoAccount.get("gender"));
-        log.info(kakaoGender);
         String gender =  kakaoGender.substring(0, 1);
-        log.info(gender);
 
         return OAuth2Attributes.builder()
                 .registrationId(registrationId)

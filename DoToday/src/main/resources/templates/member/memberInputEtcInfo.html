@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo!Doit!</title>
+  <link rel="stylesheet" th:href="@{/css/header.css}" />
+  <link rel="stylesheet" th:href="@{/css/inputEtc.css}">
+</head>
+<body>
+  <div class="header">
+    <div class="main_logo"><a href="/home">Todo!Doit!</a></div>
+    <div class="go_todo_list"><a href="/home">투두 리스트</a></div>
+    <div class="go_my_page"><a href="/members/mypage">마이 페이지</a></div>
+    <div class="go_friend_page"><a href="/friend/list">친구 목록</a></div>
+    <div class="logout"><a href="/members/logout">로그아웃</a></div>
+  </div>
+  <div class="back_box">
+    <form method="post" th:object="${memberEtcInfo}">
+      <p class="back_title">회원가입이 거의 다 됐습니다!</p>
+      <p class="title_name">생년월일</p>
+      <div class="input_birth_form">
+        <label for="input_year_box" class="input_year">
+          <input type="text" class="input_year_box" id="input_year_box" placeholder="년" th:field="*{memberBirthYear}">
+          <input type="text" class="input_year_box" id="input_month_box" placeholder="월" th:field="*{memberBirthMonth}">
+          <input type="text" class="input_year_box" id="input_date_box" placeholder="일" th:field="*{memberBirthDate}">
+        </label>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

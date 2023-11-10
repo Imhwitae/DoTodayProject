@@ -1,0 +1,64 @@
+.back_box {
+    width: 50%;
+    height: auto;
+    border-radius: 20px;
+    background: #F9F9F9;
+    margin: 4.9481% auto;
+    padding: 59px 0px 5.209% 0px;
+}
+
+.back_title {
+    /* 회원가입이 거의 다 됐습니다! */
+    width: 404px;
+    height: 44px;
+    margin-left: 4rem;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 44px;
+    display: flex;
+    align-items: center;
+    letter-spacing: -0.05em;
+    color: rgba(255, 68, 98, 0.9);
+}
+
+.title_name {
+    /* 생년월일 */
+    width: 57px;
+    height: 22px;
+    margin-left: 4rem;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 22px;
+    letter-spacing: -0.05em;
+    color: #9F9F9F;
+}
+
+.input_year {
+    display: flex;
+    justify-content: center;
+}
+
+.input_year_box {
+    /* Rectangle 13 */
+    width: 100px;
+    height: 40px;
+    background: #FFFFFF;
+    border: 1px solid rgba(255, 68, 98, 0.9);
+    border-radius: 10px;
+
+    /* 년 */
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 22px;
+    display: flex;
+    letter-spacing: -0.05em;
+    color: #9F9F9F;
+    padding-left: 1rem;
+}
+
+#input_month_box {
+    margin: 0 4rem 0 4rem;
+}

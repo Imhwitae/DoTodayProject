@@ -1,6 +1,7 @@
 package com.todolist.DoToday.dto.response;
 
 import com.todolist.DoToday.dto.request.SocialMemberJoinDto;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +14,8 @@ import java.util.Map;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@Builder
 public class MemberDetailDto implements UserDetails, OAuth2User {
     private Long memberNum;
     private String memberId;
@@ -21,17 +24,6 @@ public class MemberDetailDto implements UserDetails, OAuth2User {
     private String memberImage;
     private boolean memberExpired;
 
-    // 기본 로그인시 가져오는 정보
-    public MemberDetailDto(Long memberNum, String memberId, String memberPw, String memberName, String memberImage, boolean memberExpired) {
-        this.memberNum = memberNum;
-        this.memberId = memberId;
-        this.memberPw = memberPw;
-        this.memberName = memberName;
-        this.memberImage = memberImage;
-        this.memberExpired = memberExpired;
-    }
-
-    @Builder
     public MemberDetailDto (SocialMemberJoinDto socialMemberJoinDto) {
         this.memberId = socialMemberJoinDto.getMemberId();
         this.memberPw = socialMemberJoinDto.getMemberPw();
