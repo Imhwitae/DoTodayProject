@@ -2,10 +2,12 @@ package com.todolist.DoToday.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.todolist.DoToday.dto.request.AppMemberJoinDto;
 import com.todolist.DoToday.dto.request.KakaoMemberJoinDto;
 import com.todolist.DoToday.dto.request.MemberChangePwDto;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.dto.request.MemberJoinDto;
+//import com.todolist.DoToday.repository.MemberMapperRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,6 +43,7 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
     private final AmazonS3Client amazonS3Client;
     private final JdbcTemplate jdbcTemplate;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+//    private final MemberMapperRepository memberMapperRepository;
     protected RowMapper<MemberDetailDto> rowMapper = new RowMapper<MemberDetailDto>() {
         @Override
         public MemberDetailDto mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -232,6 +235,28 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
         } else {
             log.info("기존 비밀번호가 틀림");
         }
+    }
 
+    // 앱에서 받아온 정보로 회원가입
+    public Long appMemberJoin(AppMemberJoinDto appMemberJoinDto) {
+        String id = appMemberJoinDto.getId();
+        String pw = appMemberJoinDto.getPw();
+        String name = appMemberJoinDto.getName();
+        String image = basicImage;
+        if (StringUtils.hasText(appMemberJoinDto.getImage_url()) && appMemberJoinDto.getImage_url().equals("null")) {
+            image = appMemberJoinDto.getImage_url();
+        }
+        String gender = appMemberJoinDto.getGender();
+        LocalDate regtime = LocalDate.now();
+        boolean isEnabled = false;
+
+        String encodedPw = bCryptPasswordEncoder.encode(pw);
+
+        jdbcTemplate.update("insert into member (member_id, member_pw, member_name, member_image," +
+                        "member_regdate, member_gender, member_enabled) " +
+                        "values (?, ?, ?, ?, ?, ?, ?)",
+                id, encodedPw, name, image, regtime, gender, isEnabled);
+
+        return findById(id).getMemberNum();
     }
 }
