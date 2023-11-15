@@ -33,7 +33,7 @@ public class HomeController {
             return "redirect:/list/todolist";
         }
 
-        return "/index.html";
+        return "index.html";
     }
 
     @GetMapping("/home")

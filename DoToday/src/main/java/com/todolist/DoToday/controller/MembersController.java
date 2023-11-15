@@ -8,6 +8,7 @@ import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.jwt.JwtTokenProvider;
 import com.todolist.DoToday.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,7 +34,7 @@ public class MembersController {
 
         model.addAttribute("member", new MemberJoinDto());
 
-        return "/join_form";
+        return "join_form";
     }
 
     @ModelAttribute("genders")
@@ -42,7 +43,7 @@ public class MembersController {
     }
 
     @PostMapping("/add")
-    public String memberAdd(MemberJoinDto memberJoinDto) {
+    public String memberAdd(@Valid MemberJoinDto memberJoinDto) {
         log.info("id: {}, " +
                 "email: {}, " +
                 "pw: {}, " +
@@ -54,12 +55,12 @@ public class MembersController {
 
         log.info("회원가입 성공");
 
-        return "/member/login";
+        return "member/login";
     }
 
     @GetMapping("/loginform")
     public String memberLoginForm() {
-        return "/member/login";
+        return "member/login";
     }
 
     // @AuthenticationPricipal로 바꾸기
@@ -68,7 +69,7 @@ public class MembersController {
         String accessToken = jwtTokenProvider.extractToken(request.getCookies());
         model.addAttribute("memberDetail", jwtTokenProvider.getMember(accessToken));
         model.addAttribute("changePw", new MemberChangePwDto());
-        return "/member/mypage";
+        return "member/mypage";
     }
 
 //    @GetMapping("/changeMemInfo")
@@ -99,7 +100,7 @@ public class MembersController {
     @GetMapping("/inputetc")
     public String inputEtc(Model model) {
         model.addAttribute("memberEtcInfo", new MemberEtcInfoDto());
-        return "/member/memberInputEtcInfo";
+        return "member/memberInputEtcInfo";
     }
 
 }
