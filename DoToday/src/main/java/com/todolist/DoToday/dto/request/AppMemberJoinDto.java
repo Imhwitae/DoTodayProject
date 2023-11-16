@@ -9,5 +9,5 @@ public class AppMemberJoinDto {
     private String pw;  // uid = pw
     private String name;
     private String image_url;
-    private String gender;
+//    private String gender;
 }

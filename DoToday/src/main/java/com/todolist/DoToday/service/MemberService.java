@@ -246,7 +246,7 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
         if (StringUtils.hasText(appMemberJoinDto.getImage_url()) && appMemberJoinDto.getImage_url().equals("null")) {
             image = appMemberJoinDto.getImage_url();
         }
-        String gender = appMemberJoinDto.getGender();
+//        String gender = appMemberJoinDto.getGender();
         LocalDate regtime = LocalDate.now();
         boolean isEnabled = false;
 
@@ -254,8 +254,8 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
 
         jdbcTemplate.update("insert into member (member_id, member_pw, member_name, member_image," +
                         "member_regdate, member_gender, member_enabled) " +
-                        "values (?, ?, ?, ?, ?, ?, ?)",
-                id, encodedPw, name, image, regtime, gender, isEnabled);
+                        "values (?, ?, ?, ?, ?, ?)",
+                id, encodedPw, name, image, regtime, isEnabled);
 
         return findById(id).getMemberNum();
     }

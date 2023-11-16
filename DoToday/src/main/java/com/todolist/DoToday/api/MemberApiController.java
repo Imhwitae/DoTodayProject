@@ -1,4 +1,4 @@
-package com.todolist.DoToday.controller;
+package com.todolist.DoToday.api;
 
 import com.todolist.DoToday.dto.request.AppMemberJoinDto;
 import com.todolist.DoToday.service.MemberService;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
-public class APIController {
+public class MemberApiController {
 
     private final MemberService memberService;
 
