@@ -1,6 +1,6 @@
 package com.todolist.DoToday.api;
 
-import com.todolist.DoToday.dto.request.AppMemberJoinDto;
+import com.todolist.DoToday.api.request.ApiMemberJoinDto;
 import com.todolist.DoToday.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +13,7 @@ public class MemberApiController {
     private final MemberService memberService;
 
     @PostMapping("/join")
-    public Long appSocialMemberJoin(@RequestBody AppMemberJoinDto joinApi) {
+    public Long appSocialMemberJoin(@RequestBody ApiMemberJoinDto joinApi) {
         return memberService.appMemberJoin(joinApi);
     }
 

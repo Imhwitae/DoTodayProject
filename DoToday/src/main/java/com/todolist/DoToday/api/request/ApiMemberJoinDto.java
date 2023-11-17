@@ -1,9 +1,9 @@
-package com.todolist.DoToday.dto.request;
+package com.todolist.DoToday.api.request;
 
 import lombok.Getter;
 
 @Getter
-public class AppMemberJoinDto {
+public class ApiMemberJoinDto {
     private String registration_id;  // kakao, naver, google...
     private String id;  // email = id
     private String pw;  // uid = pw

@@ -2,7 +2,7 @@ package com.todolist.DoToday.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.todolist.DoToday.dto.request.AppMemberJoinDto;
+import com.todolist.DoToday.api.request.ApiMemberJoinDto;
 import com.todolist.DoToday.dto.request.KakaoMemberJoinDto;
 import com.todolist.DoToday.dto.request.MemberChangePwDto;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -238,13 +240,13 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
     }
 
     // 앱에서 받아온 정보로 회원가입
-    public Long appMemberJoin(AppMemberJoinDto appMemberJoinDto) {
-        String id = appMemberJoinDto.getId();
-        String pw = appMemberJoinDto.getPw();
-        String name = appMemberJoinDto.getName();
+    public Long appMemberJoin(ApiMemberJoinDto apiMemberJoinDto) {
+        String id = apiMemberJoinDto.getId();
+        String pw = apiMemberJoinDto.getPw();
+        String name = apiMemberJoinDto.getName();
         String image = basicImage;
-        if (StringUtils.hasText(appMemberJoinDto.getImage_url()) && appMemberJoinDto.getImage_url().equals("null")) {
-            image = appMemberJoinDto.getImage_url();
+        if (StringUtils.hasText(apiMemberJoinDto.getImage_url()) && apiMemberJoinDto.getImage_url().equals("null")) {
+            image = apiMemberJoinDto.getImage_url();
         }
 //        String gender = appMemberJoinDto.getGender();
         LocalDate regtime = LocalDate.now();
@@ -259,4 +261,18 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
 
         return findById(id).getMemberNum();
     }
+
+    public ResponseEntity<Long> checkMember(ApiMemberJoinDto apiMemberJoinDto) {
+        String memberId = apiMemberJoinDto.getId();
+        Long memberNum = findById(memberId).getMemberNum();
+
+
+
+        if (StringUtils.hasText(findById(memberId).getMemberId())) {
+            return new ResponseEntity<>(memberNum ,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    // 아이디 중복 체크 해서 오류 핸들링 생각하기
 }
