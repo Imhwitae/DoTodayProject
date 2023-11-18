@@ -1,5 +1,6 @@
 package com.todolist.DoToday.service;
 
+import com.todolist.DoToday.dto.request.AppListGetDto;
 import com.todolist.DoToday.dto.response.TodoList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -70,6 +71,39 @@ public class ListService {
         return result;
     }
 
+    public int appListWrite(AppListGetDto listGetDto){
+        int result = 0;
+        if (listGetDto.getDate() != null){
+            result = jdbcTemplate.update("insert into list(list_title,member_id,write_date,when_todo) values(?,?,?,?)"
+                    , listGetDto.getListTitle(), listGetDto.getMemberId(), listGetDto.getDate(), listGetDto.getWhenToDo());
+        }else {
+            result = jdbcTemplate.update("insert into list(list_title,member_id,when_todo) values(?,?,?)"
+                    , listGetDto.getListTitle(), listGetDto.getMemberId(), listGetDto.getWhenToDo());
+        }
+        return result;
+    }
+
+    public int appListTitleUpdate(AppListGetDto listGetDto){
+        int result = 0;
+        result = jdbcTemplate.update("update list set list_title = ? where list_num = ?"
+                , listGetDto.getListTitle(), listGetDto.getListNum());
+        return result;
+    }
+
+    public int appListWhenUpdate(AppListGetDto listGetDto){
+        int result = 0;
+        result = jdbcTemplate.update("update list set when_todo = ? where list_num = ?"
+                , listGetDto.getWhenToDo(), listGetDto.getListNum());
+        return result;
+    }
+
+    public int appListDelete(AppListGetDto listGetDto){
+        int result = 0;
+        result = jdbcTemplate.update("update list set when_todo = ? where list_num = ?"
+                , listGetDto.getWhenToDo(), listGetDto.getListNum());
+        return result;
+    }
+
     //삭제
     public int delete(int listNum){
         int result = jdbcTemplate.update("delete from list where list_num = ?"
@@ -126,6 +160,24 @@ public class ListService {
 
     public boolean whenValidate(TodoList todoList){
         String title = todoList.getWhenToDo();
+        boolean blank = false;
+        if (title.trim().isEmpty() == true || title == null){ //앞뒤로 공백이 있으면 지워줌
+            blank = true;
+        }
+        return blank;
+    }
+
+    public boolean appTitleValidate(AppListGetDto listGetDto){
+        String title = listGetDto.getListTitle();
+        boolean blank = false;
+        if (title.trim().isEmpty() == true || title == null){ //앞뒤로 공백이 있으면 지워줌
+            blank = true;
+        }
+        return blank;
+    }
+
+    public boolean appWhenValidate(AppListGetDto listGetDto){
+        String title = listGetDto.getWhenToDo();
         boolean blank = false;
         if (title.trim().isEmpty() == true || title == null){ //앞뒤로 공백이 있으면 지워줌
             blank = true;
