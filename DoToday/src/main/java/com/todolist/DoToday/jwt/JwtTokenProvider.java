@@ -8,6 +8,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,7 +40,7 @@ public class JwtTokenProvider {
     }
 
     // 시간은 밀리초 단위
-    // acsessToken 유효시간: 60분 (60 * 10분)
+    // acsessToken 유효시간: 60분 (3600 * 1000 ms)
     private long tokenTime = 60 * 60 * 1000L;
     // refreshToken 유효시간: 1일
     private long refreshTokenTime = 60 * 60 * 24 * 1000L;
@@ -179,13 +180,21 @@ public class JwtTokenProvider {
         return accessToken;
     }
 
-
-
     public Authentication getAuthentication(String memberId) {
         MemberDetailDto member = memberMapper.findById(memberId);
         return new UsernamePasswordAuthenticationToken(member, null, null);
     }
 
+    public void reCreateAccessToken(String refreshToken ,HttpServletResponse response) {
+        if (validateRefreshToken(refreshToken)) {
+            String memberId = getMemberIdFromToken(refreshToken);
+            MemberTokenDto tokens = createToken(memberId);
 
-
+            // 새로 발급한 토큰 쿠키에 삽입
+            Cookie newAccessToken = new Cookie("accessToken", tokens.getAccessToken());
+            response.addCookie(newAccessToken);
+        } else {
+            log.info("refreshToken 유효성 검증 실패. 재로그인 필요");
+        }
+    }
 }

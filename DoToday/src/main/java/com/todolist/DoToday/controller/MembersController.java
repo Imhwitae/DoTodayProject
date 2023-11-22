@@ -27,7 +27,6 @@ import java.io.IOException;
 public class MembersController {
 
     private final MemberService memberService;
-    private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/join_form")
     public String addForm(Model model) {
@@ -37,9 +36,10 @@ public class MembersController {
         return "join_form";
     }
 
+    // 모든 필드를 배열로 만들어줌
     @ModelAttribute("genders")
     public Gender[] genders() {
-        return Gender.values();  // enum에서 values를 사용하면 모든 데이터를 배열로 만들어줌
+        return Gender.values();
     }
 
     @PostMapping("/add")
@@ -65,27 +65,20 @@ public class MembersController {
 
     // @AuthenticationPricipal로 바꾸기
     @GetMapping("/mypage")
-    public String memberMyPage(HttpServletRequest request, Model model) {
-        String accessToken = jwtTokenProvider.extractToken(request.getCookies());
-        model.addAttribute("memberDetail", jwtTokenProvider.getMember(accessToken));
+    public String memberMyPage(@AuthenticationPrincipal MemberDetailDto member, Model model) {
+//        String accessToken = jwtTokenProvider.extractToken(request.getCookies());
+        model.addAttribute("memberDetail", member);
         model.addAttribute("changePw", new MemberChangePwDto());
         return "member/mypage";
     }
 
-//    @GetMapping("/changeMemInfo")
-//    public String changeMemberInfo(@AuthenticationPrincipal MemberDetailDto memberDetailDto,
-//                                   Model birthModel,
-//                                   Model changePwModel) {
-//        changePwModel.addAttribute("changePw", new MemberChangePwDto());
-//        return "/member/change_mem_info";
-//    }
-
     @PostMapping("/update")
-    public String updateMyPage(HttpServletRequest request,
+    public String updateMyPage(@AuthenticationPrincipal MemberDetailDto member,
                                @RequestParam("image_file") MultipartFile image) throws IOException {
         log.info("이미지 받음 {}", image.getOriginalFilename());
 
-        String memberId = jwtTokenProvider.getMemberIdFromToken(jwtTokenProvider.extractToken(request.getCookies()));
+//        String memberId = jwtTokenProvider.getMemberIdFromToken(jwtTokenProvider.extractToken(request.getCookies()));
+        String memberId = member.getMemberId();
         memberService.updateMemberImg(image, memberId);
 
         return "redirect:/list/todolist";
@@ -97,10 +90,16 @@ public class MembersController {
         return "redirect:/members/logout";
     }
 
-    @GetMapping("/inputetc")
-    public String inputEtc(Model model) {
-        model.addAttribute("memberEtcInfo", new MemberEtcInfoDto());
+    @GetMapping("/writeetc")
+    public String writeEtc(Model model) {
+        model.addAttribute("memberEtcInfo", new MemberJoinDto());
         return "member/memberInputEtcInfo";
+    }
+
+    @PostMapping("/inputetc")
+    public String inputEtc(MemberJoinDto memberJoinDto) {
+        memberService.inputEtc(memberJoinDto);
+        return "redirect:/members/mypage";
     }
 
 }

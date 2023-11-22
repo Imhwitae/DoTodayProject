@@ -13,7 +13,6 @@ public class HomeController {
     @GetMapping("/")
     public String home(HttpServletRequest request) {
         String accessToken = null;
-        String refreshToken = null;
         Cookie[] cookies = request.getCookies();
 
         if (cookies != null) {
@@ -21,9 +20,7 @@ public class HomeController {
                 String tokenName = cookie.getName();
                 String value = cookie.getValue();
 
-                if (tokenName.equals("refreshToken")) {
-                    refreshToken = value;
-                } else if (tokenName.equals("accessToken")){
+                if (tokenName.equals("accessToken")){
                     accessToken = value;
                 }
             }

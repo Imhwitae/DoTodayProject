@@ -7,4 +7,5 @@ public class MemberEtcInfoDto {
     private String memberBirthYear;
     private String memberBirthMonth;
     private String memberBirthDate;
+    private String memberGender;
 }

@@ -18,6 +18,6 @@ public class SocialMemberJoinDto {
     private String memberName;
     private String memberImage;
     private String memberGender;
-    private LocalDate regdate;
-    private boolean memberExpired;
+    private LocalDate memberRegdate;
+    private boolean memberEnabled;
 }

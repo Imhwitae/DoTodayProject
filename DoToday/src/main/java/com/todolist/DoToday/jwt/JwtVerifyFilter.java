@@ -34,6 +34,7 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String accessToken = null;
         String refreshToken = null;
+        String memberId = null;
         Cookie[] cookies = request.getCookies();
 
         if (cookies != null) {
@@ -49,9 +50,8 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
             }
         }
 
-
         if (accessToken != null) {
-            String memberId = jwtTokenProvider.getMemberIdFromToken(accessToken);
+            memberId = jwtTokenProvider.getMemberIdFromToken(accessToken);
             if (memberId != null && jwtTokenProvider.validateToken(accessToken)) {
 //                log.info("토큰 검증 후 시큐리티 컨텍스트에 정보 담기");
                 Authentication authentication = jwtTokenProvider.getAuthentication(memberId);
@@ -59,22 +59,10 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
 //                log.info("{} 유저 정보 저장", authentication.getName());
 //                log.info("인증 여부 = {}", SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
                 filterChain.doFilter(request, response);
-            } else {
-                log.info("accessToken 시간 만료");
-                if (jwtTokenProvider.validateRefreshToken(refreshToken)) {
-                    log.info("refreshToken 유효성 검증 성공");
-                    MemberTokenDto tokens = jwtTokenProvider.createToken(memberId);
-                    log.info("토큰 재생성후 쿠키에 넣음");
-                    Cookie newAccessToken = new Cookie("accessToken", tokens.getAccessToken());
-                    Cookie newRefreshToken = new Cookie("refreshToken", tokens.getRefreshToken());
-                    response.addCookie(newAccessToken);
-                    response.addCookie(newRefreshToken);
-                    filterChain.doFilter(request, response);
-                } else {
-                    log.info("refreshToken 유효성 검증 실패. 재로그인 필요");
-                    filterChain.doFilter(request, response);
-                }
             }
+        } else if (refreshToken != null) {
+            jwtTokenProvider.reCreateAccessToken(refreshToken, response);
+            filterChain.doFilter(request, response);
         } else {
             filterChain.doFilter(request, response);
         }

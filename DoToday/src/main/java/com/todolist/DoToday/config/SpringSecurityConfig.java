@@ -35,8 +35,7 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/members/join_form", "/members/loginform", "/members/add",
                                 "/css/**", "/scripts/**", "/plugin/**", "/image/**", "/kakao/login",
-                                "/members/inputetc", "/api/members/join", "/api/list/write",
-                                "/api/members/checkid").permitAll()
+                                "/members/inputetc", "/api/list/write", "/api/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement((session) -> session

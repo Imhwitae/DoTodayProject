@@ -27,7 +27,7 @@ public class MemberDetailDto implements UserDetails, OAuth2User {
         this.memberPw = socialMemberJoinDto.getMemberPw();
         this.memberName = socialMemberJoinDto.getMemberName();
         this.memberImage = socialMemberJoinDto.getMemberImage();
-        this.memberEnabled = socialMemberJoinDto.isMemberExpired();
+        this.memberEnabled = socialMemberJoinDto.isMemberEnabled();
     }
 
     @Override
