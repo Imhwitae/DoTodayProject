@@ -8,12 +8,11 @@ import com.todolist.DoToday.dto.request.MemberChangePwDto;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.dto.request.MemberJoinDto;
 //import com.todolist.DoToday.repository.MemberMapperRepository;
+import com.todolist.DoToday.mapper.MemberMapperRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -45,7 +44,7 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
     private final AmazonS3Client amazonS3Client;
     private final JdbcTemplate jdbcTemplate;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-//    private final MemberMapperRepository memberMapperRepository;
+    private final MemberMapperRepository memberMapperRepository;
     protected RowMapper<MemberDetailDto> rowMapper = new RowMapper<MemberDetailDto>() {
         @Override
         public MemberDetailDto mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -262,17 +261,40 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
         return findById(id).getMemberNum();
     }
 
-    public ResponseEntity<Long> checkMember(ApiMemberJoinDto apiMemberJoinDto) {
-        String memberId = apiMemberJoinDto.getId();
-        Long memberNum = findById(memberId).getMemberNum();
+    /* 처음 구현할 때 MemberService가 JwtTokenProvider에도 의존성 주입이 되어있어
+       여기서 JwtTokenProvider를 가져다 쓰려고하면 순환 참조 오류 때문에 문제가 됐었다.
+       그래서 myBatis로 DB접근 방식을 변경하여 순환 참조 오류를 해결함
+    */
+//    public ResponseEntity<GiveTokenAndNum> checkMemberId(String id) {
+////        MemberDetailDto member = findById(id);
+//        MemberDetailDto member = memberService.findById(id);
+//
+//
+//        if (StringUtils.hasText(member.getMemberId())) {
+//            GiveTokenAndNum giveTokenAndNum = new GiveTokenAndNum(
+//                    member.getMemberNum(),
+//
+//                    );
+//            return new ResponseEntity<>(, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
+//     아이디 중복 체크 해서 오류 핸들링 생각하기
 
 
 
-        if (StringUtils.hasText(findById(memberId).getMemberId())) {
-            return new ResponseEntity<>(memberNum ,HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-    // 아이디 중복 체크 해서 오류 핸들링 생각하기
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

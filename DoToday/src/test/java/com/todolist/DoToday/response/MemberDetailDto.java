@@ -1,4 +1,4 @@
-package com.todolist.DoToday.dto.response;
+package com.todolist.DoToday.response;
 
 import com.todolist.DoToday.dto.request.SocialMemberJoinDto;
 import lombok.*;
@@ -22,7 +22,7 @@ public class MemberDetailDto implements UserDetails, OAuth2User {
     private String memberImage;
     private boolean memberEnabled;
 
-    public MemberDetailDto (SocialMemberJoinDto socialMemberJoinDto) {
+    public MemberDetailDto(SocialMemberJoinDto socialMemberJoinDto) {
         this.memberId = socialMemberJoinDto.getMemberId();
         this.memberPw = socialMemberJoinDto.getMemberPw();
         this.memberName = socialMemberJoinDto.getMemberName();

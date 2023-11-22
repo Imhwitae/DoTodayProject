@@ -3,6 +3,7 @@ package com.todolist.DoToday.jwt;
 import com.todolist.DoToday.dto.MemberTokenDto;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.domain.MemberRole;
+import com.todolist.DoToday.mapper.MemberMapperRepository;
 import com.todolist.DoToday.service.MemberService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -27,6 +28,7 @@ import java.util.Map;
 public class JwtTokenProvider {
     private final Map<String, Object> headerMap = new HashMap<>();
     private final MemberService memberService;
+    private final MemberMapperRepository memberMapperRepository;
 
     @Value("${custom.jwt.secret-key}")
     private String secretKey;
@@ -183,8 +185,11 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String memberId) {
-        MemberDetailDto member = memberService.findById(memberId);
+        MemberDetailDto member = memberMapperRepository.findById(memberId);
+        log.info("member: {}", member);
         return new UsernamePasswordAuthenticationToken(member, null, null);
     }
+
+
 
 }
