@@ -1,5 +1,6 @@
 package com.todolist.DoToday.api;
 
+import com.todolist.DoToday.api.request.ApiCheckMemberIdDto;
 import com.todolist.DoToday.api.request.ApiMemberJoinDto;
 import com.todolist.DoToday.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +19,10 @@ public class MemberApiController {
         return memberService.appMemberJoin(joinApi);
     }
 
-//    @PostMapping("/checkid")
-//    public ResponseEntity<String> apiCheckMember(@RequestBody String id) {
-//
-//    }
+    @PostMapping("/checkid")
+    public ResponseEntity<Object> apiCheckMember(@RequestBody ApiCheckMemberIdDto id) {
+        return memberService.checkMemberId(id.getMemberId());
+    }
 
 //    @GetMapping("/view")
 

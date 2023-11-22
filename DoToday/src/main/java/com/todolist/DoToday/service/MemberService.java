@@ -2,17 +2,24 @@ package com.todolist.DoToday.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.todolist.DoToday.api.error.ExceptionEnum;
+import com.todolist.DoToday.api.reponse.ExceptionDto;
+import com.todolist.DoToday.api.reponse.MemberNumDto;
+import com.todolist.DoToday.api.reponse.TokensDto;
 import com.todolist.DoToday.api.request.ApiMemberJoinDto;
+import com.todolist.DoToday.dto.MemberTokenDto;
 import com.todolist.DoToday.dto.request.KakaoMemberJoinDto;
 import com.todolist.DoToday.dto.request.MemberChangePwDto;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.dto.request.MemberJoinDto;
-//import com.todolist.DoToday.repository.MemberMapperRepository;
-import com.todolist.DoToday.mapper.MemberMapperRepository;
+import com.todolist.DoToday.jwt.JwtTokenProvider;
+import com.todolist.DoToday.mapper.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -34,6 +41,8 @@ import java.sql.SQLException;
 import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -44,7 +53,8 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
     private final AmazonS3Client amazonS3Client;
     private final JdbcTemplate jdbcTemplate;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final MemberMapperRepository memberMapperRepository;
+    private final MemberMapper memberMapper;
+    private final JwtTokenProvider jwtTokenProvider;
     protected RowMapper<MemberDetailDto> rowMapper = new RowMapper<MemberDetailDto>() {
         @Override
         public MemberDetailDto mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -97,7 +107,7 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("멤버 전달");
-        return findById(username);
+        return memberMapper.findById(username);
     }
 
     public void joinMember(MemberJoinDto memberJoinDto) {
@@ -118,10 +128,7 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
 
         String encodedPw = bCryptPasswordEncoder.encode(pw);
 
-        jdbcTemplate.update("insert into member (member_id, member_pw, member_name, member_image, member_birth," +
-                                "member_regdate, member_gender, member_enabled) " +
-                                "values (?, ?, ?, ?, ?, ?, ?, ?)",
-                                id, encodedPw, name, image, birth, regtime, gender, isEnabled);
+        memberMapper.insertMember(id, encodedPw, name, image, birth, regtime, gender, isEnabled);
     }
 
     public void kakaoJoinMember(KakaoMemberJoinDto memberJoinDto) {
@@ -131,19 +138,16 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
         LocalDate birth = LocalDate.parse(memberJoinDto.getMemberBirthDay(),DateTimeFormatter.ISO_LOCAL_DATE);
         String gender = memberJoinDto.getMemberGender().getGenderSelect();
         LocalDate regtime = LocalDate.now();
-        boolean isEnabled = false;
+        boolean isEnabled = true;
 
         String encodedPw = bCryptPasswordEncoder.encode("q1w2e3r4t5");
-        jdbcTemplate.update("insert into member (member_id, member_pw, member_name, member_image, member_birth," +
-                        "member_regdate, member_gender, member_enabled) " +
-                        "values (?, ?, ?, ?, ?, ?, ?, ?)",
-                id, encodedPw, name, image, birth, regtime, gender, isEnabled);
+
+        memberMapper.insertMember(id, encodedPw, name, image, birth, regtime, gender, isEnabled);
     }
 
     public MemberDetailDto findById(String id) {
         try {
-            String sql = "select * from member where member_id = ?";
-            return jdbcTemplate.queryForObject(sql, rowMapper, id);
+            return memberMapper.findById(id);
         } catch (IncorrectResultSizeDataAccessException error) { // 쿼리문에 해당하는 결과가 없거나 2개 이상일 때
             return null;
         }
@@ -161,7 +165,8 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
         if (bCryptPasswordEncoder.matches(memberPw, savedPw)) {
             log.info("비밀번호 검증 성공");
             // UsernamePasswordAuthenticationToken은 권한까지 부여한 생성자를 사용해야 인증을 해준다.
-            return new UsernamePasswordAuthenticationToken(findById(memberId), null, null);
+            MemberDetailDto member = memberMapper.findById(memberId);
+            return new UsernamePasswordAuthenticationToken(member, null, null);
         } else {
             return null;
         }
@@ -205,7 +210,7 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
     public void updateMemberImg(MultipartFile image, String memberId) throws IOException {
         if (!image.isEmpty()) {
             String updateImgUrl = uploadImage(image);
-            jdbcTemplate.update("update member set member_image = ? where member_id = ?", updateImgUrl, memberId);
+            memberMapper.updateImage(updateImgUrl, memberId);
             log.info("{} 유저 이미지 url 변경 {}", memberId, updateImgUrl);
         } else {
             throw new RuntimeException("이미지가 없습니다.");
@@ -223,13 +228,11 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
 
         String memberId = memberDetailDto.getMemberId();
         String memberPw = memberDetailDto.getMemberPw();
-//        log.info("memberId: {}, " +
-//                "memberPw: {}", memberId, memberPw);
 
         if (bCryptPasswordEncoder.matches(memberPrevPw, memberPw)) {
             if (memberNewPw.equals(memberConfNewPw)) {
                 String encodedNewPw = bCryptPasswordEncoder.encode(memberNewPw);
-                jdbcTemplate.update("update member set member_pw = ? where member_id = ?", encodedNewPw, memberId);
+                memberMapper.updatePw(encodedNewPw, memberId);
             } else {
                 log.info("새로 입력한 비밀번호가 다름");
             }
@@ -238,49 +241,62 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
         }
     }
 
+    /*API service*/
+
     // 앱에서 받아온 정보로 회원가입
     public Long appMemberJoin(ApiMemberJoinDto apiMemberJoinDto) {
         String id = apiMemberJoinDto.getId();
         String pw = apiMemberJoinDto.getPw();
         String name = apiMemberJoinDto.getName();
         String image = basicImage;
-        if (StringUtils.hasText(apiMemberJoinDto.getImage_url()) && apiMemberJoinDto.getImage_url().equals("null")) {
+        if (StringUtils.hasText(apiMemberJoinDto.getImage_url()) && !apiMemberJoinDto.getImage_url().equals("null")) {
             image = apiMemberJoinDto.getImage_url();
         }
 //        String gender = appMemberJoinDto.getGender();
         LocalDate regtime = LocalDate.now();
-        boolean isEnabled = false;
+        boolean isEnabled = true;
 
         String encodedPw = bCryptPasswordEncoder.encode(pw);
 
-        jdbcTemplate.update("insert into member (member_id, member_pw, member_name, member_image," +
-                        "member_regdate, member_gender, member_enabled) " +
-                        "values (?, ?, ?, ?, ?, ?)",
-                id, encodedPw, name, image, regtime, isEnabled);
+//        jdbcTemplate.update("insert into member (member_id, member_pw, member_name, member_image," +
+//                        "member_regdate, member_gender, member_enabled) " +
+//                        "values (?, ?, ?, ?, ?, ?)",
+//                id, encodedPw, name, image, regtime, isEnabled);
+        memberMapper.ApiInsertMember(id, encodedPw, name, image, regtime, isEnabled);
 
-        return findById(id).getMemberNum();
+        return memberMapper.findById(id).getMemberNum();
     }
 
     /* 처음 구현할 때 MemberService가 JwtTokenProvider에도 의존성 주입이 되어있어
        여기서 JwtTokenProvider를 가져다 쓰려고하면 순환 참조 오류 때문에 문제가 됐었다.
        그래서 myBatis로 DB접근 방식을 변경하여 순환 참조 오류를 해결함
     */
-//    public ResponseEntity<GiveTokenAndNum> checkMemberId(String id) {
-////        MemberDetailDto member = findById(id);
-//        MemberDetailDto member = memberService.findById(id);
-//
-//
-//        if (StringUtils.hasText(member.getMemberId())) {
-//            GiveTokenAndNum giveTokenAndNum = new GiveTokenAndNum(
-//                    member.getMemberNum(),
-//
-//                    );
-//            return new ResponseEntity<>(, HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
-//     아이디 중복 체크 해서 오류 핸들링 생각하기
+    public ResponseEntity<Object> checkMemberId(String id) {
+        Map<String, Object> apiMapper = new HashMap<>();
+
+        MemberDetailDto member = memberMapper.findById(id);
+
+        MemberTokenDto appMemberToken = jwtTokenProvider.createToken(id);
+        String appMemberAccessToken = appMemberToken.getAccessToken();
+        String appMemberRefreshToken = appMemberToken.getRefreshToken();
+
+        if (member != null && StringUtils.hasText(member.getMemberId())) {
+            MemberNumDto memberNum = new MemberNumDto(member.getMemberNum());
+            TokensDto tokensDto = new TokensDto(
+                    appMemberAccessToken,
+                    appMemberRefreshToken
+                    );
+            apiMapper.put("number", memberNum);
+            apiMapper.put("tokens", tokensDto);
+            return new ResponseEntity<>(apiMapper, HttpStatus.OK);
+        } else {
+            apiMapper.put("status", ExceptionEnum.MEMBER_NOT_FOUND.getHttpStatus());
+            apiMapper.put("error",new ExceptionDto(
+                    ExceptionEnum.MEMBER_NOT_FOUND.getCode(),
+                    ExceptionEnum.MEMBER_NOT_FOUND.getMsg()));
+            return new ResponseEntity<>(apiMapper, HttpStatus.NOT_FOUND);
+        }
+    }
 
 
 

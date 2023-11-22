@@ -3,8 +3,7 @@ package com.todolist.DoToday.jwt;
 import com.todolist.DoToday.dto.MemberTokenDto;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.domain.MemberRole;
-import com.todolist.DoToday.mapper.MemberMapperRepository;
-import com.todolist.DoToday.service.MemberService;
+import com.todolist.DoToday.mapper.MemberMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -15,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import java.util.Base64;
@@ -27,8 +27,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
     private final Map<String, Object> headerMap = new HashMap<>();
-    private final MemberService memberService;
-    private final MemberMapperRepository memberMapperRepository;
+    private final MemberMapper memberMapper;
 
     @Value("${custom.jwt.secret-key}")
     private String secretKey;
@@ -64,7 +63,7 @@ public class JwtTokenProvider {
         // accessToken 발급
         String accessToken = Jwts.builder()
                 .setHeader(headerMap)  // 헤더에 들어갈 정보
-                .claim("role", MemberRole.USER.name())  // 사용자 권한
+                .claim("role", MemberRole.BASIC_USER.getRole())  // 사용자 권한
                 .setSubject(memberId)
                 .setIssuedAt(date)  // 토큰 발행 일자
                 .setExpiration(expireTime)  // 토큰 만료 시간
@@ -74,7 +73,7 @@ public class JwtTokenProvider {
         // refreshToken 발급
         String refreshToken = Jwts.builder()
                 .setHeader(headerMap)
-                .claim("role", MemberRole.USER)
+                .claim("role", MemberRole.BASIC_USER.getRole())
                 .setSubject(memberId)
                 .setIssuedAt(date)
                 .setExpiration(refreshExpireTime)
@@ -88,13 +87,13 @@ public class JwtTokenProvider {
                 .build();
     }
 
-    // JWT 토큰 유효성 검증
-    public boolean validateToken(String token) {
+    // accessToken 유효성 검증
+    public boolean validateToken(String accessToken) {
         // 토큰 서명 확인
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(jwtSecretKey())
                 .build()
-                .parseClaimsJws(token)
+                .parseClaimsJws(accessToken)
                 .getBody();
 
         Date expireDate = claims.getExpiration();  // 토큰 만료 시간
@@ -104,26 +103,45 @@ public class JwtTokenProvider {
         if (expireDate.before(now)) {
             log.info("accessToken 시간 만료");
             return false;
+        } else {
+            return true;
         }
-        return true;
     }
 
-    // JWT refreshToken 유효성 검증
-    public String validateRefreshToken(String refreshToken) {
-        try {
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(jwtSecretKey())
-                    .build()
-                    .parseClaimsJws(refreshToken)
-                    .getBody();
+    // refreshToken 유효성 검증
+    public boolean validateRefreshToken(String refreshToken) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(jwtSecretKey())
+                .build()
+                .parseClaimsJws(refreshToken)
+                .getBody();
 
-            if (claims.getExpiration().before(new Date())) {
-                return reCreateAccessToken(claims.getSubject());
-            }
-        } catch (Exception e) {
+        if (claims.getExpiration().before(new Date())) {
             log.info("재로그인 필요");
+            return false;
+        } else {
+            return true;
         }
-        return null;
+    }
+
+    // accessToken 재발급
+    public String reCreateAccessToken(String memberId) {
+        headerMap.put("type", "JWT");
+        headerMap.put("alg", "HS256");
+        Date date = new Date();
+        Date expireTime = new Date();
+        expireTime.setTime(date.getTime() + tokenTime);
+
+        String accessToken = Jwts.builder()
+                .setHeader(headerMap)  // 헤더에 들어갈 정보
+                .claim("role", MemberRole.BASIC_USER.getRole())  // 사용자 권한
+                .setSubject(memberId)
+                .setIssuedAt(date)  // 토큰 발행 일자
+                .setExpiration(expireTime)  // 토큰 만료 시간
+                .signWith(jwtSecretKey())  // 커스텀 키, 사용할 암호화 알고리즘(알아서 해줌)
+                .compact();
+
+        return accessToken;
     }
 
     // JWT 토큰에서 사용자 아이디 추출
@@ -140,22 +158,19 @@ public class JwtTokenProvider {
     // JWT 토큰에서 멤버 객체 추출
     public MemberDetailDto getMember(String token) {
         String memberId = getMemberIdFromToken(token);
-        return memberService.findById(memberId);
+        return memberMapper.findById(memberId);
     }
 
     // 쿠키 배열에서 accessToken만 추출
     public String extractToken(Cookie[] cookies) {
         String accessToken = null;
-        String refreshToken = null;
 
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 String tokenName = cookie.getName();
                 String value = cookie.getValue();
 
-                if (tokenName.equals("refreshToken")) {
-                    refreshToken = value;
-                } else if (tokenName.equals("accessToken")){
+                if (tokenName.equals("accessToken")){
                     accessToken = value;
                 }
             }
@@ -164,29 +179,10 @@ public class JwtTokenProvider {
         return accessToken;
     }
 
-    // accessToken 재발급
-    public String reCreateAccessToken(String memberId) {
-        headerMap.put("type", "JWT");
-        headerMap.put("alg", "HS256");
-        Date date = new Date();
-        Date expireTime = new Date();
-        expireTime.setTime(date.getTime() + tokenTime);
 
-        String accessToken = Jwts.builder()
-                .setHeader(headerMap)  // 헤더에 들어갈 정보
-                .claim("role", MemberRole.USER)  // 사용자 권한
-                .setSubject(memberId)
-                .setIssuedAt(date)  // 토큰 발행 일자
-                .setExpiration(expireTime)  // 토큰 만료 시간
-                .signWith(jwtSecretKey())  // 커스텀 키, 사용할 암호화 알고리즘(알아서 해줌)
-                .compact();
-
-        return accessToken;
-    }
 
     public Authentication getAuthentication(String memberId) {
-        MemberDetailDto member = memberMapperRepository.findById(memberId);
-        log.info("member: {}", member);
+        MemberDetailDto member = memberMapper.findById(memberId);
         return new UsernamePasswordAuthenticationToken(member, null, null);
     }
 

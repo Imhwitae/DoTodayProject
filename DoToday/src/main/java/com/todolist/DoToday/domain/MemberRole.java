@@ -1,22 +1,16 @@
 package com.todolist.DoToday.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public enum MemberRole {
 
-    @Getter
     ADMIN("ROLE_ADMIN"),
-    @Getter
-    USER("ROLE_USER"),
-    @Getter
+    BASIC_USER("ROLE_USER"),
     KAKAO_USER("KAKAO"),
-    @Getter
     GOOGLE_USER("GOOGLE");
 
-
-    MemberRole(String value) {
-        this.value = value;
-    }
-
-    private String value;
+    private String role;
 }
