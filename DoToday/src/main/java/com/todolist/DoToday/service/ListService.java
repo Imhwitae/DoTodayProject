@@ -1,6 +1,7 @@
 package com.todolist.DoToday.service;
 
-import com.todolist.DoToday.dto.request.AppListGetDto;
+import com.todolist.DoToday.api.reponse.AppListDto;
+import com.todolist.DoToday.api.request.AppListGetDto;
 import com.todolist.DoToday.dto.response.TodoList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +9,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -29,6 +29,19 @@ public class ListService {
         @Override
         public TodoList mapRow(ResultSet rs, int rowNum) throws SQLException {
             TodoList todoList = new TodoList();
+            todoList.setListTitle(rs.getString("list_title"));
+            todoList.setComplete(rs.getInt("complete"));
+            todoList.setListNum(rs.getInt("list_num"));
+            todoList.setMemberId(rs.getString("member_id"));
+            todoList.setWhenToDo(rs.getString("when_todo"));
+            return todoList;
+        }
+    };
+
+    private final RowMapper<AppListDto> appListRowMapper = new RowMapper<AppListDto>() {
+        @Override
+        public AppListDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+            AppListDto todoList = new AppListDto();
             todoList.setListTitle(rs.getString("list_title"));
             todoList.setComplete(rs.getInt("complete"));
             todoList.setListNum(rs.getInt("list_num"));
@@ -71,6 +84,14 @@ public class ListService {
         return result;
     }
 
+    public List<AppListDto> appShowLists(String userId, String date){
+        String sql = "select * from list where member_id = ? and write_date = ?";
+
+        List<AppListDto> list = jdbcTemplate.query(sql, new Object[]{userId,date}, appListRowMapper);
+
+        return list;
+    }
+
     public int appListWrite(AppListGetDto listGetDto){
         int result = 0;
         if (listGetDto.getDate() != null){
@@ -83,24 +104,10 @@ public class ListService {
         return result;
     }
 
-    public int appListTitleUpdate(AppListGetDto listGetDto){
+    public int appListUpdate(AppListGetDto listGetDto){
         int result = 0;
-        result = jdbcTemplate.update("update list set list_title = ? where list_num = ?"
-                , listGetDto.getListTitle(), listGetDto.getListNum());
-        return result;
-    }
-
-    public int appListWhenUpdate(AppListGetDto listGetDto){
-        int result = 0;
-        result = jdbcTemplate.update("update list set when_todo = ? where list_num = ?"
-                , listGetDto.getWhenToDo(), listGetDto.getListNum());
-        return result;
-    }
-
-    public int appListDelete(AppListGetDto listGetDto){
-        int result = 0;
-        result = jdbcTemplate.update("update list set when_todo = ? where list_num = ?"
-                , listGetDto.getWhenToDo(), listGetDto.getListNum());
+        result = jdbcTemplate.update("update list set list_title = ? and when_todo = ? where list_num = ?"
+                , listGetDto.getListTitle(), listGetDto.getWhenToDo(), listGetDto.getListNum());
         return result;
     }
 
