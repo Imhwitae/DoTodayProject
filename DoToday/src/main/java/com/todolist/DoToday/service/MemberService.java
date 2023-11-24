@@ -275,30 +275,20 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
        여기서 JwtTokenProvider를 가져다 쓰려고하면 순환 참조 오류 때문에 문제가 됐었다.
        그래서 myBatis로 DB접근 방식을 변경하여 순환 참조 오류를 해결함
     */
-    public String checkMemberId(String id) {
-        Map<String, Object> apiMapper = new HashMap<>();
+    public ResponseEntity<Map<String, Object>> checkMemberId(String id) {
+        Map<String, Object> apiMap = new HashMap<>();
 
-        MemberDetailDto member = memberMapper.findById(id);
-
-        MemberTokenDto appMemberToken = jwtTokenProvider.createToken(id);
-        String appMemberAccessToken = appMemberToken.getAccessToken();
-        String appMemberRefreshToken = appMemberToken.getRefreshToken();
-
-        if (member != null && StringUtils.hasText(member.getMemberId())) {
-//            MemberNumDto memberNum = new MemberNumDto(member.getMemberNum());
-//            TokensDto tokensDto = new TokensDto(
-//                    appMemberAccessToken,
-//                    appMemberRefreshToken);
-//            apiMapper.put("number", memberNum);
-//            apiMapper.put("tokens", tokensDto);
-            return "success";
-        } else {
-//            apiMapper.put("status", ExceptionEnum.MEMBER_NOT_FOUND.getHttpStatus());
-//            apiMapper.put("error",new ExceptionDto(
-//                    ExceptionEnum.MEMBER_NOT_FOUND.getCode(),
-//                    ExceptionEnum.MEMBER_NOT_FOUND.getMsg()));
-            return "memberNotfound";
+        try {
+            MemberDetailDto member = memberMapper.findById(id);
+            if (member.getMemberId() != null) {
+                apiMap.put("error", "This ID is already in use.");
+                return new ResponseEntity<>(apiMap, HttpStatus.OK);
+            }
+        } catch (NullPointerException e) {
+            apiMap.put("ok", "This ID can be used");
+            return new ResponseEntity<>(apiMap, HttpStatus.OK);
         }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<Object> apiLogin(ApiMemberLoginDto apiMemberLoginDto) {
@@ -315,7 +305,7 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
         boolean checkPw = bCryptPasswordEncoder.matches(apiMemberLoginDto.getMemberPw(), member.getMemberPw());
         log.info("pw: {}", checkPw);
 
-        if (checkPw) {
+        if (StringUtils.hasText(member.getMemberId()) && checkPw) {
             MemberTokenDto appMemberToken = jwtTokenProvider.createToken(member.getMemberId());
             return new ResponseEntity<>(appMemberToken, HttpStatus.OK);
         } else {

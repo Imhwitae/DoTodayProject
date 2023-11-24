@@ -3,14 +3,13 @@ package com.todolist.DoToday.api;
 import com.todolist.DoToday.api.request.ApiCheckMemberIdDto;
 import com.todolist.DoToday.api.request.ApiMemberJoinDto;
 import com.todolist.DoToday.api.request.ApiMemberLoginDto;
-import com.todolist.DoToday.dto.MemberTokenDto;
 import com.todolist.DoToday.service.MemberService;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +24,7 @@ public class MemberApiController {
     }
 
     @PostMapping("/checkid")
-    public String apiCheckMember(@RequestBody ApiCheckMemberIdDto id) {
+    public ResponseEntity<Map<String, Object>> apiCheckMember(@RequestBody ApiCheckMemberIdDto id) {
         return memberService.checkMemberId(id.getMemberId());
     }
 
