@@ -9,8 +9,8 @@ public class SpringDocConfig {
     @Bean
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
-                .group("todolist")
-                .pathsToMatch("/public/**")
+                .group("member")
+                .pathsToMatch("/api/members")
                 .build();
     }
 }

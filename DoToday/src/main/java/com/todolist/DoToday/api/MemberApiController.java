@@ -19,7 +19,7 @@ public class MemberApiController {
     private final MemberService memberService;
 
     @PostMapping("/join")
-    public Long apiSocialMemberJoin(@RequestBody ApiMemberJoinDto joinApi) throws IOException {
+    public ResponseEntity<Map<String, Object>> apiSocialMemberJoin(@RequestBody ApiMemberJoinDto joinApi) throws IOException {
         return memberService.apiMemberJoin(joinApi);
     }
 
@@ -29,7 +29,7 @@ public class MemberApiController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> apiLoginMember(@RequestBody ApiMemberLoginDto apiMemberLoginDto) {
+    public ResponseEntity<Map<String, Object>> apiLoginMember(@RequestBody ApiMemberLoginDto apiMemberLoginDto) {
         return memberService.apiLogin(apiMemberLoginDto);
     }
 

@@ -57,6 +57,7 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MemberMapper memberMapper;
     private final JwtTokenProvider jwtTokenProvider;
+    private Map<String, Object> apiMap;
     protected RowMapper<MemberDetailDto> rowMapper = new RowMapper<MemberDetailDto>() {
         @Override
         public MemberDetailDto mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -244,7 +245,9 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
     /*API service*/
 
     // 앱에서 받아온 정보로 회원가입
-    public Long apiMemberJoin(ApiMemberJoinDto apiMemberJoinDto) {
+    public ResponseEntity<Map<String, Object>> apiMemberJoin(ApiMemberJoinDto apiMemberJoinDto) {
+        apiMap = new HashMap<>();
+
         String id = apiMemberJoinDto.getId();
         String pw = apiMemberJoinDto.getPw();
         String name = apiMemberJoinDto.getName();
@@ -252,15 +255,19 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
         if (StringUtils.hasText(apiMemberJoinDto.getImage_url()) && !apiMemberJoinDto.getImage_url().equals("null")) {
             image = apiMemberJoinDto.getImage_url();
         }
-//        String gender = appMemberJoinDto.getGender();
         LocalDate regtime = LocalDate.now();
         boolean isEnabled = true;
 
-        String encodedPw = bCryptPasswordEncoder.encode(pw);
-
-        memberMapper.ApiInsertMember(id, encodedPw, name, image, regtime, isEnabled);
-
-        return memberMapper.findById(id).getMemberNum();
+        if (memberMapper.findById(id) != null) {
+            apiMap.put("id error", id + " is already in use.");
+            return new ResponseEntity<>(apiMap, HttpStatus.OK);
+        } else {
+            String encodedPw = bCryptPasswordEncoder.encode(pw);
+            memberMapper.ApiInsertMember(id, encodedPw, name, image, regtime, isEnabled);
+            MemberNumDto num = new MemberNumDto(memberMapper.findById(id).getMemberNum());
+            apiMap.put("joinSucess", num);
+            return new ResponseEntity<>(apiMap, HttpStatus.OK);
+        }
     }
 
     // 회원가입 후 추가 정보 입력
@@ -274,44 +281,47 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
     /* 처음 구현할 때 MemberService가 JwtTokenProvider에도 의존성 주입이 되어있어
        여기서 JwtTokenProvider를 가져다 쓰려고하면 순환 참조 오류 때문에 문제가 됐었다.
        그래서 myBatis로 DB접근 방식을 변경하여 순환 참조 오류를 해결함
+       그냥 문자열로 Return하면 파싱을 못함!
     */
     public ResponseEntity<Map<String, Object>> checkMemberId(String id) {
-        Map<String, Object> apiMap = new HashMap<>();
+        apiMap = new HashMap<>();
 
         try {
             MemberDetailDto member = memberMapper.findById(id);
             if (member.getMemberId() != null) {
-                apiMap.put("error", "This ID is already in use.");
+                apiMap.put("error", id + " is already in use.");
                 return new ResponseEntity<>(apiMap, HttpStatus.OK);
             }
         } catch (NullPointerException e) {
-            apiMap.put("ok", "This ID can be used");
+            apiMap.put("ok", id + " can be used");
             return new ResponseEntity<>(apiMap, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<Object> apiLogin(ApiMemberLoginDto apiMemberLoginDto) {
+    public ResponseEntity<Map<String, Object>> apiLogin(ApiMemberLoginDto apiMemberLoginDto) {
         // 에러 처리하기 + 아이디 중복체크
+        apiMap = new HashMap<>();
+
         try {
             MemberDetailDto member = memberMapper.findById(apiMemberLoginDto.getMemberId());
             bCryptPasswordEncoder.matches(apiMemberLoginDto.getMemberPw(), member.getMemberPw());
         } catch (NullPointerException e) {
-            e.getMessage();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            apiMap.put("error", e.getMessage());
+            return new ResponseEntity<>(apiMap, HttpStatus.OK);
         }
 
         MemberDetailDto member = memberMapper.findById(apiMemberLoginDto.getMemberId());
         boolean checkPw = bCryptPasswordEncoder.matches(apiMemberLoginDto.getMemberPw(), member.getMemberPw());
         log.info("pw: {}", checkPw);
 
-        if (StringUtils.hasText(member.getMemberId()) && checkPw) {
+        if (checkPw) {
             MemberTokenDto appMemberToken = jwtTokenProvider.createToken(member.getMemberId());
-            return new ResponseEntity<>(appMemberToken, HttpStatus.OK);
+            apiMap.put("loginSuccess", appMemberToken);
+            return new ResponseEntity<>(apiMap, HttpStatus.OK);
         } else {
-            Map<String, Object> errorMapper = new HashMap<>();
-            errorMapper.put("error", new ResponseEntity<>(HttpStatus.BAD_REQUEST));
-            return new ResponseEntity<>(errorMapper, HttpStatus.OK);
+            apiMap.put("error", new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+            return new ResponseEntity<>(apiMap, HttpStatus.OK);
         }
 
     }
