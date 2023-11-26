@@ -3,6 +3,7 @@ package com.todolist.DoToday.api;
 import com.todolist.DoToday.api.request.ApiCheckMemberIdDto;
 import com.todolist.DoToday.api.request.ApiMemberJoinDto;
 import com.todolist.DoToday.api.request.ApiMemberLoginDto;
+import com.todolist.DoToday.dto.MemberTokenDto;
 import com.todolist.DoToday.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,8 @@ public class MemberApiController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> apiLoginMember(@RequestBody ApiMemberLoginDto apiMemberLoginDto) {
+    @ResponseBody
+    public MemberTokenDto apiLoginMember(@RequestBody ApiMemberLoginDto apiMemberLoginDto) {
         return memberService.apiLogin(apiMemberLoginDto);
     }
 
