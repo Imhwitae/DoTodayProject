@@ -12,5 +12,5 @@ public class AppListGetDto { // 받아서 작성, 수정용 dto
     private String date;
     private String whenToDo;
     private int complete;
-    private String status;//
+    private String status;//작성인지 수정인지 구분
 }

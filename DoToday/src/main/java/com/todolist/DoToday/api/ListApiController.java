@@ -1,29 +1,34 @@
 package com.todolist.DoToday.api;
 
-import com.todolist.DoToday.api.reponse.AppFirstListDto;
+import com.todolist.DoToday.api.reponse.AppListsOfMemberDto;
 import com.todolist.DoToday.api.reponse.AppListDto;
 import com.todolist.DoToday.api.request.AppListGetDto;
 import com.todolist.DoToday.api.request.AppListNumDto;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.service.ListService;
-import lombok.Getter;
+import com.todolist.DoToday.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/list")
 public class ListApiController {
     private final ListService listService;
+    private final MemberService memberService;
     private boolean tBlank, wBlank;
     @GetMapping("/show")
-    public AppFirstListDto showListToday(@AuthenticationPrincipal MemberDetailDto member){
-        AppFirstListDto listDto = new AppFirstListDto();
+    public AppListsOfMemberDto showList(
+//            @AuthenticationPrincipal MemberDetailDto member
+    ){
+        MemberDetailDto member = memberService.findById("test@gmail.com");
+        AppListsOfMemberDto listDto = new AppListsOfMemberDto();
 
         LocalDate currentDate = LocalDate.now();
         String currentDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
