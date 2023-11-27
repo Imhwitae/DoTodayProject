@@ -90,7 +90,17 @@ public class JwtTokenProvider {
 
     // accessToken 유효성 검증
     public boolean validateToken(String accessToken) {
-        // 토큰 서명 확인
+        try {
+            // 토큰 서명 확인
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(jwtSecretKey())
+                    .build()
+                    .parseClaimsJws(accessToken)
+                    .getBody();
+        } catch (Exception e) {
+            return false;
+        }
+
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(jwtSecretKey())
                 .build()

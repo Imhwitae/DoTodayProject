@@ -2,7 +2,9 @@ package com.todolist.DoToday.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.todolist.DoToday.api.error.ApiErrorResponse;
 import com.todolist.DoToday.api.error.ExceptionEnum;
+import com.todolist.DoToday.api.reponse.AcccessTokenApi;
 import com.todolist.DoToday.api.reponse.ExceptionDto;
 import com.todolist.DoToday.api.reponse.MemberNumDto;
 import com.todolist.DoToday.api.reponse.TokensDto;
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -44,6 +47,7 @@ import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -352,6 +356,34 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
             apiMap.put("error", new ResponseEntity<>(HttpStatus.BAD_REQUEST));
 //            return new ResponseEntity<>(apiMap, HttpStatus.OK);
             return null;
+        }
+
+    }
+
+    // 토큰 재발급
+    public ResponseEntity<Map<String, Object>> validateToken(String refreshToken) {
+        apiMap = new HashMap<>();
+        if (StringUtils.hasText(refreshToken) && !refreshToken.isEmpty()) {
+            log.info("tokenOK");
+            if (jwtTokenProvider.validateToken(refreshToken)) {
+                String memberId = jwtTokenProvider.getMemberIdFromToken(refreshToken);
+                AcccessTokenApi accessToken = new AcccessTokenApi(jwtTokenProvider.reCreateAccessToken(memberId));
+                apiMap.put("validSuccess", accessToken);
+                log.info("validOK");
+                return new ResponseEntity<>(apiMap, HttpStatus.OK);
+            } else {
+                ApiErrorResponse errorResponse = new ApiErrorResponse(
+                        ExceptionEnum.TOKEN_VALIDATE_ERROR.getMsg(), ExceptionEnum.TOKEN_VALIDATE_ERROR.getHttpStatus());
+                apiMap.put("error", errorResponse);
+                log.info("TokenValidErr");
+                return new ResponseEntity<>(apiMap, HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            ApiErrorResponse errorResponse = new ApiErrorResponse(
+                    ExceptionEnum.PARAMETER_ERROR.getMsg(), ExceptionEnum.PARAMETER_ERROR.getHttpStatus());
+            apiMap.put("error", errorResponse);
+            log.info("parmeterErr");
+            return new ResponseEntity<>(apiMap ,HttpStatus.BAD_REQUEST);
         }
 
     }
