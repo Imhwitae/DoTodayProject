@@ -307,7 +307,7 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
             MemberDetailDto member = memberMapper.findById(apiMemberLoginDto.getMemberId());
             bCryptPasswordEncoder.matches(apiMemberLoginDto.getMemberPw(), member.getMemberPw());
         } catch (NullPointerException e) {
-            apiMap.put("error", e.getMessage());
+            apiMap.put("id or pw null error", e.getMessage());
             return new ResponseEntity<>(apiMap, HttpStatus.OK);
         }
 
