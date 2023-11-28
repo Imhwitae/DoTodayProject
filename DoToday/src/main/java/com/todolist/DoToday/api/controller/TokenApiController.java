@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URISyntaxException;
 import java.util.Map;
 
 @RestController
@@ -25,9 +26,9 @@ public class TokenApiController {
         return tokenApiService.validateRefreshToken(refreshToken.getRefreshToken());
     }
 
-    @PutMapping("/redirectlist")
-    public ResponseEntity<?> redirectToListController() {
-        return
+    @PutMapping("/redirecttokentolist")
+    public ResponseEntity<?> redirectToListController(@RequestBody RequestAccessToken accessToken) throws URISyntaxException {
+        return tokenApiService.redirectAccessToken(accessToken.getAccessToken());
     }
 
 }

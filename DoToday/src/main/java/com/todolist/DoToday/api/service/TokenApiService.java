@@ -6,11 +6,14 @@ import com.todolist.DoToday.api.reponse.AcccessTokenApi;
 import com.todolist.DoToday.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -74,7 +77,12 @@ public class TokenApiService {
     }
 
     // accessToken redirect
-    public ResponseEntity<?> redirectAccessToken(String accessToken) {
-
+    public ResponseEntity<?> redirectAccessToken(String accessToken) throws URISyntaxException {
+        URI redirectUrl = new URI("redirect:/api/list/show");
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("accessToken", accessToken);
+        headers.setLocation(redirectUrl);
+        System.out.println(headers);
+        return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
     }
 }
