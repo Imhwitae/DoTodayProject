@@ -46,9 +46,9 @@ public class ListService {
             todoList.setListTitle(rs.getString("list_title"));
             todoList.setComplete(rs.getInt("complete"));
             todoList.setListNum(rs.getInt("list_num"));
-            todoList.setMemberId(rs.getString("member_id"));
+//            todoList.setMemberId(rs.getString("member_id"));
             todoList.setWhenToDo(rs.getString("when_todo"));
-            todoList.setDate(rs.getString("write_date"));
+//            todoList.setDate(rs.getString("write_date"));
             return todoList;
         }
     };
@@ -86,35 +86,6 @@ public class ListService {
         return result;
     }
 
-    public List<AppListDto> appShowLists(String userId, String date){
-        String sql = "select * from list where member_id = ? and write_date = ?";
-
-        List<AppListDto> list = jdbcTemplate.query(sql, new Object[]{userId,date}, appListRowMapper);
-
-        if (list.isEmpty()){
-            list = null;
-        }
-        return list;
-    }
-
-    public int appListWrite(AppListGetDto listGetDto){
-        int result = 0;
-        if (listGetDto.getDate() != null){
-            result = jdbcTemplate.update("insert into list(list_title,member_id,write_date,when_todo) values(?,?,?,?)"
-                    , listGetDto.getListTitle(), listGetDto.getMemberId(), listGetDto.getDate(), listGetDto.getWhenToDo());
-        }else {
-            result = jdbcTemplate.update("insert into list(list_title,member_id,when_todo) values(?,?,?)"
-                    , listGetDto.getListTitle(), listGetDto.getMemberId(), listGetDto.getWhenToDo());
-        }
-        return result;
-    }
-
-    public int appListUpdate(AppListGetDto listGetDto){
-        int result = 0;
-        result = jdbcTemplate.update("update list set list_title = ? and when_todo = ? where list_num = ?"
-                , listGetDto.getListTitle(), listGetDto.getWhenToDo(), listGetDto.getListNum());
-        return result;
-    }
 
     //삭제
     public int delete(int listNum){
@@ -179,24 +150,6 @@ public class ListService {
         return blank;
     }
 
-    public boolean appTitleValidate(AppListGetDto listGetDto){
-        String title = listGetDto.getListTitle();
-        boolean blank = false;
-        if (title.trim().isEmpty() == true || title == null){ //앞뒤로 공백이 있으면 지워줌
-            blank = true;
-        }
-        return blank;
-    }
-
-    public boolean appWhenValidate(AppListGetDto listGetDto){
-        String title = listGetDto.getWhenToDo();
-        boolean blank = false;
-        if (title.trim().isEmpty() == true || title == null){ //앞뒤로 공백이 있으면 지워줌
-            blank = true;
-        }
-        return blank;
-    }
-
     public String dateCheck(String date){
         String msg = null;
 
@@ -220,8 +173,6 @@ public class ListService {
         return msg;
     }
 
-
-
     public boolean emptyList(List<TodoList> list){
         boolean listExist;
         if (list.isEmpty()){ //투두 리스트가 비어있는지 확인
@@ -231,4 +182,53 @@ public class ListService {
         }
         return listExist;
     }
+
+    public boolean appTitleValidate(AppListGetDto listGetDto){
+        String title = listGetDto.getListTitle();
+        boolean blank = false;
+        if (title.trim().isEmpty() == true || title == null){ //앞뒤로 공백이 있으면 지워줌
+            blank = true;
+        }
+        return blank;
+    }
+
+    public boolean appWhenValidate(AppListGetDto listGetDto){
+        String title = listGetDto.getWhenToDo();
+        boolean blank = false;
+        if (title.trim().isEmpty() == true || title == null){ //앞뒤로 공백이 있으면 지워줌
+            blank = true;
+        }
+        return blank;
+    }
+
+    public List<AppListDto> appShowLists(String userId, String date){
+        String sql = "select * from list where member_id = ? and write_date = ?";
+
+        List<AppListDto> list = jdbcTemplate.query(sql, new Object[]{userId,date}, appListRowMapper);
+
+        if (list.isEmpty()){
+            list = null;
+        }
+        return list;
+    }
+
+    public int appListWrite(AppListGetDto listGetDto){
+        int result = 0;
+        if (listGetDto.getDate() != null){
+            result = jdbcTemplate.update("insert into list(list_title,member_id,write_date,when_todo) values(?,?,?,?)"
+                    , listGetDto.getListTitle(), listGetDto.getMemberId(), listGetDto.getDate(), listGetDto.getWhenToDo());
+        }else {
+            result = jdbcTemplate.update("insert into list(list_title,member_id,when_todo) values(?,?,?)"
+                    , listGetDto.getListTitle(), listGetDto.getMemberId(), listGetDto.getWhenToDo());
+        }
+        return result;
+    }
+
+    public int appListUpdate(AppListGetDto listGetDto){
+        int result = 0;
+        result = jdbcTemplate.update("update list set list_title = ? and when_todo = ? where list_num = ?"
+                , listGetDto.getListTitle(), listGetDto.getWhenToDo(), listGetDto.getListNum());
+        return result;
+    }
+
 }

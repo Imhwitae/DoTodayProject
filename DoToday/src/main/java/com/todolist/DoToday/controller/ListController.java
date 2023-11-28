@@ -32,15 +32,19 @@ public class ListController {
     private final JwtTokenProvider jtp;
     private final MemberService memberService;
 
+//    @GetMapping("/test")
+//    public String getHeaderToken(){
+////        return;
+//    }
     //자신의 투두리스트 확인
     @GetMapping("/todolist")
     public String showMyList(@AuthenticationPrincipal MemberDetailDto member,
                              HttpServletRequest request,
                              Model model,
                              @ModelAttribute("todoList") TodoList todoList) {
-        String token = jtp.extractToken(request.getCookies());
-        MemberDetailDto mdd = null;
-//        mdd = jtp.getMember(token);
+//        String token = jtp.extractToken(request.getCookies());
+//        MemberDetailDto mdd = null;
+////        mdd = jtp.getMember(token);
         List<TodoList> list = listService.showToday(member.getName());
 
         listExist = listService.emptyList(list);

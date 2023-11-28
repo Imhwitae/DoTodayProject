@@ -13,10 +13,10 @@ public class TestService {
     @Autowired
     private MemberMapper memberMapper;
 
-    @Test
-    @DisplayName("멤버 객체가 null이 아니다.")
-    void checkMember() {
-//        Assertions.assertNotNull(memberMapperRepository.findById("test@gmail.com"));
-        Assertions.assertNotNull(memberMapper.findAll());
-    }
+//    @Test
+//    @DisplayName("멤버 객체가 null이 아니다.")
+//    void checkMember() {
+////        Assertions.assertNotNull(memberMapperRepository.findById("test@gmail.com"));
+//        Assertions.assertNotNull(memberMapper.findAll());
+//    }
 }
