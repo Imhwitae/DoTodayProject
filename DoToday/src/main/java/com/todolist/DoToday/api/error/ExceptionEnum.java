@@ -14,7 +14,7 @@ public enum ExceptionEnum {
     // request 관련 오류
     PARAMETER_ERROR("PE01", HttpStatus.BAD_REQUEST, "parmeterError"),
     // Token 관련 오류
-    TOKEN_VALIDATE_ERROR("TE01", HttpStatus.BAD_REQUEST, "tokenValidError"),
+    TOKEN_VALIDATE_ERROR("TE01", HttpStatus.BAD_REQUEST, "tokenValidateError"),
     TOKEN_TIMEOUT_ERROR("TE02", HttpStatus.BAD_REQUEST, "tokenTimeout");
 
     private final String code;

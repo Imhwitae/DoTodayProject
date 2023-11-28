@@ -1,4 +1,4 @@
-package com.todolist.DoToday.api;
+package com.todolist.DoToday.api.controller;
 
 import com.todolist.DoToday.api.request.ApiCheckMemberIdDto;
 import com.todolist.DoToday.api.request.ApiMemberJoinDto;
@@ -31,16 +31,9 @@ public class MemberApiController {
     }
 
     @PostMapping("/login")
-//    @ResponseBody
     public MemberTokenDto apiLoginMember(@RequestBody ApiMemberLoginDto apiMemberLoginDto) {
         return memberService.apiLogin(apiMemberLoginDto);
     }
-
-    @GetMapping("/validtoken")
-    public ResponseEntity<Map<String, Object>> apiValidateToken(@RequestBody RequestRefreshToken refreshToken) {
-        return memberService.validateToken(refreshToken.getRefreshToken());
-    }
-
 }
 
 

@@ -264,7 +264,7 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
 
         if (memberMapper.findById(id) != null) {
             apiMap.put("id error", id + " is already in use.");
-            return new ResponseEntity<>(apiMap, HttpStatus.OK);
+            return new ResponseEntity<>(apiMap, HttpStatus.BAD_REQUEST);
         } else {
             String encodedPw = bCryptPasswordEncoder.encode(pw);
             memberMapper.ApiInsertMember(id, encodedPw, name, image, regtime, isEnabled);
@@ -285,7 +285,7 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
     /* 처음 구현할 때 MemberService가 JwtTokenProvider에도 의존성 주입이 되어있어
        여기서 JwtTokenProvider를 가져다 쓰려고하면 순환 참조 오류 때문에 문제가 됐었다.
        그래서 myBatis로 DB접근 방식을 변경하여 순환 참조 오류를 해결함
-       그냥 문자열로 Return하면 파싱을 못함!
+       + 그냥 문자열로 Return하면 파싱을 못함!
     */
     public ResponseEntity<Map<String, Object>> checkMemberId(String id) {
         apiMap = new HashMap<>();
@@ -294,7 +294,7 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
             MemberDetailDto member = memberMapper.findById(id);
             if (member.getMemberId() != null) {
                 apiMap.put("error", id + " is already in use.");
-                return new ResponseEntity<>(apiMap, HttpStatus.OK);
+                return new ResponseEntity<>(apiMap, HttpStatus.BAD_REQUEST);
             }
         } catch (NullPointerException e) {
             apiMap.put("ok", id + " can be used");
@@ -357,35 +357,5 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
 //            return new ResponseEntity<>(apiMap, HttpStatus.OK);
             return null;
         }
-
     }
-
-    // 토큰 재발급
-    public ResponseEntity<Map<String, Object>> validateToken(String refreshToken) {
-        apiMap = new HashMap<>();
-        if (StringUtils.hasText(refreshToken) && !refreshToken.isEmpty()) {
-            log.info("tokenOK");
-            if (jwtTokenProvider.validateToken(refreshToken)) {
-                String memberId = jwtTokenProvider.getMemberIdFromToken(refreshToken);
-                AcccessTokenApi accessToken = new AcccessTokenApi(jwtTokenProvider.reCreateAccessToken(memberId));
-                apiMap.put("validSuccess", accessToken);
-                log.info("validOK");
-                return new ResponseEntity<>(apiMap, HttpStatus.OK);
-            } else {
-                ApiErrorResponse errorResponse = new ApiErrorResponse(
-                        ExceptionEnum.TOKEN_VALIDATE_ERROR.getMsg(), ExceptionEnum.TOKEN_VALIDATE_ERROR.getHttpStatus());
-                apiMap.put("error", errorResponse);
-                log.info("TokenValidErr");
-                return new ResponseEntity<>(apiMap, HttpStatus.BAD_REQUEST);
-            }
-        } else {
-            ApiErrorResponse errorResponse = new ApiErrorResponse(
-                    ExceptionEnum.PARAMETER_ERROR.getMsg(), ExceptionEnum.PARAMETER_ERROR.getHttpStatus());
-            apiMap.put("error", errorResponse);
-            log.info("parmeterErr");
-            return new ResponseEntity<>(apiMap ,HttpStatus.BAD_REQUEST);
-        }
-
-    }
-
 }

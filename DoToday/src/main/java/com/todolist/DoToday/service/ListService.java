@@ -46,9 +46,9 @@ public class ListService {
             todoList.setListTitle(rs.getString("list_title"));
             todoList.setComplete(rs.getInt("complete"));
             todoList.setListNum(rs.getInt("list_num"));
-            todoList.setMemberId(rs.getString("member_id"));
+//            todoList.setMemberId(rs.getString("member_id"));
             todoList.setWhenToDo(rs.getString("when_todo"));
-            todoList.setDate(rs.getString("write_date"));
+//            todoList.setDate(rs.getString("write_date"));
             return todoList;
         }
     };
