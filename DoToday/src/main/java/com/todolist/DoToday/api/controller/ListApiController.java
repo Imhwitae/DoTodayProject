@@ -4,7 +4,9 @@ import com.todolist.DoToday.api.reponse.AppListsOfMemberDto;
 import com.todolist.DoToday.api.reponse.AppListDto;
 import com.todolist.DoToday.api.request.AppListGetDto;
 import com.todolist.DoToday.api.request.AppListNumDto;
+import com.todolist.DoToday.api.service.ListApiService;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
+import com.todolist.DoToday.jwt.JwtTokenProvider;
 import com.todolist.DoToday.service.ListService;
 import com.todolist.DoToday.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -20,21 +22,21 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/list")
 public class ListApiController {
-    private final ListService listService;
-    private final MemberService memberService;
+    private final JwtTokenProvider jtp;
+    private final ListApiService listService;
     private boolean tBlank, wBlank;
     @GetMapping("/show")
     public AppListsOfMemberDto showList(
-//            @AuthenticationPrincipal MemberDetailDto member
+            @RequestHeader("accessToken") String token
     ){
-        MemberDetailDto member = memberService.findById("test@gmail.com");
+        String memberId = jtp.getMemberIdFromToken(token);
         AppListsOfMemberDto listDto = new AppListsOfMemberDto();
 
         LocalDate currentDate = LocalDate.now();
         String currentDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        List<AppListDto> todoLists = listService.appShowLists(member.getMemberId(), currentDateStr);
+        List<AppListDto> todoLists = listService.appShowLists(memberId, currentDateStr);
 
-        currentDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
+//        currentDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
 
         listDto.setList(todoLists);
         listDto.setDate(currentDateStr);
@@ -75,17 +77,17 @@ public class ListApiController {
 
     @PostMapping("/delete")
     public int appListDelete(@RequestBody AppListNumDto listNum){
-        return listService.delete(listNum.getListNum());
+        return listService.appListDelete(listNum.getListNum());
     }
 
     @PostMapping("/complete")
     public int appListComplete(@RequestBody AppListNumDto listNum){
-        return listService.updateComplete(listNum.getListNum());
+        return listService.appUpdateComplete(listNum.getListNum());
     }
 
     @PostMapping("/incomplete")
     public int appListIncomplete(@RequestBody AppListNumDto listNum){
-        return listService.updateInComplete(listNum.getListNum());
+        return listService.appUpdateInComplete(listNum.getListNum());
     }
 
 
