@@ -95,11 +95,4 @@ public class MembersController {
         model.addAttribute("memberEtcInfo", new MemberJoinDto());
         return "member/memberInputEtcInfo";
     }
-
-    @PostMapping("/inputetc")
-    public String inputEtc(MemberJoinDto memberJoinDto) {
-        memberService.inputEtc(memberJoinDto);
-        return "redirect:/members/mypage";
-    }
-
 }
