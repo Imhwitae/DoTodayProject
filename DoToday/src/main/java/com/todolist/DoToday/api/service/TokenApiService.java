@@ -1,4 +1,4 @@
-package com.todolist.DoToday.service;
+package com.todolist.DoToday.api.service;
 
 import com.todolist.DoToday.api.error.ApiErrorResponse;
 import com.todolist.DoToday.api.error.ExceptionEnum;
@@ -18,18 +18,24 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class TokenApiService {
-    // 토큰 API 관련 서비스
     private final JwtTokenProvider jwtTokenProvider;
     private Map<String, Object> apiMap;
 
-    // accesstoken 유효성 검증
+    // accesstoken 검증
     public ResponseEntity<Map<String, Object>> validateAccessToken(String accessToken) {
         apiMap = new HashMap<>();
 
-        if (jwtTokenProvider.validateToken(accessToken)) {
+        if (StringUtils.hasText(accessToken) && jwtTokenProvider.validateToken(accessToken)) {
             String memberId = jwtTokenProvider.getMember(accessToken).getMemberId();
-            apiMap.put("OK", memberId);
+            apiMap.put("success", memberId);
             return new ResponseEntity<>(apiMap, HttpStatus.OK);
+        } else if (accessToken.isEmpty()) {
+            ApiErrorResponse errorResponse = new ApiErrorResponse(
+                    ExceptionEnum.PARAMETER_ERROR.getMsg(),
+                    ExceptionEnum.PARAMETER_ERROR.getHttpStatus()
+            );
+            apiMap.put("error", errorResponse);
+            return new ResponseEntity<>(apiMap, HttpStatus.BAD_REQUEST);
         } else {
             ApiErrorResponse errorResponse = new ApiErrorResponse(
                     ExceptionEnum.TOKEN_VALIDATE_ERROR.getMsg(),
@@ -40,7 +46,7 @@ public class TokenApiService {
         }
     }
 
-    // 토큰 재발급
+    // refreshToken 검증 후 accessToken 재발급
     public ResponseEntity<Map<String, Object>> validateRefreshToken(String refreshToken) {
         apiMap = new HashMap<>();
         if (StringUtils.hasText(refreshToken) && !refreshToken.isEmpty()) {
@@ -53,7 +59,7 @@ public class TokenApiService {
                 return new ResponseEntity<>(apiMap, HttpStatus.OK);
             } else {
                 ApiErrorResponse errorResponse = new ApiErrorResponse(
-                        ExceptionEnum.TOKEN_VALIDATE_ERROR.getMsg(), ExceptionEnum.TOKEN_VALIDATE_ERROR.getHttpStatus());
+                        ExceptionEnum.TOKEN_TIMEOUT_ERROR.getMsg(), ExceptionEnum.TOKEN_TIMEOUT_ERROR.getHttpStatus());
                 apiMap.put("error", errorResponse);
                 log.info("TokenValidErr");
                 return new ResponseEntity<>(apiMap, HttpStatus.BAD_REQUEST);
@@ -65,5 +71,10 @@ public class TokenApiService {
             log.info("parmeterErr");
             return new ResponseEntity<>(apiMap ,HttpStatus.BAD_REQUEST);
         }
+    }
+
+    // accessToken redirect
+    public ResponseEntity<?> redirectAccessToken(String accessToken) {
+
     }
 }

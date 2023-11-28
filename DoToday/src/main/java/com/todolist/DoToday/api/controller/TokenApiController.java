@@ -1,13 +1,11 @@
 package com.todolist.DoToday.api.controller;
 
+import com.todolist.DoToday.api.request.RequestAccessToken;
 import com.todolist.DoToday.api.request.RequestRefreshToken;
-import com.todolist.DoToday.service.TokenApiService;
+import com.todolist.DoToday.api.service.TokenApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -18,12 +16,18 @@ public class TokenApiController {
     private final TokenApiService tokenApiService;
 
     @GetMapping("/validaccesstoken")
-    public ResponseEntity<Map<String, Object>> validateAccessToken( ) {
-
+    public ResponseEntity<Map<String, Object>> validateAccessToken(@RequestBody RequestAccessToken accessToken) {
+        return tokenApiService.validateAccessToken(accessToken.getAccessToken());
     }
 
     @GetMapping("/validrefreshtoken")
     public ResponseEntity<Map<String, Object>> validateRefreshToken(@RequestBody RequestRefreshToken refreshToken) {
         return tokenApiService.validateRefreshToken(refreshToken.getRefreshToken());
     }
+
+    @PutMapping("/redirectlist")
+    public ResponseEntity<?> redirectToListController() {
+        return
+    }
+
 }

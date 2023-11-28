@@ -1,4 +1,4 @@
-package com.todolist.DoToday.api.controller;
+package com.todolist.DoToday.api;
 
 import com.todolist.DoToday.api.reponse.AppListsOfMemberDto;
 import com.todolist.DoToday.api.reponse.AppListDto;
