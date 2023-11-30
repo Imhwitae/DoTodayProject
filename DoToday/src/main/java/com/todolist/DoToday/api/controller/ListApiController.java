@@ -4,6 +4,7 @@ import com.todolist.DoToday.api.reponse.AppListsOfMemberDto;
 import com.todolist.DoToday.api.reponse.AppListDto;
 import com.todolist.DoToday.api.request.AppListGetDto;
 import com.todolist.DoToday.api.request.AppListNumDto;
+import com.todolist.DoToday.api.request.RequestAccessToken;
 import com.todolist.DoToday.api.service.ListApiService;
 import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.jwt.JwtTokenProvider;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -27,9 +29,9 @@ public class ListApiController {
     private boolean tBlank, wBlank;
     @GetMapping("/show")
     public AppListsOfMemberDto showList(
-            @RequestHeader("accessToken") String token
+            @RequestBody RequestAccessToken token
     ){
-        String memberId = jtp.getMemberIdFromToken(token);
+        String memberId = jtp.getMemberIdFromToken(token.getAccessToken());
         AppListsOfMemberDto listDto = new AppListsOfMemberDto();
 
         LocalDate currentDate = LocalDate.now();

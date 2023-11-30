@@ -39,20 +39,6 @@ public class ListService {
         }
     };
 
-    private final RowMapper<AppListDto> appListRowMapper = new RowMapper<AppListDto>() {
-        @Override
-        public AppListDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-            AppListDto todoList = new AppListDto();
-            todoList.setListTitle(rs.getString("list_title"));
-            todoList.setComplete(rs.getInt("complete"));
-            todoList.setListNum(rs.getInt("list_num"));
-//            todoList.setMemberId(rs.getString("member_id"));
-            todoList.setWhenToDo(rs.getString("when_todo"));
-//            todoList.setDate(rs.getString("write_date"));
-            return todoList;
-        }
-    };
-
     public List<TodoList> show(String userId,String date){
         String sql = "select * from list where member_id = ? and write_date = ?";
 
