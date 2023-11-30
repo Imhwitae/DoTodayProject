@@ -84,6 +84,6 @@ public class TokenApiService {
         apiMap = new HashMap<>();
         apiMap.put("accessToken", accessToken);
         log.info("redirect: {}, token: {}",  headers, accessToken);
-        return new ResponseEntity<>(apiMap, HttpStatus.SEE_OTHER);
+        return new ResponseEntity<>(apiMap, headers, HttpStatus.SEE_OTHER);
     }
 }
