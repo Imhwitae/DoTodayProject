@@ -78,7 +78,7 @@ public class TokenApiService {
 
     // accessToken redirect
     public ResponseEntity<?> redirectAccessToken(String accessToken) throws URISyntaxException {
-        URI redirectUrl = new URI("redirect:/api/list/show");
+        URI redirectUrl = new URI("http://localhost:8080/api/list/show");
         HttpHeaders headers = new HttpHeaders();
         headers.set("accessToken", accessToken);
         headers.setLocation(redirectUrl);
