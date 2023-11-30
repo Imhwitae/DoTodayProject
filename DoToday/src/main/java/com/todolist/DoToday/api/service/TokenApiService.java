@@ -77,12 +77,13 @@ public class TokenApiService {
     }
 
     // accessToken redirect
-    public ResponseEntity<?> redirectAccessToken(String accessToken) throws URISyntaxException {
+    public ResponseEntity<Map<String, Object>> redirectAccessToken(String accessToken) throws URISyntaxException {
         URI redirectUrl = new URI("http://localhost:8080/api/list/show");
         HttpHeaders headers = new HttpHeaders();
-        headers.set("accessToken", accessToken);
         headers.setLocation(redirectUrl);
-        System.out.println(headers);
-        return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
+        apiMap = new HashMap<>();
+        apiMap.put("accessToken", accessToken);
+        log.info("redirect: {}, token: {}",  headers, accessToken);
+        return new ResponseEntity<>(apiMap, HttpStatus.SEE_OTHER);
     }
 }

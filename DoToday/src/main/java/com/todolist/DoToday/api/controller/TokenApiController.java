@@ -33,7 +33,7 @@ public class TokenApiController {
 
     @Operation(summary = "access token 토큰 리다이렉트", description = "access token을 받아 토큰 정보를 기반으로 리스트를 가져올 수 있도록 리다이렉트")
     @PutMapping("/redirecttokentolist")
-    public ResponseEntity<?> redirectToListController(@RequestBody RequestAccessToken accessToken) throws URISyntaxException {
+    public ResponseEntity<Map<String, Object>> redirectToListController(@RequestBody RequestAccessToken accessToken) throws URISyntaxException {
         return tokenApiService.redirectAccessToken(accessToken.getAccessToken());
     }
 }
