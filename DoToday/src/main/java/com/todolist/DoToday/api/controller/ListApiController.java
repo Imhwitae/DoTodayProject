@@ -1,5 +1,6 @@
 package com.todolist.DoToday.api.controller;
 
+import com.todolist.DoToday.api.message.Message;
 import com.todolist.DoToday.api.reponse.AppListsOfMemberDto;
 import com.todolist.DoToday.api.reponse.AppListDto;
 import com.todolist.DoToday.api.request.AppListGetDto;
@@ -12,6 +13,8 @@ import com.todolist.DoToday.service.ListService;
 import com.todolist.DoToday.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -24,38 +27,40 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/api/list")
 public class ListApiController {
-    private final JwtTokenProvider jtp;
+//    private final JwtTokenProvider jtp;
     private final ListApiService listService;
     private boolean tBlank, wBlank;
     @GetMapping("/show")
-    public AppListsOfMemberDto showList(
-            @RequestBody RequestAccessToken token
-    ){
-        String memberId = jtp.getMemberIdFromToken(token.getAccessToken());
-        AppListsOfMemberDto listDto = new AppListsOfMemberDto();
-
+    public AppListsOfMemberDto showList(@RequestBody RequestAccessToken token){
+        log.info(token.getAccessToken());
+//        String memberId = jtp.getMemberIdFromToken(token.getAccessToken());
+//        AppListsOfMemberDto listDto = new AppListsOfMemberDto();
+//
+//        List<AppListDto> todoLists = listService.appShowLists(memberId, currentDateStr);
+//
+//        listDto.setList(todoLists);
+//        listDto.setDate(currentDateStr);
+//        listDto.setToken("token");
+//
+//        return listDto;
         LocalDate currentDate = LocalDate.now();
         String currentDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        List<AppListDto> todoLists = listService.appShowLists(memberId, currentDateStr);
-
 //        currentDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
 
-        listDto.setList(todoLists);
-        listDto.setDate(currentDateStr);
-        listDto.setToken("token");
+        AppListsOfMemberDto listDto = listService.appShowLists(token.getAccessToken(),currentDateStr);
 
         return listDto;
     }
 
     @PostMapping("/write")
-    public int appListWrite(@RequestBody AppListGetDto listGetDto){
+    public ResponseEntity<Message> appListWrite(@RequestBody AppListGetDto listGetDto) {
         tBlank = listService.appTitleValidate(listGetDto);
-        if (tBlank == true){ // todolist의 title 비어있을때
+        if (tBlank == true) { // todolist의 title 비어있을때
             listGetDto.setListTitle("");
         }
 
         wBlank = listService.appWhenValidate(listGetDto);
-        if (wBlank == true){
+        if (wBlank == true) {
             listGetDto.setWhenToDo("아무때나");
         }
 
@@ -68,12 +73,17 @@ public class ListApiController {
 //
 //        listGetDto.setDate(setDateStr);
 
-        if (listGetDto.getStatus() == "write"){// 리스트 작성을 하는 경우
+        Message message = new Message();
+
+        if (listGetDto.getType().equals("write")) {// 리스트 작성을 하는 경우
             return listService.appListWrite(listGetDto);
-        } else if (listGetDto.getStatus() == "update"){// 리스트 수정을 하는 경우
+        } else if (listGetDto.getType().equals("update")) {// 리스트 수정을 하는 경우
             return listService.appListUpdate(listGetDto);
-        } else{
-            return 0;
+        } else {
+            message.setMessage("listStatus is null");
+            message.setMessage(listGetDto.getType());
+            message.setStatus(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
     }
 
