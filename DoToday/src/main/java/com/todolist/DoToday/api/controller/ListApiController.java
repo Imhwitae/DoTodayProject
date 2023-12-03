@@ -11,6 +11,8 @@ import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.jwt.JwtTokenProvider;
 import com.todolist.DoToday.service.ListService;
 import com.todolist.DoToday.service.MemberService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
+@Tag(name = "리스트 API", description = "리스트 관련 API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +32,8 @@ import java.util.Map;
 public class ListApiController {
     private final ListApiService listService;
     private boolean tBlank, wBlank;
+
+    @Operation(summary = "로그인후 리스트 조회", description = "받아온 토큰의 회원아이디로 DB에서 리스트 조회")
     @GetMapping("/show")
     public AppListsOfMemberDto showList(@RequestBody RequestAccessToken token){
         log.info(token.getAccessToken());
@@ -51,6 +56,7 @@ public class ListApiController {
         return listDto;
     }
 
+    @Operation(summary = "리스트 작성", description = "받아온 객체의 type 값을 확인해 write의 경우 DB에 삽입, update의 경우 DB데이터 수정")
     @PostMapping("/write")
     public ResponseEntity<Message> appListWrite(@RequestBody AppListGetDto listGetDto) {
         tBlank = listService.appTitleValidate(listGetDto);
@@ -86,16 +92,19 @@ public class ListApiController {
         }
     }
 
+    @Operation(summary = "리스트 삭제", description = "리스트 번호를 받아와 리스트 삭제")
     @PostMapping("/delete")
     public ResponseEntity<Message> appListDelete(@RequestBody AppListNumDto listNumDto){
         return listService.appListDelete(listNumDto);
     }
 
+    @Operation(summary = "리스트 완료 처리", description = "리스트 번호를 받아와 리스트 완료처리")
     @PostMapping("/complete")
     public ResponseEntity<Message> appListComplete(@RequestBody AppListNumDto listNumDto){
         return listService.appUpdateComplete(listNumDto);
     }
 
+    @Operation(summary = "리스트 완료 취소", description = "리스트 번호를 받아와 리스트 완료 취소")
     @PostMapping("/incomplete")
     public ResponseEntity<Message> appListIncomplete(@RequestBody AppListNumDto listNumDto){
         return listService.appUpdateInComplete(listNumDto);
