@@ -60,7 +60,7 @@ public class ListApiController {
 
         wBlank = listService.appWhenValidate(listGetDto);
         if (wBlank == true) {
-            listGetDto.setWhenToDo("아무때나");
+            listGetDto.setWhenToDo("");
         }
 
         //날짜를 받아올때 0000년 00월 00일로 받을 경우 포멧을 바꿔준다. 아닐경우 사용안함

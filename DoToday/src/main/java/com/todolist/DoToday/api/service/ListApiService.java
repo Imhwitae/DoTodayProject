@@ -61,7 +61,7 @@ public class ListApiService {
         String memberId;
         if (!jwt.validateToken(token)) {//토큰이 유효하지 않을때
             dto.setList(null);
-            dto.setToken("Invalid_Token");
+            dto.setAccessToken("Invalid_Token");
             dto.setDate(null);
         } else {
             memberId = jwt.getMemberIdFromToken(token);
@@ -74,7 +74,7 @@ public class ListApiService {
 
             dto.setDate(date);
             dto.setList(list);
-            dto.setToken(token);
+            dto.setAccessToken(token);
         }
         return dto;
     }
