@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class AppListNumDto {
-    private String token;
+    private String accessToken;
     private int listNum;
 }

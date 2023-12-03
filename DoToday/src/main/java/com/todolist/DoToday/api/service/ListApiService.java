@@ -5,6 +5,7 @@ import com.todolist.DoToday.api.message.Message;
 import com.todolist.DoToday.api.reponse.AppListDto;
 import com.todolist.DoToday.api.reponse.AppListsOfMemberDto;
 import com.todolist.DoToday.api.request.AppListGetDto;
+import com.todolist.DoToday.api.request.AppListNumDto;
 import com.todolist.DoToday.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -82,7 +83,7 @@ public class ListApiService {
         Message message = new Message();
         String memberId;
         if (!jwt.validateToken(listGetDto.getAccessToken())){
-            message.setMessage("token is not valid");
+            message.setMessage("Invalid_Token");
             message.setStatus(HttpStatus.UNAUTHORIZED);
 
             return new ResponseEntity<>(message,HttpStatus.UNAUTHORIZED);
@@ -96,7 +97,7 @@ public class ListApiService {
             jdbcTemplate.update("insert into list(list_title,member_id,when_todo) values(?,?,?)"
                     , listGetDto.getListTitle(), memberId, listGetDto.getWhenToDo());
         }
-        message.setMessage("listWrite Success!");
+        message.setMessage("Write_Success");
         message.setStatus(HttpStatus.OK);
         return new ResponseEntity<>(message,HttpStatus.OK);
     }
@@ -105,7 +106,7 @@ public class ListApiService {
         Message message = new Message();
 
         if (!jwt.validateToken(listGetDto.getAccessToken())){
-            message.setMessage("token is not valid");
+            message.setMessage("Invalid_Token");
             message.setStatus(HttpStatus.UNAUTHORIZED);
 
             return new ResponseEntity<>(message,HttpStatus.UNAUTHORIZED);
@@ -113,30 +114,60 @@ public class ListApiService {
 
         jdbcTemplate.update("update list set list_title = ? , when_todo = ? where list_num = ?"
                 , listGetDto.getListTitle(), listGetDto.getWhenToDo(), listGetDto.getListNum());
-        message.setMessage("listUpdate success!");
+        message.setMessage("Update_success");
         message.setStatus(HttpStatus.OK);
         return new ResponseEntity<>(message,HttpStatus.OK);
     }
 
     //완료처리
-    public int appUpdateComplete(int num){
-        int result = jdbcTemplate.update("update list set complete = 1 where list_num = ?"
-                , num);
-        return result;
+    public ResponseEntity<Message> appUpdateComplete(AppListNumDto listDto){
+        Message message = new Message();
+
+        if (!jwt.validateToken(listDto.getAccessToken())){
+            message.setMessage("Invalid_Token");
+            message.setStatus(HttpStatus.UNAUTHORIZED);
+
+            return new ResponseEntity<>(message,HttpStatus.UNAUTHORIZED);
+        }
+        jdbcTemplate.update("update list set complete = 1 where list_num = ?"
+                , listDto.getListNum());
+        message.setMessage("CompleteUpdate_success");
+        message.setStatus(HttpStatus.OK);
+        return new ResponseEntity<>(message,HttpStatus.OK);
     }
 
     //미완료처리
-    public int appUpdateInComplete(int num){
-        int result = jdbcTemplate.update("update list set complete = 0 where list_num = ?"
-                , num);
-        return result;
+    public ResponseEntity<Message> appUpdateInComplete(AppListNumDto listDto){
+        Message message = new Message();
+
+        if (!jwt.validateToken(listDto.getAccessToken())){
+            message.setMessage("Invalid_Token");
+            message.setStatus(HttpStatus.UNAUTHORIZED);
+
+            return new ResponseEntity<>(message,HttpStatus.UNAUTHORIZED);
+        }
+        jdbcTemplate.update("update list set complete = 0 where list_num = ?"
+                , listDto.getListNum());
+        message.setMessage("InCompleteUpdate_success");
+        message.setStatus(HttpStatus.OK);
+        return new ResponseEntity<>(message,HttpStatus.OK);
     }
 
     //삭제
-    public int appListDelete(int listNum){
+    public ResponseEntity<Message> appListDelete(AppListNumDto listDto){
+        Message message = new Message();
+
+        if (!jwt.validateToken(listDto.getAccessToken())){
+            message.setMessage("Invalid_Token");
+            message.setStatus(HttpStatus.UNAUTHORIZED);
+
+            return new ResponseEntity<>(message,HttpStatus.UNAUTHORIZED);
+        }
         int result = jdbcTemplate.update("delete from list where list_num = ?"
-                ,listNum);
-        return result;
+                ,listDto.getListNum());
+        message.setMessage("ListDelete_success");
+        message.setStatus(HttpStatus.OK);
+        return new ResponseEntity<>(message,HttpStatus.OK);
     }
 
 

@@ -27,7 +27,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/api/list")
 public class ListApiController {
-//    private final JwtTokenProvider jtp;
     private final ListApiService listService;
     private boolean tBlank, wBlank;
     @GetMapping("/show")
@@ -88,19 +87,18 @@ public class ListApiController {
     }
 
     @PostMapping("/delete")
-    public int appListDelete(@RequestBody AppListNumDto listNum){
-        return listService.appListDelete(listNum.getListNum());
+    public ResponseEntity<Message> appListDelete(@RequestBody AppListNumDto listNumDto){
+        return listService.appListDelete(listNumDto);
     }
 
     @PostMapping("/complete")
-    public int appListComplete(@RequestBody AppListNumDto listNum){
-        return listService.appUpdateComplete(listNum.getListNum());
+    public ResponseEntity<Message> appListComplete(@RequestBody AppListNumDto listNumDto){
+        return listService.appUpdateComplete(listNumDto);
     }
 
     @PostMapping("/incomplete")
-    public int appListIncomplete(@RequestBody AppListNumDto listNum){
-        return listService.appUpdateInComplete(listNum.getListNum());
+    public ResponseEntity<Message> appListIncomplete(@RequestBody AppListNumDto listNumDto){
+        return listService.appUpdateInComplete(listNumDto);
     }
-
 
 }
