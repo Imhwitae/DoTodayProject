@@ -60,9 +60,9 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
 //                log.info("인증 여부 = {}", SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
                 filterChain.doFilter(request, response);
             }
-        } else if (refreshToken != null) {
-            jwtTokenProvider.reCreateAccessToken(refreshToken, response);
-            filterChain.doFilter(request, response);
+//        } else if (refreshToken != null) {
+//            jwtTokenProvider.reCreateAccessToken(refreshToken, response);
+//            filterChain.doFilter(request, response);
         } else {
             filterChain.doFilter(request, response);
         }

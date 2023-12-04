@@ -31,6 +31,7 @@ public class ListApiController {
     public AppListsOfMemberDto showList(
             @RequestBody RequestAccessToken token
     ){
+        log.info("{}", token);
         String memberId = jtp.getMemberIdFromToken(token.getAccessToken());
         AppListsOfMemberDto listDto = new AppListsOfMemberDto();
 
