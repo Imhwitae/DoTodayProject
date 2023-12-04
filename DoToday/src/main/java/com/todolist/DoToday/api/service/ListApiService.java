@@ -1,8 +1,15 @@
 package com.todolist.DoToday.api.service;
 
+import com.todolist.DoToday.api.error.ApiErrorResponse;
+import com.todolist.DoToday.api.message.Message;
 import com.todolist.DoToday.api.reponse.AppListDto;
+import com.todolist.DoToday.api.reponse.AppListsOfMemberDto;
 import com.todolist.DoToday.api.request.AppListGetDto;
+import com.todolist.DoToday.api.request.AppListNumDto;
+import com.todolist.DoToday.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -12,9 +19,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Service
-
 @RequiredArgsConstructor
 public class ListApiService {
+    private final JwtTokenProvider jwt;
     private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<AppListDto> appListRowMapper = new RowMapper<AppListDto>() {
@@ -49,55 +56,118 @@ public class ListApiService {
         return blank;
     }
 
-    public List<AppListDto> appShowLists(String userId, String date){
-        String sql = "select * from list where member_id = ? and write_date = ?";
+    public AppListsOfMemberDto appShowLists(String token, String date) {
+        AppListsOfMemberDto dto = new AppListsOfMemberDto();
+        String memberId;
+        if (!jwt.validateToken(token)) {//토큰이 유효하지 않을때
+            dto.setList(null);
+            dto.setAccessToken("Invalid_Token");
+            dto.setDate(null);
+        } else {
+            memberId = jwt.getMemberIdFromToken(token);
+            String sql = "select * from list where member_id = ? and write_date = ?";
+            List<AppListDto> list = jdbcTemplate.query(sql, new Object[]{memberId, date}, appListRowMapper);
 
-        List<AppListDto> list = jdbcTemplate.query(sql, new Object[]{userId,date}, appListRowMapper);
+            if (list.isEmpty()) {
+                list = null;
+            }
 
-        if (list.isEmpty()){
-            list = null;
+            dto.setDate(date);
+            dto.setList(list);
+            dto.setAccessToken(token);
         }
-        return list;
+        return dto;
     }
 
-    public int appListWrite(AppListGetDto listGetDto){
-        int result = 0;
+    public ResponseEntity<Message> appListWrite(AppListGetDto listGetDto){
+        Message message = new Message();
+        String memberId;
+        if (!jwt.validateToken(listGetDto.getAccessToken())){
+            message.setMessage("Invalid_Token");
+            message.setStatus(HttpStatus.UNAUTHORIZED);
+
+            return new ResponseEntity<>(message,HttpStatus.UNAUTHORIZED);
+        }
+        memberId = jwt.getMemberIdFromToken(listGetDto.getAccessToken());
+
         if (listGetDto.getDate() != null){
-            result = jdbcTemplate.update("insert into list(list_title,member_id,write_date,when_todo) values(?,?,?,?)"
-                    , listGetDto.getListTitle(), listGetDto.getMemberId(), listGetDto.getDate(), listGetDto.getWhenToDo());
+            jdbcTemplate.update("insert into list(list_title,member_id,write_date,when_todo) values(?,?,?,?)"
+                    , listGetDto.getListTitle(), memberId, listGetDto.getDate(), listGetDto.getWhenToDo());
         }else {
-            result = jdbcTemplate.update("insert into list(list_title,member_id,when_todo) values(?,?,?)"
-                    , listGetDto.getListTitle(), listGetDto.getMemberId(), listGetDto.getWhenToDo());
+            jdbcTemplate.update("insert into list(list_title,member_id,when_todo) values(?,?,?)"
+                    , listGetDto.getListTitle(), memberId, listGetDto.getWhenToDo());
         }
-        return result;
+        message.setMessage("Write_Success");
+        message.setStatus(HttpStatus.OK);
+        return new ResponseEntity<>(message,HttpStatus.OK);
     }
 
-    public int appListUpdate(AppListGetDto listGetDto){
-        int result = 0;
-        result = jdbcTemplate.update("update list set list_title = ? and when_todo = ? where list_num = ?"
+    public ResponseEntity<Message> appListUpdate(AppListGetDto listGetDto){
+        Message message = new Message();
+
+        if (!jwt.validateToken(listGetDto.getAccessToken())){
+            message.setMessage("Invalid_Token");
+            message.setStatus(HttpStatus.UNAUTHORIZED);
+
+            return new ResponseEntity<>(message,HttpStatus.UNAUTHORIZED);
+        }
+
+        jdbcTemplate.update("update list set list_title = ? , when_todo = ? where list_num = ?"
                 , listGetDto.getListTitle(), listGetDto.getWhenToDo(), listGetDto.getListNum());
-        return result;
+        message.setMessage("Update_success");
+        message.setStatus(HttpStatus.OK);
+        return new ResponseEntity<>(message,HttpStatus.OK);
     }
 
     //완료처리
-    public int appUpdateComplete(int num){
-        int result = jdbcTemplate.update("update list set complete = 1 where list_num = ?"
-                , num);
-        return result;
+    public ResponseEntity<Message> appUpdateComplete(AppListNumDto listDto){
+        Message message = new Message();
+
+        if (!jwt.validateToken(listDto.getAccessToken())){
+            message.setMessage("Invalid_Token");
+            message.setStatus(HttpStatus.UNAUTHORIZED);
+
+            return new ResponseEntity<>(message,HttpStatus.UNAUTHORIZED);
+        }
+        jdbcTemplate.update("update list set complete = 1 where list_num = ?"
+                , listDto.getListNum());
+        message.setMessage("CompleteUpdate_success");
+        message.setStatus(HttpStatus.OK);
+        return new ResponseEntity<>(message,HttpStatus.OK);
     }
 
     //미완료처리
-    public int appUpdateInComplete(int num){
-        int result = jdbcTemplate.update("update list set complete = 0 where list_num = ?"
-                , num);
-        return result;
+    public ResponseEntity<Message> appUpdateInComplete(AppListNumDto listDto){
+        Message message = new Message();
+
+        if (!jwt.validateToken(listDto.getAccessToken())){
+            message.setMessage("Invalid_Token");
+            message.setStatus(HttpStatus.UNAUTHORIZED);
+
+            return new ResponseEntity<>(message,HttpStatus.UNAUTHORIZED);
+        }
+        jdbcTemplate.update("update list set complete = 0 where list_num = ?"
+                , listDto.getListNum());
+        message.setMessage("InCompleteUpdate_success");
+        message.setStatus(HttpStatus.OK);
+        return new ResponseEntity<>(message,HttpStatus.OK);
     }
 
     //삭제
-    public int appListDelete(int listNum){
+    public ResponseEntity<Message> appListDelete(AppListNumDto listDto){
+        Message message = new Message();
+
+        if (!jwt.validateToken(listDto.getAccessToken())){
+            message.setMessage("Invalid_Token");
+            message.setStatus(HttpStatus.UNAUTHORIZED);
+
+            return new ResponseEntity<>(message,HttpStatus.UNAUTHORIZED);
+        }
         int result = jdbcTemplate.update("delete from list where list_num = ?"
-                ,listNum);
-        return result;
+                ,listDto.getListNum());
+        message.setMessage("ListDelete_success");
+        message.setStatus(HttpStatus.OK);
+        return new ResponseEntity<>(message,HttpStatus.OK);
     }
 
 
