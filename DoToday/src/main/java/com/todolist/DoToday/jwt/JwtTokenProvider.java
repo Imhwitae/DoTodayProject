@@ -40,9 +40,8 @@ public class JwtTokenProvider {
     }
 
     // 시간은 밀리초 단위
-    // acsessToken 유효시간: 60분 (3600 * 1000 ms) -> 5초
-    private long tokenTime = 5 * 1000L;
-//            60 * 60 * 1000L;
+    // acsessToken 유효시간: 30분 (1800 * 1000 ms)
+    private long tokenTime = 60 * 30 * 1000L;
     // refreshToken 유효시간: 1일
     private long refreshTokenTime = 60 * 60 * 24 * 1000L;
 
