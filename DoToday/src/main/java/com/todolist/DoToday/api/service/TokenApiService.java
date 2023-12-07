@@ -75,22 +75,6 @@ public class TokenApiService {
             return new ResponseEntity<>(apiMap ,HttpStatus.BAD_REQUEST);
         }
     }
-
-    // accessToken redirect
-//    public ResponseEntity<Map<String, Object>> redirectAccessToken(String accessToken) throws URISyntaxException {
-//        URI redirectUrl = new URI("http://localhost:8080/api/list/show");
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setLocation(redirectUrl);
-//        headers.add("Content-Type", "application/json;charset=UTF-8");
-//        apiMap = new HashMap<>();
-//        apiMap.put("accessToken", accessToken);
-//        log.info("redirect: {}, token: {}",  headers, accessToken);
-//        return new ResponseEntity<>(apiMap, headers, HttpStatus.TEMPORARY_REDIRECT);
-//    }
-
-    public boolean redirectAccessToken(String accessToken) {
-        return jwtTokenProvider.validateToken(accessToken);
-    }
 }
 
 
