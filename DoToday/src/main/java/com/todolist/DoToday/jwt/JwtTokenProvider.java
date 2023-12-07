@@ -220,6 +220,5 @@ public class JwtTokenProvider {
 
     public String splitBearer(String bearerToken) {
         return bearerToken.substring(7);
-
     }
 }

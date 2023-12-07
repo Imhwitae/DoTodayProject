@@ -32,6 +32,7 @@ import java.util.Map;
 @RequestMapping("/api/list")
 public class ListApiController {
     private final ListApiService listService;
+    private final JwtTokenProvider jwtTokenProvider;
     private boolean tBlank, wBlank;
 
     @Operation(summary = "로그인후 리스트 조회", description = "받아온 토큰의 회원아이디로 DB에서 리스트 조회")
@@ -51,8 +52,9 @@ public class ListApiController {
         LocalDate currentDate = LocalDate.now();
         String currentDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 //        currentDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
+        String originToken = jwtTokenProvider.splitBearer(token);
 
-        ResponseEntity<ListsOfMemberMessage> listDto = listService.appShowLists(token,currentDateStr);
+        ResponseEntity<ListsOfMemberMessage> listDto = listService.appShowLists(originToken,currentDateStr);
         return listDto;
     }
 
