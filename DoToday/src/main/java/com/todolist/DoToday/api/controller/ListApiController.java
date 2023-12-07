@@ -35,8 +35,8 @@ public class ListApiController {
 
     @Operation(summary = "로그인후 리스트 조회", description = "받아온 토큰의 회원아이디로 DB에서 리스트 조회")
     @GetMapping("/show")
-    public AppListsOfMemberDto showList(@RequestBody RequestAccessToken token){
-        log.info(token.getAccessToken());
+    public AppListsOfMemberDto showList(@RequestHeader("accessToken") String token){
+        log.info(token);
 //        String memberId = jtp.getMemberIdFromToken(token.getAccessToken());
 //        AppListsOfMemberDto listDto = new AppListsOfMemberDto();
 //
@@ -51,7 +51,7 @@ public class ListApiController {
         String currentDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 //        currentDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
 
-        AppListsOfMemberDto listDto = listService.appShowLists(token.getAccessToken(),currentDateStr);
+        AppListsOfMemberDto listDto = listService.appShowLists(token,currentDateStr);
 
         return listDto;
     }
