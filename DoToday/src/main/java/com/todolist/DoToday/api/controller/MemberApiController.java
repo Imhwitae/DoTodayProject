@@ -3,13 +3,9 @@ package com.todolist.DoToday.api.controller;
 import com.todolist.DoToday.api.request.ApiCheckMemberIdDto;
 import com.todolist.DoToday.api.request.ApiMemberJoinDto;
 import com.todolist.DoToday.api.request.ApiMemberLoginDto;
-import com.todolist.DoToday.api.request.RequestRefreshToken;
 import com.todolist.DoToday.api.service.MemberApiService;
 import com.todolist.DoToday.dto.MemberTokenDto;
-import com.todolist.DoToday.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -52,7 +48,7 @@ public class MemberApiController {
 
     @Operation(summary = "로그인", description = "아이디와 비밀번호를 받고 로그인 성공시 토큰 반환")
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> apiLoginMember(@RequestBody ApiMemberLoginDto apiMemberLoginDto) {
+    public ResponseEntity<Object> apiLoginMember(@RequestBody ApiMemberLoginDto apiMemberLoginDto) {
         return memberApiService.apiLogin(apiMemberLoginDto);
     }
 }

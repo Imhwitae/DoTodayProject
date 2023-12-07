@@ -89,38 +89,44 @@ public class JwtTokenProvider {
     }
 
     // accessToken 유효성 검증
-    public boolean validateToken(String accessToken) {
-        try {
-            // 토큰 서명 확인
+    public boolean validateToken(String BearerAccessToken) {
+//        try {
+//            // 토큰 서명 확인
+//            Claims claims = Jwts.parserBuilder()
+//                    .setSigningKey(jwtSecretKey())
+//                    .build()
+//                    .parseClaimsJws(accessToken)
+//                    .getBody();
+//        } catch (Exception e) {
+//            return false;
+//        }
+
+        if (BearerAccessToken.startsWith("Bearer ")) {
+            log.info("{}", BearerAccessToken);
+
+            String accessToken = BearerAccessToken.substring(7);
+            log.info("{}", accessToken);
+
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(jwtSecretKey())
                     .build()
                     .parseClaimsJws(accessToken)
                     .getBody();
-        } catch (Exception e) {
-            return false;
-        }
 
-        if (!accessToken.startsWith("Bearer")) {
-            return false;
-        }
+            Date expireDate = claims.getExpiration();  // 토큰 만료 시간
+            Date now = new Date();  // 현재 시간
 
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(jwtSecretKey())
-                .build()
-                .parseClaimsJws(accessToken)
-                .getBody();
-
-        Date expireDate = claims.getExpiration();  // 토큰 만료 시간
-        Date now = new Date();  // 현재 시간
-
-        //  토큰 만료 시간이 현재 시간보다 이전이라면
-        if (expireDate.before(now)) {
-            log.info("accessToken 시간 만료");
-            return false;
+            //  토큰 만료 시간이 현재 시간보다 이전이라면
+            if (expireDate.before(now)) {
+                log.info("accessToken 시간 만료");
+                return false;
+            } else {
+                return true;
+            }
         } else {
-            return true;
+            return false;
         }
+
     }
 
     // refreshToken 유효성 검증
@@ -210,5 +216,10 @@ public class JwtTokenProvider {
         } else {
             log.info("refreshToken 유효성 검증 실패. 재로그인 필요");
         }
+    }
+
+    public String splitBearer(String bearerToken) {
+        return bearerToken.substring(7);
+
     }
 }
