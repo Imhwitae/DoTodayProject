@@ -1,5 +1,6 @@
 package com.todolist.DoToday.api.controller;
 
+import com.todolist.DoToday.api.message.ListsOfMemberMessage;
 import com.todolist.DoToday.api.message.Message;
 import com.todolist.DoToday.api.reponse.AppListsOfMemberDto;
 import com.todolist.DoToday.api.reponse.AppListDto;
@@ -35,7 +36,7 @@ public class ListApiController {
 
     @Operation(summary = "로그인후 리스트 조회", description = "받아온 토큰의 회원아이디로 DB에서 리스트 조회")
     @GetMapping("/show")
-    public AppListsOfMemberDto showList(@RequestHeader("accessToken") String token){
+    public ResponseEntity<ListsOfMemberMessage> showList(@RequestHeader("accessToken") String token){
         log.info(token);
 //        String memberId = jtp.getMemberIdFromToken(token.getAccessToken());
 //        AppListsOfMemberDto listDto = new AppListsOfMemberDto();
@@ -51,8 +52,7 @@ public class ListApiController {
         String currentDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 //        currentDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
 
-        AppListsOfMemberDto listDto = listService.appShowLists(token,currentDateStr);
-
+        ResponseEntity<ListsOfMemberMessage> listDto = listService.appShowLists(token,currentDateStr);
         return listDto;
     }
 

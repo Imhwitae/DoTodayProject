@@ -1,6 +1,7 @@
 package com.todolist.DoToday.api.service;
 
 import com.todolist.DoToday.api.error.ApiErrorResponse;
+import com.todolist.DoToday.api.message.ListsOfMemberMessage;
 import com.todolist.DoToday.api.message.Message;
 import com.todolist.DoToday.api.reponse.AppListDto;
 import com.todolist.DoToday.api.reponse.AppListsOfMemberDto;
@@ -56,13 +57,18 @@ public class ListApiService {
         return blank;
     }
 
-    public AppListsOfMemberDto appShowLists(String token, String date) {
+    public ResponseEntity<ListsOfMemberMessage> appShowLists(String token, String date) {
+        ListsOfMemberMessage message = new ListsOfMemberMessage();
         AppListsOfMemberDto dto = new AppListsOfMemberDto();
         String memberId;
         if (!jwt.validateToken(token)) {//토큰이 유효하지 않을때
             dto.setList(null);
-            dto.setAccessToken("Invalid_Token");
+//            dto.setAccessToken("Invalid_Token");
             dto.setDate(null);
+            message.setList(dto);
+            message.setStatus(HttpStatus.UNAUTHORIZED);
+            message.setMessage("토큰이 유효하지 않아요");
+            return new ResponseEntity<>(message,HttpStatus.UNAUTHORIZED);
         } else {
             memberId = jwt.getMemberIdFromToken(token);
             String sql = "select * from list where member_id = ? and write_date = ?";
@@ -74,9 +80,15 @@ public class ListApiService {
 
             dto.setDate(date);
             dto.setList(list);
-            dto.setAccessToken(token);
+//            dto.setAccessToken(token);
+
+            message.setList(dto);
+            message.setStatus(HttpStatus.OK);
+            message.setMessage("ListSearch_Success");
+
+            return new ResponseEntity<>(message,HttpStatus.OK);
         }
-        return dto;
+//        return new ResponseEntity<>(message,HttpStatus.OK);
     }
 
     public ResponseEntity<Message> appListWrite(AppListGetDto listGetDto){
