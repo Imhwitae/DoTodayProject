@@ -8,7 +8,7 @@ import lombok.Setter;
 public class AppListGetDto { // 받아서 작성, 수정용 dto
     private int listNum;
     private String listTitle;
-    private String accessToken;
+//    private String accessToken;
     private String date;
     private String whenToDo;
     private int complete;

@@ -9,6 +9,7 @@ import com.todolist.DoToday.api.request.AppListGetDto;
 import com.todolist.DoToday.api.request.AppListNumDto;
 import com.todolist.DoToday.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ListApiService {
@@ -61,6 +63,7 @@ public class ListApiService {
         ListsOfMemberMessage message = new ListsOfMemberMessage();
         AppListsOfMemberDto dto = new AppListsOfMemberDto();
         String memberId;
+//        log.info(jwt.validateToken(token)+"");
         if (!jwt.validateToken(token)) {//토큰이 유효하지 않을때
             dto.setList(null);
 //            dto.setAccessToken("Invalid_Token");
@@ -88,19 +91,18 @@ public class ListApiService {
 
             return new ResponseEntity<>(message,HttpStatus.OK);
         }
-//        return new ResponseEntity<>(message,HttpStatus.OK);
     }
 
-    public ResponseEntity<Message> appListWrite(AppListGetDto listGetDto){
+    public ResponseEntity<Message> appListWrite(String token,AppListGetDto listGetDto){
         Message message = new Message();
         String memberId;
-        if (!jwt.validateToken(listGetDto.getAccessToken())){
+        if (!jwt.validateToken(token)){
             message.setMessage("Invalid_Token");
             message.setStatus(HttpStatus.UNAUTHORIZED);
 
             return new ResponseEntity<>(message,HttpStatus.UNAUTHORIZED);
         }
-        memberId = jwt.getMemberIdFromToken(listGetDto.getAccessToken());
+        memberId = jwt.getMemberIdFromToken(token);
 
         if (listGetDto.getDate() != null){
             jdbcTemplate.update("insert into list(list_title,member_id,write_date,when_todo) values(?,?,?,?)"
@@ -114,10 +116,10 @@ public class ListApiService {
         return new ResponseEntity<>(message,HttpStatus.OK);
     }
 
-    public ResponseEntity<Message> appListUpdate(AppListGetDto listGetDto){
+    public ResponseEntity<Message> appListUpdate(String token, AppListGetDto listGetDto){
         Message message = new Message();
 
-        if (!jwt.validateToken(listGetDto.getAccessToken())){
+        if (!jwt.validateToken(token)){
             message.setMessage("Invalid_Token");
             message.setStatus(HttpStatus.UNAUTHORIZED);
 
@@ -132,10 +134,10 @@ public class ListApiService {
     }
 
     //완료처리
-    public ResponseEntity<Message> appUpdateComplete(AppListNumDto listDto){
+    public ResponseEntity<Message> appUpdateComplete(String token, AppListNumDto listDto){
         Message message = new Message();
 
-        if (!jwt.validateToken(listDto.getAccessToken())){
+        if (!jwt.validateToken(token)){
             message.setMessage("Invalid_Token");
             message.setStatus(HttpStatus.UNAUTHORIZED);
 
@@ -149,10 +151,10 @@ public class ListApiService {
     }
 
     //미완료처리
-    public ResponseEntity<Message> appUpdateInComplete(AppListNumDto listDto){
+    public ResponseEntity<Message> appUpdateInComplete(String token, AppListNumDto listDto){
         Message message = new Message();
 
-        if (!jwt.validateToken(listDto.getAccessToken())){
+        if (!jwt.validateToken(token)){
             message.setMessage("Invalid_Token");
             message.setStatus(HttpStatus.UNAUTHORIZED);
 
@@ -166,10 +168,10 @@ public class ListApiService {
     }
 
     //삭제
-    public ResponseEntity<Message> appListDelete(AppListNumDto listDto){
+    public ResponseEntity<Message> appListDelete(String token, AppListNumDto listDto){
         Message message = new Message();
 
-        if (!jwt.validateToken(listDto.getAccessToken())){
+        if (!jwt.validateToken(token)){
             message.setMessage("Invalid_Token");
             message.setStatus(HttpStatus.UNAUTHORIZED);
 
