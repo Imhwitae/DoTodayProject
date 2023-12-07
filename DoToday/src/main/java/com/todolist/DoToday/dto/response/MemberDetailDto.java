@@ -11,9 +11,7 @@ import java.util.Map;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class MemberDetailDto implements UserDetails, OAuth2User {
     private Long memberNum;
     private String memberId;
@@ -21,6 +19,16 @@ public class MemberDetailDto implements UserDetails, OAuth2User {
     private String memberName;
     private String memberImage;
     private boolean memberEnabled;
+    private Map<String, Object> attributes;
+
+    public MemberDetailDto(Long memberNum, String memberId, String memberPw, String memberName, String memberImage, boolean memberEnabled) {
+        this.memberNum = memberNum;
+        this.memberId = memberId;
+        this.memberPw = memberPw;
+        this.memberName = memberName;
+        this.memberImage = memberImage;
+        this.memberEnabled = memberEnabled;
+    }
 
     public MemberDetailDto (SocialMemberJoinDto socialMemberJoinDto) {
         this.memberId = socialMemberJoinDto.getMemberId();
@@ -32,7 +40,7 @@ public class MemberDetailDto implements UserDetails, OAuth2User {
 
     @Override
     public Map<String, Object> getAttributes() {
-        return null;
+        return attributes;
     }
 
     @Override

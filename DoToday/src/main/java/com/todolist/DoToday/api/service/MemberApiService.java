@@ -83,46 +83,16 @@ public class MemberApiService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-//    public ResponseEntity<Map<String, Object>> apiLogin(ApiMemberLoginDto apiMemberLoginDto) {
-//        // 에러 처리하기 + 아이디 중복체크
-//        apiMap = new HashMap<>();
-//
-//        try {
-//            MemberDetailDto member = memberMapper.findById(apiMemberLoginDto.getMemberId());
-//            bCryptPasswordEncoder.matches(apiMemberLoginDto.getMemberPw(), member.getMemberPw());
-//        } catch (NullPointerException e) {
-//            ApiErrorResponse idError = new ApiErrorResponse(
-//                    ExceptionEnum.MEMBER_NOT_FOUND.getMsg(),
-//                    ExceptionEnum.MEMBER_NOT_FOUND.getHttpStatus()
-//            );
-//            apiMap.put("error", idError);
-//            return new ResponseEntity<>(apiMap, HttpStatus.OK);
-//        }
-//
-//        MemberDetailDto member = memberMapper.findById(apiMemberLoginDto.getMemberId());
-//        boolean checkPw = bCryptPasswordEncoder.matches(apiMemberLoginDto.getMemberPw(), member.getMemberPw());
-//        log.info("pw: {}", checkPw);
-//
-//        if (checkPw) {
-//            MemberTokenDto appMemberToken = jwtTokenProvider.createToken(member.getMemberId());
-////            apiMap.put("loginSuccess", appMemberToken);
-//            return new ResponseEntity<>(appMemberToken, HttpStatus.OK);
-//        } else {
-//            apiMap.put("error", new ResponseEntity<>(HttpStatus.BAD_REQUEST));
-//            return new ResponseEntity<>(apiMap, HttpStatus.BAD_REQUEST);
-//        }
-//
-//    }
-
     public ResponseEntity<Object> apiLogin(ApiMemberLoginDto apiMemberLoginDto) {
-        // 에러 처리하기 + 아이디 중복체크
-        apiMap = new HashMap<>();
-
         try {
             MemberDetailDto member = memberMapper.findById(apiMemberLoginDto.getMemberId());
             bCryptPasswordEncoder.matches(apiMemberLoginDto.getMemberPw(), member.getMemberPw());
         } catch (NullPointerException e) {
-            return ResponseEntity.badRequest().build();
+            ApiErrorResponse idNotFoundErr = new ApiErrorResponse(
+                    ExceptionEnum.MEMBER_NOT_FOUND.getMsg(),
+                    ExceptionEnum.MEMBER_NOT_FOUND.getHttpStatus()
+            );
+            return new ResponseEntity<>(idNotFoundErr, HttpStatus.BAD_REQUEST);
         }
 
         MemberDetailDto member = memberMapper.findById(apiMemberLoginDto.getMemberId());
@@ -130,12 +100,14 @@ public class MemberApiService {
         log.info("pw: {}", checkPw);
 
         if (checkPw) {
-            MemberTokenDto appMemberToken = jwtTokenProvider.createToken(member.getMemberId());
-//            apiMap.put("loginSuccess", appMemberToken);
-            return ResponseEntity.ok(appMemberToken);
+            MemberTokenDto returnToken = jwtTokenProvider.createToken(member.getMemberId());
+            return new ResponseEntity<>(returnToken, HttpStatus.OK);
         } else {
-            apiMap.put("error", new ResponseEntity<>(HttpStatus.BAD_REQUEST));
-            return ResponseEntity.badRequest().build();
+            ApiErrorResponse pwErr = new ApiErrorResponse(
+                    ExceptionEnum.MEMBER_PW_WRONG.getMsg(),
+                    ExceptionEnum.MEMBER_PW_WRONG.getHttpStatus()
+            );
+            return new ResponseEntity<>(pwErr, HttpStatus.BAD_REQUEST);
         }
     }
 }

@@ -5,6 +5,7 @@ import com.todolist.DoToday.dto.response.MemberDetailDto;
 import com.todolist.DoToday.mapper.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -20,6 +21,7 @@ import java.util.Map;
 @Slf4j
 public class OAuth2ServiceImpl implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     private final MemberMapper memberMapper;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         log.info("loadUser() 진입");
@@ -32,6 +34,7 @@ public class OAuth2ServiceImpl implements OAuth2UserService<OAuth2UserRequest, O
          */
         OAuth2UserService<OAuth2UserRequest, OAuth2User> service = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = service.loadUser(userRequest);  // oauth2 정보 가져오기
+//        log.info("attributes: {}", oAuth2User.getAttributes());
 
         /**
          * userRequest에서 registrationId 추출
@@ -40,11 +43,6 @@ public class OAuth2ServiceImpl implements OAuth2UserService<OAuth2UserRequest, O
          */
         String registrationId = userRequest.getClientRegistration().getRegistrationId();  // 소셜 로그인 정보
         log.info(registrationId);
-//        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
-//                .getUserInfoEndpoint().getUserNameAttributeName();  // OAuth 로그인시 키가 되는 값
-//        log.info(userNameAttributeName);
-//        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();  // 권한 설정
-//        grantedAuthorities.add(new SimpleGrantedAuthority(registrationId));
 
         // 가져올 attributes는 각 소셜 서비스마다 다르기 때문에 각각에 맞게 대응해야 한다.
         Map<String, Object> originAttribute = oAuth2User.getAttributes();
@@ -60,7 +58,7 @@ public class OAuth2ServiceImpl implements OAuth2UserService<OAuth2UserRequest, O
     private SocialMemberJoinDto socialMember(OAuth2Attributes attributes) {
         return SocialMemberJoinDto.builder()
                 .memberId(attributes.getEmail())
-                .memberPw(attributes.getUserId())
+                .memberPw(bCryptPasswordEncoder.encode(attributes.getUserId()))
                 .memberName(attributes.getName())
                 .memberImage(attributes.getImageUrl())
                 .memberGender(attributes.getGender())

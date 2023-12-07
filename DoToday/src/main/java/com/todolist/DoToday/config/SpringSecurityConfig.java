@@ -56,7 +56,7 @@ public class SpringSecurityConfig {
                 .addFilterBefore(jwtVerifyFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout
                         .logoutUrl("/members/logout")
-                        .deleteCookies("JSESSIONID", "accessToken", "refreshToken")
+                        .deleteCookies("JSESSIONID", "accessToken")
                         .logoutSuccessUrl("/")
                 );
 

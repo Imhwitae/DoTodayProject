@@ -53,7 +53,7 @@ public class OAuth2Attributes {
     private static OAuth2Attributes typeGoogle(String registrationId, Map<String, Object> attributes) {
         return OAuth2Attributes.builder()
                 .registrationId(registrationId)
-                .userId(String.valueOf(attributes.get("id")))
+                .userId(String.valueOf(attributes.get("sub")))
                 .email(String.valueOf(attributes.get("email")))
                 .name(String.valueOf(attributes.get("name")))
                 .imageUrl(String.valueOf(attributes.get("picture")))
