@@ -90,7 +90,19 @@ public class JwtTokenProvider {
 
     // accessToken 유효성 검증
     public boolean validateToken(String BearerAccessToken) {
-        if (BearerAccessToken.startsWith("Bearer ")) {
+//        try {
+//            // 토큰 서명 확인
+//            Claims claims = Jwts.parserBuilder()
+//                    .setSigningKey(jwtSecretKey())
+//                    .build()
+//                    .parseClaimsJws(accessToken)
+//                    .getBody();
+//        } catch (Exception e) {
+//            return false;
+//        }
+        log.info(BearerAccessToken);
+        log.info(BearerAccessToken.startsWith("Bearer")+"");
+        if (BearerAccessToken.startsWith("Bearer")) {
             log.info("{}", BearerAccessToken);
 
             String accessToken = BearerAccessToken.substring(7);
@@ -110,6 +122,7 @@ public class JwtTokenProvider {
                 log.info("accessToken 시간 만료");
                 return false;
             } else {
+                log.info("엑세스토큰 유효함");
                 return true;
             }
         } else {
