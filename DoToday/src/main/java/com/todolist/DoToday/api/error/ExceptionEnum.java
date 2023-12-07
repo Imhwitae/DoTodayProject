@@ -9,8 +9,9 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ExceptionEnum {
     // 회원 관련 오류
-    MEMBER_OVERLAP_ERROR("ME01", HttpStatus.BAD_REQUEST, "이미 가입된 회원입니다."),
-    MEMBER_NOT_FOUND("ME02", HttpStatus.NOT_FOUND, "alredy used id"),
+    MEMBER_OVERLAP_ERROR("ME01", HttpStatus.BAD_REQUEST, "Already used id"),
+    MEMBER_NOT_FOUND("ME02", HttpStatus.NOT_FOUND, "Id not found"),
+    MEMBER_PW_WRONG("ME03", HttpStatus.BAD_REQUEST, "This password is incorrect"),
 
     // request 관련 오류
     PARAMETER_ERROR("PE01", HttpStatus.BAD_REQUEST, "parmeterError"),

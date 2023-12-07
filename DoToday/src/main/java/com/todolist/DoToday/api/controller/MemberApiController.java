@@ -52,7 +52,7 @@ public class MemberApiController {
 
     @Operation(summary = "로그인", description = "아이디와 비밀번호를 받고 로그인 성공시 토큰 반환")
     @PostMapping("/login")
-    public MemberTokenDto apiLoginMember(@RequestBody ApiMemberLoginDto apiMemberLoginDto) {
+    public ResponseEntity<Map<String, Object>> apiLoginMember(@RequestBody ApiMemberLoginDto apiMemberLoginDto) {
         return memberApiService.apiLogin(apiMemberLoginDto);
     }
 }

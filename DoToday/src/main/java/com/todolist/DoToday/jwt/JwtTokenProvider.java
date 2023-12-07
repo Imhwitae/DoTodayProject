@@ -101,6 +101,10 @@ public class JwtTokenProvider {
             return false;
         }
 
+        if (!accessToken.startsWith("Bearer")) {
+            return false;
+        }
+
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(jwtSecretKey())
                 .build()

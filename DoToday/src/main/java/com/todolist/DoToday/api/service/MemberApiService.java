@@ -1,5 +1,6 @@
 package com.todolist.DoToday.api.service;
 
+import com.todolist.DoToday.api.error.ApiErrorResponse;
 import com.todolist.DoToday.api.reponse.MemberNumDto;
 import com.todolist.DoToday.api.request.ApiMemberJoinDto;
 import com.todolist.DoToday.api.request.ApiMemberLoginDto;
@@ -81,34 +82,7 @@ public class MemberApiService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-//    public ResponseEntity<Map<String, Object>> apiLogin(ApiMemberLoginDto apiMemberLoginDto) {
-//        // 에러 처리하기 + 아이디 중복체크
-//        apiMap = new HashMap<>();
-//
-//        try {
-//            MemberDetailDto member = memberMapper.findById(apiMemberLoginDto.getMemberId());
-//            bCryptPasswordEncoder.matches(apiMemberLoginDto.getMemberPw(), member.getMemberPw());
-//        } catch (NullPointerException e) {
-//            apiMap.put("error", e.getMessage());
-//            return new ResponseEntity<>(apiMap, HttpStatus.OK);
-//        }
-//
-//        MemberDetailDto member = memberMapper.findById(apiMemberLoginDto.getMemberId());
-//        boolean checkPw = bCryptPasswordEncoder.matches(apiMemberLoginDto.getMemberPw(), member.getMemberPw());
-//        log.info("pw: {}", checkPw);
-//
-//        if (checkPw) {
-//            MemberTokenDto appMemberToken = jwtTokenProvider.createToken(member.getMemberId());
-//            apiMap.put("loginSuccess", appMemberToken);
-//            return new ResponseEntity<>(apiMap, HttpStatus.OK);
-//        } else {
-//            apiMap.put("error", new ResponseEntity<>(HttpStatus.BAD_REQUEST));
-//            return new ResponseEntity<>(apiMap, HttpStatus.OK);
-//        }
-//
-//    }
-
-    public MemberTokenDto apiLogin(ApiMemberLoginDto apiMemberLoginDto) {
+    public ResponseEntity<Map<String, Object>> apiLogin(ApiMemberLoginDto apiMemberLoginDto) {
         // 에러 처리하기 + 아이디 중복체크
         apiMap = new HashMap<>();
 
@@ -116,9 +90,11 @@ public class MemberApiService {
             MemberDetailDto member = memberMapper.findById(apiMemberLoginDto.getMemberId());
             bCryptPasswordEncoder.matches(apiMemberLoginDto.getMemberPw(), member.getMemberPw());
         } catch (NullPointerException e) {
+//            ApiErrorResponse idError = new ApiErrorResponse(
+//
+//            );
             apiMap.put("error", e.getMessage());
-//            return new ResponseEntity<>(apiMap, HttpStatus.OK);
-            return null;
+            return new ResponseEntity<>(apiMap, HttpStatus.OK);
         }
 
         MemberDetailDto member = memberMapper.findById(apiMemberLoginDto.getMemberId());
@@ -128,12 +104,40 @@ public class MemberApiService {
         if (checkPw) {
             MemberTokenDto appMemberToken = jwtTokenProvider.createToken(member.getMemberId());
             apiMap.put("loginSuccess", appMemberToken);
-//            return new ResponseEntity<>(apiMap, HttpStatus.OK);
-            return appMemberToken;
+            return new ResponseEntity<>(apiMap, HttpStatus.OK);
         } else {
             apiMap.put("error", new ResponseEntity<>(HttpStatus.BAD_REQUEST));
-//            return new ResponseEntity<>(apiMap, HttpStatus.OK);
-            return null;
+            return new ResponseEntity<>(apiMap, HttpStatus.BAD_REQUEST);
         }
+
     }
+
+//    public MemberTokenDto apiLogin(ApiMemberLoginDto apiMemberLoginDto) {
+//        // 에러 처리하기 + 아이디 중복체크
+//        apiMap = new HashMap<>();
+//
+//        try {
+//            MemberDetailDto member = memberMapper.findById(apiMemberLoginDto.getMemberId());
+//            bCryptPasswordEncoder.matches(apiMemberLoginDto.getMemberPw(), member.getMemberPw());
+//        } catch (NullPointerException e) {
+//            apiMap.put("error", e.getMessage());
+////            return new ResponseEntity<>(apiMap, HttpStatus.OK);
+//            return null;
+//        }
+//
+//        MemberDetailDto member = memberMapper.findById(apiMemberLoginDto.getMemberId());
+//        boolean checkPw = bCryptPasswordEncoder.matches(apiMemberLoginDto.getMemberPw(), member.getMemberPw());
+//        log.info("pw: {}", checkPw);
+//
+//        if (checkPw) {
+//            MemberTokenDto appMemberToken = jwtTokenProvider.createToken(member.getMemberId());
+//            apiMap.put("loginSuccess", appMemberToken);
+////            return new ResponseEntity<>(apiMap, HttpStatus.OK);
+//            return appMemberToken;
+//        } else {
+//            apiMap.put("error", new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+////            return new ResponseEntity<>(apiMap, HttpStatus.OK);
+//            return null;
+//        }
+//    }
 }
