@@ -72,8 +72,7 @@ public class ListApiService {
             message.setMessage("토큰이 유효하지 않아요");
             return new ResponseEntity<>(message,HttpStatus.UNAUTHORIZED);
         } else {
-            String originToken = jwt.splitBearer(token);
-            memberId = jwt.getMemberIdFromToken(originToken);
+            memberId = jwt.getMemberIdFromToken(token);
             String sql = "select * from list where member_id = ? and write_date = ?";
             List<AppListDto> list = jdbcTemplate.query(sql, new Object[]{memberId, date}, appListRowMapper);
 
