@@ -52,9 +52,8 @@ public class ListApiController {
         LocalDate currentDate = LocalDate.now();
         String currentDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 //        currentDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
-        String originToken = jwtTokenProvider.splitBearer(token);
 
-        ResponseEntity<ListsOfMemberMessage> listDto = listService.appShowLists(originToken,currentDateStr);
+        ResponseEntity<ListsOfMemberMessage> listDto = listService.appShowLists(token,currentDateStr);
         return listDto;
     }
 

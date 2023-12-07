@@ -100,8 +100,9 @@ public class JwtTokenProvider {
 //        } catch (Exception e) {
 //            return false;
 //        }
-
-        if (BearerAccessToken.startsWith("Bearer ")) {
+        log.info(BearerAccessToken);
+        log.info(BearerAccessToken.startsWith("Bearer")+"");
+        if (BearerAccessToken.startsWith("Bearer")) {
             log.info("{}", BearerAccessToken);
 
             String accessToken = BearerAccessToken.substring(7);
@@ -121,9 +122,11 @@ public class JwtTokenProvider {
                 log.info("accessToken 시간 만료");
                 return false;
             } else {
+                log.info("엑세스토큰 유효함");
                 return true;
             }
         } else {
+            log.info("엑세스토큰 유효하지않음(Bearer 조건문으로 안감)");
             return false;
         }
 
