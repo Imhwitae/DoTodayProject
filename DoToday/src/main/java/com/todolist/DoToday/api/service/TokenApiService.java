@@ -29,7 +29,7 @@ public class TokenApiService {
         apiMap = new HashMap<>();
 
         if (StringUtils.hasText(accessToken) && jwtTokenProvider.validateToken(accessToken)) {
-            String originToken = jwtTokenProvider.splitBearer(accessToken);
+            String originToken = jwtTokenProvider.cutBearer(accessToken);
             String memberId = jwtTokenProvider.getMember(originToken).getMemberId();
             apiMap.put("success", memberId);
             return new ResponseEntity<>(apiMap, HttpStatus.OK);

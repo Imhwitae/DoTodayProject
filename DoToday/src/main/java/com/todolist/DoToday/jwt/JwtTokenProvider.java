@@ -90,17 +90,6 @@ public class JwtTokenProvider {
 
     // accessToken 유효성 검증
     public boolean validateToken(String BearerAccessToken) {
-//        try {
-//            // 토큰 서명 확인
-//            Claims claims = Jwts.parserBuilder()
-//                    .setSigningKey(jwtSecretKey())
-//                    .build()
-//                    .parseClaimsJws(accessToken)
-//                    .getBody();
-//        } catch (Exception e) {
-//            return false;
-//        }
-
         if (BearerAccessToken.startsWith("Bearer ")) {
             log.info("{}", BearerAccessToken);
 
@@ -116,7 +105,7 @@ public class JwtTokenProvider {
             Date expireDate = claims.getExpiration();  // 토큰 만료 시간
             Date now = new Date();  // 현재 시간
 
-            //  토큰 만료 시간이 현재 시간보다 이전이라면
+            //  토큰 만료 시간이 현재 시간 보다 이전 이라면
             if (expireDate.before(now)) {
                 log.info("accessToken 시간 만료");
                 return false;
@@ -124,9 +113,9 @@ public class JwtTokenProvider {
                 return true;
             }
         } else {
+            log.info("Bearer 가 없음");
             return false;
         }
-
     }
 
     // refreshToken 유효성 검증
@@ -167,6 +156,8 @@ public class JwtTokenProvider {
 
     // JWT 토큰에서 사용자 아이디 추출
     public String getMemberIdFromToken(String token) {
+        String originToken = cutBearer(token);
+
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(jwtSecretKey())
                 .build()
@@ -218,7 +209,7 @@ public class JwtTokenProvider {
         }
     }
 
-    public String splitBearer(String bearerToken) {
+    public String cutBearer(String bearerToken) {
         return bearerToken.substring(7);
     }
 }

@@ -64,7 +64,7 @@ public class ListApiService {
         AppListsOfMemberDto dto = new AppListsOfMemberDto();
         String memberId;
 //        log.info(jwt.validateToken(token)+"");
-        if (jwt.validateToken(token)) {//토큰이 유효하지 않을때
+        if (!jwt.validateToken(token)) {//토큰이 유효하지 않을때
             dto.setList(null);
 //            dto.setAccessToken("Invalid_Token");
             dto.setDate(null);
