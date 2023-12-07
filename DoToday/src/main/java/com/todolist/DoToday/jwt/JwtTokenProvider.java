@@ -45,20 +45,18 @@ public class JwtTokenProvider {
     // refreshToken 유효시간: 1일
     private long refreshTokenTime = 60 * 60 * 24 * 1000L;
 
-    // JWT 토큰 생성
+    // JWT 토큰 생성 (Api로도 사용)
     public MemberTokenDto createToken(String memberId) {
         headerMap.put("type", "JWT");
         headerMap.put("alg", "HS256");
 
 //        Claims claims = Jwts.claims().setSubject(memberId);  // JWT payload에 저장되는 정보(보통 유저 식별 값을 넣음)
 
-        // 현재 시간
-        Date date = new Date();
-        // accessToken 만료 시간
-        Date expireTime = new Date();
+        Date date = new Date();  // 현재 시간
+        Date expireTime = new Date();  // accessToken 만료 시간
         expireTime.setTime(date.getTime() + tokenTime);
-        // refreshToken 만료 시간
-        Date refreshExpireTime = new Date();
+
+        Date refreshExpireTime = new Date();  // refreshToken 만료 시간
         refreshExpireTime.setTime(date.getTime() + refreshTokenTime);
 
         // accessToken 발급
@@ -81,57 +79,42 @@ public class JwtTokenProvider {
                 .signWith(jwtSecretKey())
                 .compact();
 
-        // Dto에 저장
+        // Dto에 리턴
         return MemberTokenDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
     }
 
-    // accessToken 유효성 검증
-    public boolean validateToken(String BearerAccessToken) {
-        if (BearerAccessToken.startsWith("Bearer")) {
-            log.info("{}", BearerAccessToken);
-
-            String accessToken = BearerAccessToken.substring(7);
-            log.info("{}", accessToken);
-
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(jwtSecretKey())
-                    .build()
-                    .parseClaimsJws(accessToken)
-                    .getBody();
-
-            Date expireDate = claims.getExpiration();  // 토큰 만료 시간
-            Date now = new Date();  // 현재 시간
-
-            //  토큰 만료 시간이 현재 시간 보다 이전 이라면
-            if (expireDate.before(now)) {
-                log.info("accessToken 시간 만료");
-                return false;
-            } else {
-                log.info("엑세스토큰 유효함");
-                return true;
-            }
-        } else {
-            log.info("Bearer 가 없음");
-            return false;
-        }
-    }
-
-    // refreshToken 유효성 검증
-    public boolean validateRefreshToken(String refreshToken) {
+    public boolean validateToken(String accessToken) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(jwtSecretKey())
                 .build()
-                .parseClaimsJws(refreshToken)
+                .parseClaimsJws(accessToken)
                 .getBody();
 
-        if (claims.getExpiration().before(new Date())) {
-            log.info("재로그인 필요");
+        Date expireDate = claims.getExpiration();  // 토큰 만료 시간
+        Date now = new Date();  // 현재 시간
+
+        //  토큰 만료 시간이 현재 시간 보다 이전 이라면
+        if (expireDate.before(now)) {
+            log.info("accessToken 기간 만료");
             return false;
         } else {
+            log.info("accessToken 기간 유효함");
             return true;
+        }
+    }
+
+    // api로 온 accessToken 유효성 검증
+    public boolean validateApiToken(String BearerAccessToken) {
+        if (BearerAccessToken.startsWith("Bearer")) {
+
+            String accessToken = BearerAccessToken.substring(7);
+            return validateToken(accessToken);
+        } else {
+            log.info("Bearer 가 없음");
+            return false;
         }
     }
 
@@ -143,7 +126,7 @@ public class JwtTokenProvider {
         Date expireTime = new Date();
         expireTime.setTime(date.getTime() + tokenTime);
 
-        String accessToken = Jwts.builder()
+        return Jwts.builder()
                 .setHeader(headerMap)  // 헤더에 들어갈 정보
                 .claim("role", MemberRole.BASIC_USER.getRole())  // 사용자 권한
                 .setSubject(memberId)
@@ -151,21 +134,22 @@ public class JwtTokenProvider {
                 .setExpiration(expireTime)  // 토큰 만료 시간
                 .signWith(jwtSecretKey())  // 커스텀 키, 사용할 암호화 알고리즘(알아서 해줌)
                 .compact();
-
-        return accessToken;
     }
 
-    // JWT 토큰에서 사용자 아이디 추출
     public String getMemberIdFromToken(String token) {
-        String originToken = cutBearer(token);
-
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(jwtSecretKey())
                 .build()
-                .parseClaimsJws(originToken)
+                .parseClaimsJws(token)
                 .getBody();
 
         return claims.getSubject();
+    }
+
+    // Api로 받은 JWT 토큰에서 사용자 아이디 추출
+    public String getMemberIdFromApiToken(String token) {
+        String originToken = cutBearer(token);
+        return getMemberIdFromToken(originToken);
     }
 
     // JWT 토큰에서 멤버 객체 추출
@@ -195,19 +179,6 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String memberId) {
         MemberDetailDto member = memberMapper.findById(memberId);
         return new UsernamePasswordAuthenticationToken(member, null, null);
-    }
-
-    public void reCreateAccessToken(String refreshToken ,HttpServletResponse response) {
-        if (validateRefreshToken(refreshToken)) {
-            String memberId = getMemberIdFromToken(refreshToken);
-            MemberTokenDto tokens = createToken(memberId);
-
-            // 새로 발급한 토큰 쿠키에 삽입
-            Cookie newAccessToken = new Cookie("accessToken", tokens.getAccessToken());
-            response.addCookie(newAccessToken);
-        } else {
-            log.info("refreshToken 유효성 검증 실패. 재로그인 필요");
-        }
     }
 
     public String cutBearer(String bearerToken) {

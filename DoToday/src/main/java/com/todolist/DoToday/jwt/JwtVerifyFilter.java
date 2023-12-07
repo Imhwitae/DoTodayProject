@@ -33,8 +33,6 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String accessToken = null;
-        String refreshToken = null;
-        String memberId = null;
         Cookie[] cookies = request.getCookies();
 
         if (cookies != null) {
@@ -42,16 +40,14 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
                 String tokenName = cookie.getName();
                 String value = cookie.getValue();
 
-                if (tokenName.equals("refreshToken")) {
-                    refreshToken = value;
-                } else if (tokenName.equals("accessToken")){
+                if (tokenName.equals("accessToken")) {
                     accessToken = value;
                 }
             }
         }
 
         if (accessToken != null) {
-            memberId = jwtTokenProvider.getMemberIdFromToken(accessToken);
+            String memberId = jwtTokenProvider.getMemberIdFromToken(accessToken);
             if (memberId != null && jwtTokenProvider.validateToken(accessToken)) {
 //                log.info("토큰 검증 후 시큐리티 컨텍스트에 정보 담기");
                 Authentication authentication = jwtTokenProvider.getAuthentication(memberId);

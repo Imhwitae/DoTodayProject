@@ -35,20 +35,13 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
         String memberId = authentication.getName();
 
         String getAccessToken = jwtTokenProvider.createToken(memberId).getAccessToken();
-        String getRefreshToken = jwtTokenProvider.createToken(memberId).getRefreshToken();
 
         // accessToken 쿠키 생성
         Cookie accessToken = new Cookie("accessToken", getAccessToken);
-        accessToken.setMaxAge(60*60);
+        accessToken.setMaxAge(60*30);
         accessToken.setPath("/");
 
-        // refreshToken 쿠키 생성
-        Cookie refreshToken = new Cookie("refreshToken", getRefreshToken);
-        refreshToken.setMaxAge(60*60*24);
-        refreshToken.setPath("/");
-
         response.addCookie(accessToken);
-        response.addCookie(refreshToken);
         log.info("{} 로그인 성공", memberId);
         response.sendRedirect("/home");
     }

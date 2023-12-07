@@ -104,7 +104,6 @@ public class MemberService implements UserDetailsService, AuthenticationProvider
         }
 
         String combineBirth = year + "-" + month + "-" + date;
-
         return LocalDate.parse(combineBirth, DateTimeFormatter.ISO_LOCAL_DATE);
     }
 

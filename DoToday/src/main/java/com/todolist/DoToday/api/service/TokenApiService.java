@@ -28,7 +28,7 @@ public class TokenApiService {
     public ResponseEntity<Map<String, Object>> validateAccessToken(String accessToken) {
         apiMap = new HashMap<>();
 
-        if (StringUtils.hasText(accessToken) && jwtTokenProvider.validateToken(accessToken)) {
+        if (StringUtils.hasText(accessToken) && jwtTokenProvider.validateApiToken(accessToken)) {
             String originToken = jwtTokenProvider.cutBearer(accessToken);
             String memberId = jwtTokenProvider.getMember(originToken).getMemberId();
             apiMap.put("success", memberId);
@@ -55,8 +55,8 @@ public class TokenApiService {
         apiMap = new HashMap<>();
         if (StringUtils.hasText(refreshToken) && !refreshToken.isEmpty()) {
             log.info("tokenOK");
-            if (jwtTokenProvider.validateToken(refreshToken)) {
-                String memberId = jwtTokenProvider.getMemberIdFromToken(refreshToken);
+            if (jwtTokenProvider.validateApiToken(refreshToken)) {
+                String memberId = jwtTokenProvider.getMemberIdFromApiToken(refreshToken);
                 AcccessTokenApi accessToken = new AcccessTokenApi(jwtTokenProvider.reCreateAccessToken(memberId));
                 apiMap.put("validSuccess", accessToken);
                 log.info("validOK");
