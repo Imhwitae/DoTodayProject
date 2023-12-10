@@ -32,7 +32,6 @@ import java.util.Map;
 @RequestMapping("/api/list")
 public class ListApiController {
     private final ListApiService listService;
-    private final JwtTokenProvider jwtTokenProvider;
     private boolean tBlank, wBlank;
 
     @Operation(summary = "로그인후 리스트 조회", description = "받아온 토큰의 회원아이디로 DB에서 리스트 조회")
