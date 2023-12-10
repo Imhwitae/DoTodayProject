@@ -77,8 +77,16 @@ public class ListApiService {
             List<AppListDto> list = jdbcTemplate.query(sql, new Object[]{memberId, date}, appListRowMapper);
 
             if (list.isEmpty()) {
-                list = null;
+                AppListGetDto appList = new AppListGetDto();
+                appList.setListTitle("appExample");
+                appList.setWhenToDo("whenExample");
+                for(int i=0;i<5;i++){
+                    appListWrite(token,appList);
+                }
             }
+
+            list = jdbcTemplate.query(sql, new Object[]{memberId, date}, appListRowMapper);
+
 
             dto.setDate(date);
             dto.setList(list);
